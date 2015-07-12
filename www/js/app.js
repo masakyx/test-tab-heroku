@@ -1,3 +1,6 @@
+
+
+
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -47,7 +50,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
-
+  .state('tab.realtime',{
+      url:'/view-game-realtime',
+      views:{
+        'tab-realtime':{
+            templateUrl:'templates/view-game-realtime.html',
+            controller:'ViewgameCtrl'
+        }
+      }
+  })
   .state('tab.chats', {
       url: '/chats',
       views: {

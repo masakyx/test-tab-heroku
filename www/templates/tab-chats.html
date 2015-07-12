@@ -1,21 +1,25 @@
 <ion-view view-title="Chats">
-  <ion-content>
-   <!-- <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>
-      </ion-item>
-      </ion-list> -->
+<ion-content> 
+    <ul>
+      <div  ng-repeat="message in messages">
       <div class="card">
-        <div class="item item-text-wrap"  ng-click="click()" ng-init="init()" >
-          count = {{count}}
-        </div>
+      <div class="item item-text-wrap item-icon-left">
+        <i class="icon ion-chatbubble-working"></i>
+        Message = {{message.message}}の{{message.name}}
       </div>
-  </ion-content>
+      <div class="item item-divider" align="right">
+        <h5>{{message.time | date:'yyyy年MM月dd日HH時mm分ss秒'}}  masaki</h5>
+      </div>
+      </div>
+      </div>
+    </ul>
+</ion-content>
+        <ion-footer-bar class="bar-dark item-input-inset">
+              <label class="item-input-wrapper">
+                  <input type="text" placeholder="Message">
+              </label>
+              <button class="button button-clear" ng-click="submitclick()">
+                Submit
+              </button>
+        </ion-footer-bar>
 </ion-view>

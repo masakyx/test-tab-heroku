@@ -36,7 +36,7 @@
  */
 
 //---jquery-----------------------------------------
-function buindJQuery(){
+/*function buindJQuery(){
     jQuery = window.jQuery;
     if(jQuery){
         jqLite = jQuery;
@@ -57,7 +57,7 @@ function buindJQuery(){
     }
     angular.element = jqLite;
     console.log("jQueryを上書きしたよ！");
-}
+}*/
 //-------------------------------------------------
 function minErr(module, ErrorConstructor) {
   ErrorConstructor = ErrorConstructor || Error;

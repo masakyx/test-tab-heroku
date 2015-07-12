@@ -3,7 +3,7 @@ angular.module('starter.services', [])
 
 //--socket-factory------------------------------------------------------------------
 .factory('socket',function($rootScope){
-    var socket = io.connect(location.host + '/');
+    var socket = io.connect('https://pacific-chamber-3858.herokuapp.com/');
     return {
         on:function(eventName,callback){
           socket.on(eventName,function(){

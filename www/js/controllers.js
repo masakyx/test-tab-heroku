@@ -8,9 +8,6 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
 .controller('ViewgameCtrl',function($scope){})
 
 
-
-
-
 .controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -25,7 +22,7 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
   var messages = new Array();
   $scope.messages = messages;
   $scope.submitclick = function(){
-    var message = angular.element("#chatmessage").val();    
+    var message = $scope.message;    
     if(message == ""){
       window.alert("Messageを入力してください");
     }else{
@@ -42,8 +39,8 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
 
       socket.emit('send-chat',data);
     }
-  $ionicFrostedDelegate.update();
-  $ionicScrollDelegate.scrollBottom(true);
+    $ionicFrostedDelegate.update();
+    $ionicScrollDelegate.scrollBottom(true);
   }
   socket.on('create-chat',function(chatdata){
       chatdata.forEach(function(data){

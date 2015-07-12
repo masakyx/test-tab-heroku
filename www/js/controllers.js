@@ -19,26 +19,44 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  var x = 0;
+  
+  
+  //-----チャット送信--------------------------------
   var messages = new Array();
   $scope.messages = messages;
   $scope.submitclick = function(){
-    var time = Date.now();
-    x++;
-    socket.emit('create-chat',{name:"masaki",message:x});
-    messages.push({
-        message:"masaki",
-        name:x,
-        time:time
-    });
-    //angular.element(".chat-field").append("<div class='card'><div class='item item-text-wrap'>"+"masaki"+ x +"</div></div>");
+    var message = angular.element("#chatmessage").val();    
+    if(message == ""){
+      window.alert("Messageを入力してください");
+    }else{
+      var data = {
+        name:"Masaki",
+        message:message,
+        category:"chat",
+        time:Date.now(),
+        playername1:"player1",
+        playername2:"player2",
+        winner:"winner"   
+      };
+      $scope.message = "";
 
+      socket.emit('send-chat',data);
+    }
   $ionicFrostedDelegate.update();
   $ionicScrollDelegate.scrollBottom(true);
   }
-  socket.on('create-chat',function(data){
-      $scope.count = data.message;
-      console.log("messageがおくられたぞ");
+  socket.on('create-chat',function(chatdata){
+      chatdata.forEach(function(data){
+          messages.push(data);
+      });
+      $ionicFrostedDelegate.update();
+      $ionicScrollDelegate.scrollBottom(true);
+  });
+  socket.on('send-chat',function(data){
+      messages.push(data);
+      console.log(data);
+      $ionicFrostedDelegate.update();
+      $ionicScrollDelegate.scrollBottom(true);
   });
 })
 

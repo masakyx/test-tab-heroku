@@ -38,7 +38,12 @@ var db = mongoose.connect(process.env.MONGOLAB_URI || process.env.MONGOHQ_URL ||
 
 var ChatSchema = new mongoose.Schema({
     name:String,
-    message:String
+    message:String,
+    category:String,
+    time:Number,
+    playername1:String,
+    playername2:String,
+    winner:String
 });
 
 var Chat = db.model('chat',ChatSchema);
@@ -46,14 +51,18 @@ var Chat = db.model('chat',ChatSchema);
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
-    socket.on('create-chat',function(data){
+    Chat.find(function(err,items){
+        if(err){console.log(err);}
+        //接続したユーザーにチャットデータを送る
+        socket.emit('create-chat',items);
+    });
+    //-------チャットを表示する----------------------
+    socket.on('send-chat',function(data){
         console.log("messageきたぞ");
-         var chat = new Chat();
-         chat.name = data.name;
-         chat.message = data.message;
+         var chat = new Chat(data);
          chat.save();
-         socket.emit('create-chat',chat);
-         socket.broadcast.json.emit('create-chat',chat);
+         socket.emit('send-chat',chat);
+         socket.broadcast.json.emit('send-chat',chat);
      }); 
 });
 //------------------------------------------------------------------------------------------

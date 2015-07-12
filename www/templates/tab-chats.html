@@ -5,10 +5,10 @@
       <div class="card">
       <div class="item item-text-wrap item-icon-left">
         <i class="icon ion-chatbubble-working"></i>
-        Message = {{message.message}}の{{message.name}}
+        <p>{{message.message}}</p>
       </div>
       <div class="item item-divider" align="right">
-        <h5>{{message.time | date:'yyyy年MM月dd日HH時mm分ss秒'}}  masaki</h5>
+        <h5>{{message.time | date:'yyyy年MM月dd日HH時mm分ss秒'}}{{ message.name}}</h5>
       </div>
       </div>
       </div>
@@ -16,7 +16,7 @@
 </ion-content>
         <ion-footer-bar class="bar-dark item-input-inset">
               <label class="item-input-wrapper">
-                  <input type="text" placeholder="Message">
+                <input type="text" id="chatmessage" placeholder="Message"  ng-model="message" value={{message}}>
               </label>
               <button class="button button-clear" ng-click="submitclick()">
                 Submit

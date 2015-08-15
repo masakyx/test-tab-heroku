@@ -1,28 +1,78 @@
-<ion-view view-title="Tennis">
-  <ion-content class="padding">
-    <div class="list card">
-      <div class="item item-divider">Recent Updates</div>
-      <div class="item item-body">
-        <div>
-          There is a fire in <b>sector 3</b>
+<ion-view view-title="Tennis 試合データの作成">
+<ion-content >
+<!-- <form action="#/tab/dash/scoreboard" method="post" target="#/tab/dash/scoreboard"> -->
+      <div class="list">
+        <div class="item item-divider " align="center">記録者 選手名</div>
+        <label class="item item-input">  
+          <span class="input-label">Creater</span>
+          <input type="text" id="creater" placeholder="入力してください" name="creater">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Player1</span>
+         <input type="text"placeholder="入力してください"name="player1" id="player1">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Player2</span>
+          <input type="text"placeholder="入力してください" name="player2" id="player2">
+        </label>
+        <div class="item item-divider" align="center">セットカウント</div>
+        <div class="row">
+          <ion-radio ng-model="setChoice" ng-value="1" class="col positive" name="setradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            1
+            </ion-radio>
+            <ion-radio ng-model="setChoice" ng-value="3" class="col positive" name="setradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            3
+            </ion-radio>
+            <ion-radio ng-model="setChoice" ng-value="5" class="col positive" name="setradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            5
+            </ion-radio>
+        </div>
+        <div class="item item-divider" align="center">ゲームカウント</div>
+        <div class="row">
+          <ion-radio ng-model="gameChoice" ng-value="4" class="col positive" name="gameradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            4
+            </ion-radio>
+            <ion-radio ng-model="gameChoice" ng-value="6" class="col positive" name="gameradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            6
+            </ion-radio>
+            <ion-radio ng-model="gameChoice" ng-value="8" class="col positive" name="gameradio">
+            <i class="icon ion-ios-pricetags-outline "></i>
+            8
+            </ion-radio>
+        </div>
+        <div class="item item-divider" align="center">タイブレーク・デュース</div>
+        <li class="item item-toggle">タイブレーク
+          <div name="tiebreak">
+          <label class="toggle toggle-positive">
+            <input type="checkbox" id="tiebreak">
+            <div class="track">
+              <div class="handle" name="tiebreak">
+              </div>
+            </div>
+          </label>
+        </div>
+        </li>
+        <li class="item item-toggle">デュース
+          <label class="toggle toggle-positive">
+            <input type="checkbox" name="deuce" id="deuce">
+            <div class="track">
+              <div class="handle">
+              </div>
+            </div>
+          </label>
+        </li>
+        <div class="padding">
+          <button type="button"class="button button-block button-positive" ng-click="gamestartclick()" name="createdata">
+            試合開始
+        </button>
         </div>
       </div>
     </div>
-    <div class="list card">
-      <div class="item item-divider">Health</div>
-      <div class="item item-body">
-        <div>
-          You ate an apple today!
-        </div>
-      </div>
-    </div>
-    <div class="list card">
-      <div class="item item-divider">Upcoming</div>
-      <div class="item item-body">
-        <div>
-          You have <b>29</b> meetings on your calendar tomorrow.
-        </div>
-      </div>
-    </div>
+    <!--  </form> -->
   </ion-content>
 </ion-view>

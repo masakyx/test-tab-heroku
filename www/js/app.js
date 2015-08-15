@@ -50,6 +50,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     }
   })
+  .state('tab.scoreboard',{
+      url:'/dash/scoreboard',
+      views:{
+          'tab-dash':{
+            templateUrl:'templates/scoreboard.html',
+            controller:'scoreboardCtrl'
+          }
+      }
+  })
   .state('tab.realtime',{
       url:'/view-game-realtime',
       views:{
@@ -76,7 +85,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           controller: 'ChatDetailCtrl'
         }
       }
-    })*/
+      })*/
   //-----my data----------------
   .state('tab.data',{
     url: '/data',

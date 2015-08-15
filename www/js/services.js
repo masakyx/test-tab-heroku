@@ -3,7 +3,12 @@ angular.module('starter.services', [])
 
 //--socket-factory------------------------------------------------------------------
 .factory('socket',function($rootScope){
-    var socket = io.connect('https://pacific-chamber-3858.herokuapp.com/');
+    //    var socket = io.connect('https://pacific-chamber-3858.herokuapp.com/');
+    //var socket = io.connect(location.href+"/");
+    //local version ios  ->
+    var socket = io.connect("http://localhost:5000");
+    //local version android ->
+      //var socket = io.connect("http://10.0.2.2:5000");
     return {
         on:function(eventName,callback){
           socket.on(eventName,function(){
@@ -115,6 +120,24 @@ angular.module('starter.services', [])
     return {
       all:function(){
         return datas;
+      }
+    };
+})
+
+.factory('TennisID',function(){
+    var tennisIDs = {
+      ID:"a",
+      creater:"No name",
+      player1:"a",
+      player2:"a",
+      set:1,
+      game:6,
+      tiebreak:true,
+      deuce:true
+    };
+    return {
+      all:function(){
+        return tennisIDs;
       }
     };
 });

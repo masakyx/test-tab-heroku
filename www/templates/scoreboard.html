@@ -1,5 +1,30 @@
-<ion-view view-title="Tennis ScoreBoard">
+<ion-view view-title="Tennis ScoreBoard:★{{agcreater}}★">
 <ion-content>
-<h2 ng-model="test">{{test}}</h2>
+<div class="row">
+  <div class="col card item item-text-wrap">
+      <p align="center">{{agplayer1}}</p>
+  </div>
+  <div class="col card item item-text-wrap">
+      <p align="center">{{agplayer2}}</p>
+  </div>
+</div>
+<div class="row">
+  <div class="list col">
+    <h3 align="center" type="text" class="player1count">{{agset1}}</h3>
+    <h3 align="center" type="text" class="player1count">{{aggame1}}</h3>
+    <h3 align="center" type="text" class="player1count">{{agpoint1}}</h3>
+  </div>
+  <div class="list col">
+    <h3 align="center" type="text" class="counttext">SET COUNT</h3>
+    <h3 align="center" type="text" class="counttext">GAME COUNT</h3>
+    <h3 align="center" type="text" class="counttext">POINT</h3>
+  </div>
+  <div class="list col">
+    <h3 align="center" type="text" class="player2count">{{agset2}}</h3>
+    <h3 align="center" type="text" class="player2count">{{aggame2}}</h3>
+    <h3 align="center" type="text" class="player2count">{{agpoint2}}</h3>
+  </div>
+</div>
+<input type="button" value="oooooooooooo" ng-click="click()">
 </ino-content>
 </ion-view>

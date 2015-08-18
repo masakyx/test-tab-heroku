@@ -61,7 +61,9 @@ var TennisSchema = new mongoose.Schema({
         game:Number,
         tiebreak:Boolean,
         deuce:Boolean
-      }
+      },
+      PointData:{point:[Number]},
+      PointText:{text:[String]}
 });
 var Chat = db.model('chat',ChatSchema);
 var Tennis = db.model('tennis',TennisSchema);

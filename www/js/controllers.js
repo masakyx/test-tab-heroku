@@ -1,6 +1,8 @@
 "use strict"
 angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
-
+//----------------
+//--DashCtrl------
+//----------------
 .controller('DashCtrl', function($scope,TennisID,socket) {
     var creater = $("#creater"),
         player1 = $("#player1"),
@@ -43,14 +45,41 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
     });
 })
 
+//----------------
+//--scoreboardCtrl------
+//----------------
 .controller('scoreboardCtrl',function($scope,TennisID){
-    $scope.test = TennisID.all().creater;
+    var set1=0,set2=0,game1=0,game2=0,point1=0,point2=0;
+    $scope.agcreater = TennisID.all().creater;
+    $scope.agplayer1 = TennisID.all().player1;
+    $scope.agplayer2 = TennisID.all().player2;
+    $scope.agset1 = set1;
+    $scope.aggame1 = game1;
+    $scope.agpoint1 = point1;
+    $scope.agset2 = set2;
+    $scope.aggame2 = game2;
+    $scope.agpoint2 = point2;
+
+    $scope.click = function(){
+      set1++;
+      set2 = set2 +2;
+      $scope.agset1 = set1;
+      $scope.aggame1 = game1;
+      $scope.agpoint1 = point1;
+      $scope.agset2 = set2;
+      $scope.aggame2 = game2;
+      $scope.agpoint2 = point2;
+    }
+
 })
 
 //---view game in real time controller-----------------------------------------------------
 .controller('ViewgameCtrl',function($scope){})
 
 
+//----------------
+//--ChatsCtrl------
+//----------------
 .controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate,TennisID) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.

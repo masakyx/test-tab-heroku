@@ -1,1 +1,13 @@
 /* Empty. Add your own CSS if you like */
+.player1count,.player2count,.counttext{
+  border:medium solid black;
+  -webkit-border-radius:10px;
+  -moz-border-radius:10px;
+  font-size:100%;
+}
+.player1count{
+  background-color:#00ff80;
+}
+.player2count{
+  background-color:#00ffff;
+}

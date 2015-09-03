@@ -3,7 +3,7 @@ angular.module('starter.services', [])
 
 //--socket-factory------------------------------------------------------------------
 .factory('socket',function($rootScope){
-    var socket = io.connect('http://tennis-app-ios.herokuapp.com/');
+     var socket = io.connect('https://tennis-app-ios-0605.herokuapp.com/');
     //var socket = io.connect(location.href+"/");
     //local version ios  ->
     //var socket = io.connect("http://localhost:5000");

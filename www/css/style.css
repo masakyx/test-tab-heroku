@@ -6,8 +6,15 @@
   font-size:100%;
 }
 .player1count{
-  background-color:#00ff80;
+  background-color:#ffd500;
 }
 .player2count{
   background-color:#00ffff;
+}
+input[name="servicein"],input[name="serviceace"],input[name="fault"],input[name="returnin"],input[name="returnace"],input[name="returnmiss"]{
+  width:100%;
+}
+.middlebutton{
+  font-size:100%;
+  width:100%;
 }

@@ -63,6 +63,7 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
     $scope.click = function(){
       set1++;
       set2 = set2 +2;
+      console.log(set1+"/"+set2);
       $scope.agset1 = set1;
       $scope.aggame1 = game1;
       $scope.agpoint1 = point1;

@@ -18,3 +18,17 @@ input[name="servicein"],input[name="serviceace"],input[name="fault"],input[name=
   font-size:100%;
   width:100%;
 }
+.list1{
+  margin-bottom:0px;
+}
+.col1,.row1{
+  padding:2px;
+}
+.card1{
+  margin:10px 5px;
+  text-align:center;
+}
+.full-image1{
+  width:60%;
+}
+

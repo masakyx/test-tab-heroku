@@ -4,7 +4,7 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
 //--DashCtrl------
 //----------------
 .controller('DashCtrl', function($scope,TennisID,socket) {
-    var creater = $("#creater"),
+     var creater = $("#creater"),
         player1 = $("#player1"),
         player2 = $("#player2");
     var id;
@@ -37,7 +37,7 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
         }
       }
     }
-    socket.on("tennis-start",function(data){
+       socket.on("tennis-start",function(data){
         tennisdata.ID = data._id;
         console.log(data);
         console.log(tennisdata);

@@ -1,56 +1,56 @@
 <ion-view view-title="Tennis ScoreBoard:★{{agcreater}}★">
 <ion-content>
-<div class="row">
-  <div class="col card item item-text-wrap">
+<div class="row row1">
+  <div class="col col1 card card1 item item-text-wrap">
       <p align="center">{{agplayer1}}</p>
   </div>
-  <div class="col card item item-text-wrap">
+  <div class="col col1 card card1 item item-text-wrap">
       <p align="center">{{agplayer2}}</p>
   </div>
 </div>
-<div class="row">
-  <div class="list col">
+<div class="row row1">
+  <div class="list list1 col col1">
     <h3 align="center" type="text" class="player1count">{{agset1}}</h3>
     <h3 align="center" type="text" class="player1count">{{aggame1}}</h3>
     <h3 align="center" type="text" class="player1count">{{agpoint1}}</h3>
   </div>
-  <div class="list col">
-    <h3 align="center" type="text" class="counttext">SET COUNT</h3>
-    <h3 align="center" type="text" class="counttext">GAME COUNT</h3>
+  <div class="list list1 col col1">
+    <h3 align="center" type="text" class="counttext">SET</h3>
+    <h3 align="center" type="text" class="counttext">GAME</h3>
     <h3 align="center" type="text" class="counttext">POINT</h3>
   </div>
-  <div class="list col">
+  <div class="list list1 col col1">
     <h3 align="center" type="text" class="player2count">{{agset2}}</h3>
     <h3 align="center" type="text" class="player2count">{{aggame2}}</h3>
     <h3 align="center" type="text" class="player2count">{{agpoint2}}</h3>
   </div>
 </div>
-<div class="row">
-  <div class="list col">
-    <h4><input type="button" class="player1count" value="Service In" name="servicein"></h4>
-    <h4><input type="button" class="player1count" value="Service Ace" name="serviceace"></h4>
-    <h4><input type="button" class="player1count" value="Fault" name="fault"></h4>
-  </div>
-  <div class="list col">
-    <div class="row">
-      <div class="col card item item-body">
-        <img class="full-image" src="img/stroke.jpg">
+    <div class="row row1">
+      <div class="col col1 card card1 item item-body">
+        <img class="full-image1" src="img/stroke.jpg">
         <h2 align="center">STROKE</h2>
       </div>
-      <div class="col card  item item-body">
-        <img class="full-image" src="img/stroke.jpg">
+      <div class="col col1 card card1  item item-body">
+        <img class="full-image1" src="img/stroke.jpg">
         <h2 align="center">STROKE</h2>
       </div>
     </div>
-      <h5><button type="button" class="middlebutton button icon-left ion-ios-loop-strong" name="changecourt">CHNGE COURT</button></h5>
-      <h5><button type="button" class="middlebutton button icon-left ion-ios-loop-strong"  name="serverchange">SERVER CHANGE</button></h5>
-      <h5><button type="button" class="middlebutton button icon-left ion-ios-refresh" name="pointback">1ポイント戻る</button></h5>
-  </div>  
-  <div class="list col">
+<div class="row row1">
+  <div class="list list1 col col1">
+    <h4><input type="button" class="player1count magictime puffIn" value="Service In" name="servicein"></h4>
+    <h4><input type="button" class="player1count" value="Service Ace" name="serviceace"></h4>
+    <h4><input type="button" class="player1count" value="Fault" name="fault"></h4>
+  </div>
+  <div class="list list1 col col1">
     <h4><input type="button" class="player2count" value="Return In" name="returnin"></h4>
     <h4><input type="button" class="player2count" value="Return Ace" name="returnace"></h4>
     <h4><input type="button" class="player2count" value="Return Miss" name="returnmiss"></h4>
   </div>
+</div>
+<div class="row row1">
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-loop-strong" name="changecourt">COURT</button>
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-loop-strong"  name="serverchange">SERVER</button>
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-refresh" name="pointback">1ポイント戻る</button>
 </div>
 </ino-content>
 </ion-view>

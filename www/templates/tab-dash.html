@@ -1,18 +1,37 @@
 <ion-view view-title="Tennis 試合データの作成">
-<ion-content >
-      <div class="list">
+<ion-content ng-controller="DashCtrl">
+<div class="list">
+        <div class="item item-divider" align="center">シングルス・ダブルス</div>
+        <div class="row" ng-click="choseType()">
+          <ion-radio ng-model="gametype" ng-value="1" class="col positive" name="gametype">
+            シングルス
+            </ion-radio>
+            <ion-radio ng-model="gametype" ng-value="2" class="col positive" name="gametype">
+            ダブルス
+            </ion-radio>
+        </div>
         <div class="item item-divider " align="center">記録者 選手名</div>
         <label class="item item-input">  
           <span class="input-label">Creater</span>
-          <input type="text" id="creater" placeholder="入力してください" name="creater">
+          <input type="text" id="creater" placeholder="入力してください" name="creater" ng-model="agcreater" value={{agcreater}}>
+        </label>
+        <hr>
+        <label class="item item-input">
+          <span class="input-label">{{player1}}</span>
+          <input type="text"placeholder="入力してください"name="player1" id="player1" ng-model="agplayer1" value={{agplayer1}}>
+        </label>
+        <label class="item item-input" ng-show="daubles">
+          <span class="input-label">{{player3}}</span>
+          <input type="text"placeholder="入力してください"name="player3" id="player3" ng-model="agplayer3" value={{agplayer3}}>
+        </label>
+        <hr>
+        <label class="item item-input" ng-show="daubles">
+          <span class="input-label">{{player4}}</span>
+          <input type="text"placeholder="入力してください" name="player4" id="player4" ng-model="agplayer4" value={{agplayer4}}>
         </label>
         <label class="item item-input">
-          <span class="input-label">Player1</span>
-         <input type="text"placeholder="入力してください"name="player1" id="player1">
-        </label>
-        <label class="item item-input">
-          <span class="input-label">Player2</span>
-          <input type="text"placeholder="入力してください" name="player2" id="player2">
+          <span class="input-label">{{player2}}</span>
+          <input type="text"placeholder="入力してください" name="player2" id="player2" ng-model="agplayer2" value={{agplayer2}}>
         </label>
         <div class="item item-divider" align="center">セットカウント</div>
         <div class="row">
@@ -42,7 +61,7 @@
         <li class="item item-toggle">タイブレーク
           <div name="tiebreak">
           <label class="toggle toggle-positive">
-            <input type="checkbox" id="tiebreak">
+            <input type="checkbox" id="tiebreak" ng-model="agtiebreak" ng-value=true>
             <div class="track">
               <div class="handle" name="tiebreak">
               </div>
@@ -52,7 +71,7 @@
         </li>
         <li class="item item-toggle">デュース
           <label class="toggle toggle-positive">
-            <input type="checkbox" name="deuce" id="deuce">
+            <input type="checkbox" name="deuce" id="deuce" ng-model="agdeuce" ng-value=true>
             <div class="track">
               <div class="handle">
               </div>

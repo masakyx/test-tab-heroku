@@ -46,14 +46,15 @@
       <h1 align="center">{{agreceiver2}}</h1>
     </div>
     <div id="serverbutton1" ng-show="serverbutton1">
-      <h4><input type="button" class="player1count" value="Service In" name="servicein" ng-click="servicein1()"></h4>
-      <h4><input type="button" class="player1count" value="Service Ace" name="serviceace" ng-click="serviceace1()"></h4>
-      <h4><input type="button" class="player1count" value="Fault" name="fault" ng-click="fault1()"></h4>
-    </div> 
+      <h4><input type="button" class="player1count" value="Service In" name="servicein1" ng-click="servicein1()"></h4>
+      <h4><input type="button" class="player1count" value="Service Ace" name="serviceace1" ng-click="serviceace1()"></h4>
+    </div>
+      <h4><input type="button" class="player1count" value="Fault" name="fault1" ng-click="fault1()" ng-show="faultbutton1"></h4>
+      <h4><input type="button" class="player1count" value="Double Fault" name="doublefault1" ng-click="doublefault1()" ng-show="doublefaultbutton1"></h4>
     <div id="returnbutton1" ng-show="returnbutton1">
-      <h4><input type="button" class="player1count" value="Return In" name="returnin" ng-click="returnin1()"></h4>
-      <h4><input type="button" class="player1count" value="Return Ace" name="returnace" ng-click="returnace1()"></h4>
-      <h4><input type="button" class="player1count" value="Return Miss" name="returnmiss" ng-click="returnmiss1()"></h4>
+      <h4><input type="button" class="player1count" value="Return In" name="returnin1" ng-click="returnin1()"></h4>
+      <h4><input type="button" class="player1count" value="Return Ace" name="returnace1" ng-click="returnace1()"></h4>
+      <h4><input type="button" class="player1count" value="Return Miss" name="returnmiss1" ng-click="returnmiss1()"></h4>
     </div> 
     <div id="shotbutton1" ng-show="shotbutton1">
       <h4><input type="button" class="player1count" value="Winning Shot" name="win1" ng-click="win1()"></h4>
@@ -72,14 +73,15 @@
       <h1 align="center">{{agreceiver1}}</h1>
     </div>
     <div id="serverbutton2" ng-show="serverbutton2">
-      <h4><input type="button" class="player2count" value="Service In" name="servicein" ng-click="servicein2()"></h4>
-      <h4><input type="button" class="player2count" value="Service Ace" name="serviceace" ng-click="serviceace2()"></h4>
-      <h4><input type="button" class="player2count" value="Fault" name="fault" ng-click="fault2()"></h4>
+      <h4><input type="button" class="player2count" value="Service In" name="servicein2" ng-click="servicein2()"></h4>
+      <h4><input type="button" class="player2count" value="Service Ace" name="serviceace2" ng-click="serviceace2()"></h4>
     </div> 
+      <h4><input type="button" class="player2count" value="Fault" name="fault2" ng-click="fault2()" ng-show="faultbutton2"></h4>
+      <h4><input type="button" class="player2count" value="Double Fault" name="doublefault2" ng-click="doublefault2()" ng-show="doublefaultbutton2"></h4>
     <div id="returnbutton2" ng-show="returnbutton2">
-      <h4><input type="button" class="player2count" value="Return In" name="returnin" ng-click="returnin2()"></h4>
-      <h4><input type="button" class="player2count" value="Return Ace" name="returnace" ng-click="returnace2()"></h4>
-      <h4><input type="button" class="player2count" value="Return Miss" name="returnmiss" ng-click="returnmiss2()"></h4>
+      <h4><input type="button" class="player2count" value="Return In" name="returnin2" ng-click="returnin2()"></h4>
+      <h4><input type="button" class="player2count" value="Return Ace" name="returnace2" ng-click="returnace2()"></h4>
+      <h4><input type="button" class="player2count" value="Return Miss" name="returnmiss2" ng-click="returnmiss2()"></h4>
     </div>
     <div id="shotbutton2" ng-show="shotbutton2">
       <h4><input type="button" class="player2count" value="Winning Shot" name="win2" ng-click="win2()"></h4>

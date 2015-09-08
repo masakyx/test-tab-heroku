@@ -29,4 +29,9 @@
 .full-image1{
   width:60%;
 }
-
+#checkserver1,#checkreceiver{
+  background-color:#ffd500;
+}
+#checkserver2,#checkreceiver2{
+  background-color:#00ffff;
+}

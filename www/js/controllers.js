@@ -23,9 +23,9 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
       }else{
         $scope.daubles = true;
         $scope.player1 = "フォアサイドPlayer1";
-        $scope.player2 = "バックサイドplayer2";
+        $scope.player2 = "フォアサイドplayer2";
         $scope.player3 = "バックサイドPlayer1";
-        $scope.player4 = "フォアサイドplayer2";
+        $scope.player4 = "バックサイドplayer2";
       }
     }
 
@@ -86,13 +86,10 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
 //----------------
 //--scoreboardCtrl----------------------------------------------------------------
 //----------------------
-.controller('scoreboardCtrl',function($scope,TennisID,socket){
+.controller('scoreboardCtrl',function($scope,TennisID){
 //---------変数設定--------------------------------------------------------------
     var setpoint1=0,setpoint2=0,gamepoint1=0,gamepoint2=0,point1=0,point2=0;
-    var scoretext1="0",
-        scoretext2="0",
-        gametext1="0",
-        gametext2="0";
+    var winner="途中で終了しました。";
     var isTiebreak = false,
         foreback = 0,//0=fore,1=back
         faultcount=0;//0=fault,1=double fault
@@ -134,50 +131,107 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
     $scope.faultbutton1 = true;
     //-------player1ボタンクリック挙動------------------------------------------------
 $scope.servicein1 = function(){
+  displayReceiver();
 }
-$scope.serviceace1 = function(){ 
+$scope.serviceace1 = function(){
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.fault1 = function(){
+  $scope.faultbutton1=false;
+  $scope.doublefaultbutton1=true;
 }
 $scope.doublefault1 = function(){
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.returnin1 = function(){  
+  displayType(5);
 }
 $scope.returnace1 = function(){  
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.returnmiss1 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.win1 = function(){  
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.side1 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.back1 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.net1 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 //-------player2ボタンクリック挙動------------------------------------------------
-$scope.servicein2 = function(){  
+$scope.servicein2 = function(){
+  displayReceiver();
 }
 $scope.serviceace2 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.fault2 = function(){  
+  $scope.faultbutton2=false;
+  $scope.doublefaultbutton2=true;
 }
 $scope.doublefault2 = function(){
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.returnin2 = function(){  
+  displayType(5);
 }
-$scope.returnace2 = function(){  
+$scope.returnace2 = function(){
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
-$scope.returnmiss2 = function(){  
+$scope.returnmiss2 = function(){
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.win2 = function(){  
+  point2++;
+  displayServer();
+  ClickPoint(2,point2);
 }
 $scope.side2 = function(){  
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.back2 = function(){  
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
 $scope.net2 = function(){  
+  point1++;
+  displayServer();
+  ClickPoint(1,point1);
 }
+
 //--------チェンジボタンクリック挙動-----------------------------------------------------
 $scope.serverchange = function(){
   ServerChange();
@@ -191,15 +245,14 @@ $scope.finishgame = function(){
 //---------関数------------------------------------------------------------------
 function ScorePoint(check,point){
      if(point == 1){
-       if(check==1){$scope.aggame1="15";
-       }else if(check==2){$scope.aggame2="15";}                  
+       if(check==1){$scope.agpoint1="15";
+       }else if(check==2){$scope.agpoint2="15";}                  
      }else if(point == 2){
-       if(check==1){$scope.aggame1="30";
-       }else if(check==2){$scope.aggame2="30";}                  
-       score="30";
+       if(check==1){$scope.agpoint1="30";
+       }else if(check==2){$scope.agpoint2="30";}                  
      }else if(point == 3 && point1 < 3 || point == 3 && point2 < 3){
-       if(check==1){$scope.aggame1="40";
-       }else if(check==2){$scope.aggame2="40";}                  
+       if(check==1){$scope.agpoint1="40";
+       }else if(check==2){$scope.agpoint2="40";}                  
      }else if(point1 == 3 && point2 == 3){
        $scope.agpoint1="DEUCE";
        $scope.agpoint2="DEUCE";
@@ -231,10 +284,10 @@ function ScorePoint(check,point){
 
 function GamePoint(check,gamepoint){
   foreback = 0;//fore
-  ServeChange();
+  ServerChange();
   if(gamepoint < gamecount || gamepoint1 == gamecount && gamepoint2 == (gamecount-1) || gamepoint1 == (gamecount-1) && gamepoint2 == gamecount ){
     ClearPoint();
-    if(check==1){$scope.aggame1=gamepont1
+    if(check==1){$scope.aggame1=gamepoint1
     }else if(check==2){$scope.aggame2=gamepoint2}                  
   }else if(gamepoint == gamecount && gamepoint1 < (gamecount-1) || gamepoint == gamecount && gamepoint2 <(gamecount-1) || gamepoint1 == (gamecount+1) && gamepoint2 == (gamecount-1) || gamepoint1 == (gamecount-1) && gamepoint2 == (gamecount+1)){
     if(gamepoint1 > gamepoint2){
@@ -255,16 +308,11 @@ function GamePoint(check,gamepoint){
 
 function TieBreak(check,point){
   if((point1+point2)%2 == 1){
-    if(server == 0){
-      server = 1;
-    }else if(server == 1){
-      server = 0;
-    }
-    ServeChange(server);
+    ServerChange();
   }
   if(point < 7 || point1 > 5 && point2 > 5 && (point1-point2) == 1 || point1 > 5 && point2 > 5 && (point2-point1)==1 || point1 == point2){
-    if(check==1){$scope.agpoint1==point1;
-    }else if(check==2){$scope.agpoint2==point2;}
+    if(check==1){$scope.agpoint1=point1;
+    }else if(check==2){$scope.agpoint2=point2;}
   }else if(point1 > 5 && point2 > 5 && (point1-point2)==2 || point1 > 5 && point2 > 5 && (point2-point1)==2 || point1 == 7 && point2 < 6 || point1 < 6 && point2 == 7){
     $scope.aggame1="0";
     $scope.aggame2="0";
@@ -305,40 +353,43 @@ function SetPoint(check,setpoint){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }else if(setpoint2 == 1){
-        if(gametype=="2"){winner=player2;
+        if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }                                              
-      window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
-      location.href = "#/tab/dash";
   }else if(setcount == 3){
       if(setpoint1 == 2){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }else if(setpoint2 == 2){
-        if(gametype=="2"){winner=player2;
+        if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }
-      window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
-      location.href = "#/tab/dash";
   }else if(setcount == 5){
       if(setpoint1 == 3){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }else if(setpoint2 == 3){
-        if(gametype=="2"){winner=player2;
+        if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
+        FinishGame();
       }
-       window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
-        location.href = "#/tab/dash";
     }
 }
-
+function FinishGame(){
+       window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
+        location.href = "#/tab/dash";
+}
 function ClearPoint(){
   point1=0;
   point2=0;
@@ -359,7 +410,7 @@ function ClickPoint(check,point){
       switch (Nserverchange){
         case 1:
           displayType(2);
-          break;
+            break;
         case 2:  
           displayType(1);
           Nserverchange=0;
@@ -398,6 +449,10 @@ function ClickPoint(check,point){
       }
     }else if(gametype == "2"){
       switch (Nserverchange){
+        case 0:
+          $scope.agserver1 = player1;
+          displayType(1);
+          break;
         case 1:
           $scope.agserver2 = player2;
           displayType(2);
@@ -413,12 +468,16 @@ function ClickPoint(check,point){
         case 4:
           $scope.agserver1 = player1;
           displayType(1);
-          Nserverchange=0;
           break;
       }
     }
   }
   function displayReceiver(){
+    if((point1+point2)%2==0){
+      foreback=0;
+    }else{
+      foreback=1;
+    }
     if(gametype == "1"){
       if(Nserverchange == 1){
         $scope.agreceiver1 = player1;
@@ -428,7 +487,7 @@ function ClickPoint(check,point){
         displayType(4);
       }
     }else{
-      if(Nserverchange == 1){
+      if(Nserverchange == 1 || Nserverchange == 3){
         if(foreback == 0){
           $scope.agreceiver1 = player1;
         }else{
@@ -437,9 +496,9 @@ function ClickPoint(check,point){
         displayType(3);
       }else{
         if(foreback == 0){
-          $scope.agreceiver2 = player4;
+          $scope.agreceiver2 = player2;
         }else{
-          $scope.agreceiber2 = player2;
+          $scope.agreceiver2 = player4;
         }
         displayType(4);
       }

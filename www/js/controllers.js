@@ -1,9 +1,9 @@
 "use strict"
-angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
+angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.frostedGlass'])
 //----------------
 //--DashCtrl------
 //----------------
-.controller('DashCtrl', function($scope,TennisID,socket) {
+.controller('DashCtrl', function($scope,TennisID,socket,$ionicPopup) {
     var id;
     var tennisdata = TennisID.all();
     
@@ -41,9 +41,16 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
           deuce = $scope.agdeuce;
       if($scope.gametype == "1"){
         if(creater == null || player1== null || player2== null){
-            window.alert("名前を入力してください");
+          var alertPopup = $ionicPopup.alert({
+            title:"名前を入力してください。"
+          });
         }else{
-          if(confirm("試合データを作成しますか？")){
+          var confirmPopup = $ionicPopup.confirm({
+            title:"試合データを作成しますか？",
+            template:"試合データが作成された場合、リアルタイムに試合状況が配信されます。"
+        });
+          confirmPopup.then(function(res){
+            if(res){
               tennisdata.creater = creater;
               tennisdata.player1 = player1;
               tennisdata.player2 = player2;
@@ -54,12 +61,20 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
               tennisdata.deuce = deuce;
               socket.emit("tennis-start",{tennis:tennisdata});
             }
-          }
+          });
+        }
       }else{
         if(creater == null || player1== null || player2== null || player3==null ||player4 == null){
-            window.alert("名前を入力してください");
+          var alertPopup = $ionicPopup.alert({
+            title:"名前を入力してください。"
+          });
         }else{
-          if(confirm("試合データを作成しますか？")){
+          var confirmPopup = $ionicPopup.confirm({
+            title:"試合データを作成しますか？",
+            template:"試合データが作成された場合、リアルタイムに試合状況が配信されます。"
+          });
+          confirmPopup.then(function(res){
+            if(res){
               tennisdata.creater = creater;
               tennisdata.player1 = player1;
               tennisdata.player2 = player2;
@@ -71,7 +86,8 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
               socket.emit("tennis-start",{tennis:tennisdata});
-          }
+            } 
+          });
         }
       }
     }
@@ -86,7 +102,7 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
 //----------------
 //--scoreboardCtrl----------------------------------------------------------------
 //----------------------
-.controller('scoreboardCtrl',function($scope,TennisID){
+.controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup){
 //---------変数設定--------------------------------------------------------------
     var setpoint1=0,setpoint2=0,gamepoint1=0,gamepoint2=0,point1=0,point2=0;
     var winner="途中で終了しました。";
@@ -129,9 +145,27 @@ angular.module('starter.controllers', ['ionic','ionic.contrib.frostedGlass'])
     $scope.serverbutton1 = true;
     $scope.checkserver1 = true;
     $scope.faultbutton1 = true;
+    $scope.strokebutton1 = true;
+    $scope.strokebutton2 = true;
     //-------player1ボタンクリック挙動------------------------------------------------
 $scope.servicein1 = function(){
   displayReceiver();
+  var confirmPopup = $ionicPopup.confirm({
+    title:'Fore or Back',
+    template:"フォアハンドかバックハンドを押してください。",
+    cancelText:"Back Hand",
+    cancelType:"button-calm",
+    okText:"Fore Hand",
+    okType:"button-energized"
+  });
+  confirmPopup.then(function(res){
+    if(res){
+      console.log("back!!!");
+    }else{
+      console.log("fore!!");
+    }
+  })
+
 }
 $scope.serviceace1 = function(){
   point1++;
@@ -241,6 +275,13 @@ $scope.courtchange = function(){
 $scope.pointback = function(){
 }
 $scope.finishgame = function(){
+}
+//---------モーダルダイアログ----------------------------------------------------
+$scope.fore = function(){
+  location.href = "#/tab/dash/scoreboard";
+}
+$scope.back = function(){
+  window.alert("ダイアログーーー");
 }
 //---------関数------------------------------------------------------------------
 function ScorePoint(check,point){
@@ -587,6 +628,11 @@ function ClickPoint(check,point){
         $scope.doublefaultbutton2=false;
         break;
     }
+  }
+  function ComfirmSide(){
+    $modal.open({
+        templateUrl:"comfirmhand.html"
+    });
   }
 })
 

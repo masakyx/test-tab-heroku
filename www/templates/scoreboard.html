@@ -10,29 +10,37 @@
 </div>
 <div class="row row1">
   <div class="list list1 col col1">
-    <h3 align="center" type="text" class="player1count">{{agset1}}</h3>
-    <h3 align="center" type="text" class="player1count">{{aggame1}}</h3>
-    <h3 align="center" type="text" class="player1count">{{agpoint1}}</h3>
+    <h1 align="center"  class="player1count counttext">{{agset1}}</h1>
+    <h1 align="center"  class="player1count counttext">{{aggame1}}</h1>
+    <h1 align="center"  class="player1count counttext">{{agpoint1}}</h1>
   </div>
   <div class="list list1 col col1">
-    <h3 align="center" type="text" class="counttext">SET</h3>
-    <h3 align="center" type="text" class="counttext">GAME</h3>
-    <h3 align="center" type="text" class="counttext">POINT</h3>
+    <h1 align="center"  class="counttext">SET</h1>
+    <h1 align="center"  class="counttext">GAME</h1>
+    <h1 align="center"  class="counttext">POINT</h1>
   </div>
   <div class="list list1 col col1">
-    <h3 align="center" type="text" class="player2count">{{agset2}}</h3>
-    <h3 align="center" type="text" class="player2count">{{aggame2}}</h3>
-    <h3 align="center" type="text" class="player2count">{{agpoint2}}</h3>
+    <h1 align="center"  class="player2count counttext">{{agset2}}</h1>
+    <h1 align="center"  class="player2count counttext">{{aggame2}}</h1>
+    <h1 align="center"  class="player2count counttext">{{agpoint2}}</h1>
   </div>
 </div>
     <div class="row row1">
-      <div class="col col1 card card1 item item-body">
-        <img class="full-image1" src="img/stroke.jpg">
-        <h2 align="center">STROKE</h2>
+      <div class="col col1 card card1 item" ng-show="strokebutton1" >
+        <!--<img class="full-image1" src="img/stroke.jpg">-->
+        <h2 align="center" class="stroke">STROKE</h2>
       </div>
-      <div class="col col1 card card1  item item-body">
-        <img class="full-image1" src="img/stroke.jpg">
-        <h2 align="center">STROKE</h2>
+      <div class="col col1 card card1 item" ng-show="bolaybutton1">
+        <!--<img class="full-image1" src="img/stroke.jpg">-->
+        <h2 align="center" class="stroke">BOLAY</h2>
+      </div>
+      <div class="col col1 card card1  item" ng-show="strokebutton2">
+        <!-- <img class="full-image1" src="img/stroke.jpg">-->
+        <h2 align="center" class="stroke">STROKE</h2>
+      </div>
+      <div class="col col1 card card1  item" ng-show="bolaybutton2">
+        <!-- <img class="full-image1" src="img/stroke.jpg">-->
+        <h2 align="center" class="stroke">BOLAY</h2>
       </div>
     </div>
 <div class="row row1">
@@ -100,5 +108,21 @@
       <button type="button" class="middlebutton col col1 button icon-left ion-ios-refresh" name="pointback" ng-click="pointback()">POINT BACK</button>
       <button type="button" class="middlebutton col col1 button icon-left ion-power" name="finishgame" ng-click="finishgame()">試合終了</button>
 </div>
+
+<!-- モーダル　ダイアログ-------------------------------------------- 
+<script type="text/ng-template" id="comfirmhand.html">
+  <div class="modal-header">
+  <h3 class="modal-title">フォア・バッグどちらですか?</h3>
+  </div>
+    <div class="modal-body">
+      <p>フォアハンド、バッグハンド</p>
+      <p>どちらですか？</p>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" type="button" ng-click="fore()">フォアハンド</button>
+      <button class="btn btn-warning" type="button" ng-click="back()">バックハンド</button>
+    </div>
+</script>
+-->
 </ino-content>
 </ion-view>

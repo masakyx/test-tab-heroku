@@ -6,6 +6,13 @@
   font-size:100%;
   width:100%;
 }
+.counttext{
+  font-size:130%;
+  font-weight:bold;
+}
+.stroke{
+  font-weight:bold;
+}
 .player1count{
   background-color:#ffd500;
 }
@@ -27,9 +34,9 @@
   text-align:center;
 }
 .full-image1{
-  width:60%;
+  width:40%;
 }
-#checkserver1,#checkreceiver{
+#checkserver1,#checkreceiver1{
   background-color:#ffd500;
 }
 #checkserver2,#checkreceiver2{

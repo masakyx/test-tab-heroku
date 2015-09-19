@@ -606,6 +606,7 @@ $scope.back2 = function(){
     }else if(isside==1){
       shotdata2[13]++;
     }
+  }
   faultcount=0;
   isStroke=0;
 }

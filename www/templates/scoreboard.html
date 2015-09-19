@@ -26,20 +26,20 @@
   </div>
 </div>
     <div class="row row1">
-      <div class="col col1 card card1 item" ng-show="strokebutton1" >
-        <!--<img class="full-image1" src="img/stroke.jpg">-->
+      <div class="col col1 card card1 item" ng-show="strokebutton1" ng-click="strokeClick1()">
+        <img class="full-image1" src="img/stroke.jpg">
         <h2 align="center" class="stroke">STROKE</h2>
       </div>
-      <div class="col col1 card card1 item" ng-show="bolaybutton1">
-        <!--<img class="full-image1" src="img/stroke.jpg">-->
+      <div class="col col1 card card1 item" ng-show="bolaybutton1" ng-click="bolayClick1()">
+        <img class="full-image1" src="img/bolay.jpg">
         <h2 align="center" class="stroke">BOLAY</h2>
       </div>
-      <div class="col col1 card card1  item" ng-show="strokebutton2">
-        <!-- <img class="full-image1" src="img/stroke.jpg">-->
+      <div class="col col1 card card1  item" ng-show="strokebutton2" ng-click="strokeClick2()">
+         <img class="full-image1" src="img/stroke.jpg">
         <h2 align="center" class="stroke">STROKE</h2>
       </div>
-      <div class="col col1 card card1  item" ng-show="bolaybutton2">
-        <!-- <img class="full-image1" src="img/stroke.jpg">-->
+      <div class="col col1 card card1  item" ng-show="bolaybutton2" ng-click="bolayClick2()">
+         <img class="full-image1" src="img/bolay.jpg">
         <h2 align="center" class="stroke">BOLAY</h2>
       </div>
     </div>
@@ -109,20 +109,5 @@
       <button type="button" class="middlebutton col col1 button icon-left ion-power" name="finishgame" ng-click="finishgame()">試合終了</button>
 </div>
 
-<!-- モーダル　ダイアログ-------------------------------------------- 
-<script type="text/ng-template" id="comfirmhand.html">
-  <div class="modal-header">
-  <h3 class="modal-title">フォア・バッグどちらですか?</h3>
-  </div>
-    <div class="modal-body">
-      <p>フォアハンド、バッグハンド</p>
-      <p>どちらですか？</p>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-primary" type="button" ng-click="fore()">フォアハンド</button>
-      <button class="btn btn-warning" type="button" ng-click="back()">バックハンド</button>
-    </div>
-</script>
--->
 </ino-content>
 </ion-view>

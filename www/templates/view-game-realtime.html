@@ -1,6 +1,34 @@
 <ion-view view-title="VIEW GAME IN REAL TIME ">
 <ion-content>
   <ul>
-    <div ng-repeat="tennisdata in tennisdatas"
+    <div class="card">
+      <p>開始時間:{{time | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
+      <div class="row header">
+        <div align="center" class="col vPlayer">試合状況</div>
+        <div align="center" class="col vPlayer1">Player1</div>
+        <div align="center" class="col vPlayer2">Player2</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer">Server</div>
+        <div align="center" class="col vServer1">Server1</div>
+        <div align="center" class="col vServer2">Server2</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet">Set</div>
+        <div align="center" class="col vSet1">Set1</div>
+        <div align="center" class="col vSet2">Set2</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vGame">Game</div>
+        <div align="center" class="col vGame1">Game1</div>
+        <div align="center" class="col vGame2">Game2</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vScore">Score</div>
+        <div align="center" class="col vScore1">Score1</div>
+        <div align="center" class="col vScore2">Score2</div>
+      </div>
+    </div>
+  </ul>
 </ion-content>
 </ion-view>

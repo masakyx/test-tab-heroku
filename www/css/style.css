@@ -42,3 +42,12 @@
 #checkserver2,#checkreceiver2{
   background-color:#00ffff;
 }
+.tennistable{
+  border:2px;
+}
+.vPlayer1,.vPlayer2,.vServer,.vSet,.vGame,.vScore{
+  background-color:#cccccc;
+}
+.vPlayer,.vPlayer1,.vPlayer2,.vServer,.vServer1,.vServer2,.vSet,.vSet1,.vSet2,.vGame,.vGame1,.vGame2,.vScore,.vScore1,.vScore2{
+  border:solid 1px black;
+}

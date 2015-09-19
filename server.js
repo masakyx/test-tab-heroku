@@ -54,6 +54,7 @@ var ChatSchema = new mongoose.Schema({
 var TennisSchema = new mongoose.Schema({
       startdata:{
         ID:String,
+        realtime:Boolean,
         creater:String,
         player1:String,
         player2:String,
@@ -66,10 +67,49 @@ var TennisSchema = new mongoose.Schema({
         deuce:Boolean
       },
       PointData:{point:[Number]},
-      PointText:{text:[String]}
+      ServerSide:{point:[Number]},
+      ReturnSide:{point:[Number]},
+      ShotPoint:{point:[Number]},
+      PointData2:{point:[Number]},
+      ServerSide2:{point:[Number]},
+      ReturnSide2:{point:[Number]},
+      ShotPoint2:{point:[Number]},
+      PointText:{
+        server:String,
+        text:[String]
+      }
+});
+var PPTennisSchema = new mongoose.Schema({
+      startdata:{
+        ID:String,
+        realtime:Boolean,
+        creater:String,
+        player1:String,
+        player2:String,
+        player3:String,
+        player4:String,
+        gametype:String,
+        set:Number,
+        game:Number,
+        tiebreak:Boolean,
+        deuce:Boolean
+      },
+      PointData1:{point:[Number]},
+      ServerSide1:{point:[Number]},
+      ReturnSide1:{point:[Number]},
+      ShotPoint1:{point:[Number]},
+      PointData2:{point:[Number]},
+      ServerSide2:{point:[Number]},
+      ReturnSide2:{point:[Number]},
+      ShotPoint2:{point:[Number]},
+      PointText:{
+        server:String,
+        text:[String]
+      }
 });
 var Chat = db.model('chat',ChatSchema);
 var Tennis = db.model('tennis',TennisSchema);
+var ppTennis = db.model('pptennis',PPTennisSchema);
 
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
@@ -78,6 +118,12 @@ io.sockets.on('connection',function(socket){
         if(err){console.log(err);}
         //接続したユーザーにチャットデータを送る
         socket.emit('create-chat',items);
+    });
+    Tennis.find(function(err,items){
+        if(err){console.log(err);}
+        //接続したユーザーにテニスデータを送る
+        socket.emit('create-tennis',items);
+        socket.broadcast.json.emit('create-tennis',items);
     });
     //-------チャットを表示する----------------------
     socket.on('send-chat',function(data){

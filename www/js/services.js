@@ -86,7 +86,9 @@ angular.module('starter.services', [])
       set:1,
       game:6,
       tiebreak:true,
-      deuce:true
+      deuce:true,
+      starttime:1,
+      finishtime:1
     };
     return {
       all:function(){

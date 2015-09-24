@@ -59,6 +59,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
               tennisdata.game = game;
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
+              tennisdata.starttime=Date.now();
               socket.emit("tennis-start",{tennis:tennisdata});
             }
           });
@@ -86,6 +87,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
               tennisdata.game = game;
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
+              tennisdata.starttime=Date.now();
               socket.emit("tennis-start",{tennis:tennisdata});
             } 
           });
@@ -104,7 +106,10 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 //--scoreboardCtrl----------------------------------------------------------------
 //----------------------
 .controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket){
-//---------変数設定--------------------------------------------------------------
+    //---------変数設定--------------------------------------------------------------
+    var tennisdata = TennisID.all();
+
+
     var setpoint1=0,setpoint2=0,gamepoint1=0,gamepoint2=0,point1=0,point2=0;
     var winner="途中で終了しました。";
     var isTiebreak = false,
@@ -127,13 +132,13 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 
     var isside = 0;//0=fore 1=back hand
 //--------データ用変数の定義-----------------------------------------------------------------
-    var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0),
-        serverside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0),
-        returnside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0),
+        serverside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+        returnside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         shotdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-    var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0),
-        serverside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0),
-        returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
+        serverside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
+        returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 //---------初期設定--------------------------------------------------------------------------
     $scope.agcreater = creater;
@@ -161,83 +166,140 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
     $scope.strokebutton2 = true;
     //-------player1ボタンクリック挙動------------------------------------------------
 $scope.servicein1 = function(){
+  ForeBack();
   displayReceiver();
   if(foreback == 0){
     if(faultcount==0){
       serverside1[0]++;
+      serverside1[12]++;
     }else if(faultcount==1){
       serverside1[2]++;
+      serverside1[13]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
-      serverside1[2]++;
+      serverside1[1]++;
+      serverside1[14]++;
     }else if(faultcount==1){
       serverside1[3]++;
+      serverside1[15]++;
     }
   }
   isStroke=0;
 }
 $scope.serviceace1 = function(){
+  ForeBack();
   point1++;
   displayServer();
   ClickPoint(1,point1);
   if(foreback == 0){
     if(faultcount==0){
+      serverside1[0]++;
       serverside1[4]++;
+      serverside1[12]++;
+      pointdata1[0]++;
+      pointdata1[3]++;
     }else if(faultcount==1){
-      serverside1[5]++;
+      serverside1[2]++;
+      serverside1[6]++;
+      serverside1[13]++;
+      pointdata1[0]++;
+      pointdata1[5]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
-      serverside1[6]++;
+      serverside1[1]++;
+      serverside1[5]++;
+      serverside1[14]++;
+      pointdata1[0]++;
+      pointdata1[4]++;
     }else if(faultcount==1){
+      serverside1[3]++;
       serverside1[7]++;
+      serverside1[15]++;
+      pointdata1[0]++;
+      pointdata1[6]++;
     }
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.fault1 = function(){
+  ForeBack();
   $scope.faultbutton1=false;
   $scope.doublefaultbutton1=true;
   if(foreback==0){
     serverside1[8]++;
+    serverside1[12]++;
   }else if(foreback==1){
     serverside1[9]++;
+    serverside1[14]++;
   }
   faultcount=1;
 }
 $scope.doublefault1 = function(){
+  ForeBack();
   point2++;
   displayServer();
   ClickPoint(2,point2);
   if(foreback==0){
     serverside1[10]++;
+    serverside1[13]++;
+    pointdata2[0]++;
   }else if(foreback==1){
     serverside1[11]++;
+    serverside1[15]++;
+    pointdata2[0]++;
   }
   faultcount=0;
   isStroke=0;
 }
-$scope.returnin1 = function(){  
+$scope.returnin1 = function(){
+  ForeBack();
+  ConfirmSide();
   displayType(5);
   if(foreback==0){
     if(faultcount==0){
-      returnside1[0]++;
+      if(isside==0){
+        returnside1[0]++;
+        returnside1[24]++;
+      }else if(isside==1){
+        returnside1[20]++;
+        returnside1[25]++;
+      }
     }else if(faultcount==1){
-      returnside1[2]++;
+      if(isside==0){
+        returnside1[2]++;
+        returnside1[26]++;
+      }else if(isside==1){
+        returnside1[22]++;
+        returnside1[27]++;
+      }
     }
   }else if(foreback==1){
     if(faultcount==0){
-      returnside1[1]++;
+      if(isside==0){
+        returnside1[1]++;
+        returnside1[28]++;
+      }else if(isside==1){
+        returnside1[21]++;
+        returnside1[29]++;
+      }
     }else if(faultcount==1){
-      returnside[3]++;
+      if(isside==0){
+        returnside1[3]++;
+        returnside1[30]++;
+      }else if(isside==1){
+        returnside1[23]++;
+        returnside1[31]++;
+      }
     }
   }
-  faultcount=0;
   isStroke=0;
 }
 $scope.returnace1 = function(){
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
@@ -246,35 +308,60 @@ $scope.returnace1 = function(){
     if(faultcount==0){
       if(isside==0){
         returnside1[4]++;
+        returnside1[24]++;
+        pointdata1[1]++;
       }else if(isside==1){
         returnside1[5]++;
+        returnside1[25]++;
+        pointdata1[2]++;
       }
+      pointdata1[0]++;
+      pointdata1[7]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside1[8]++;
+        returnside1[26]++;
+        pointdata1[1]++;
       }else if(isside==1){
         returnside1[9]++;
+        returnside1[27]++;
+        pointdata1[2]++;
       }
+      pointdata1[0]++;
+      pointdata1[9]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
       if(isside==0){
         returnside1[6]++;
+        retunrside1[28]++;
+        pointdata1[1]++;
       }else if(isside==1){
         returnside1[7]++;
+        returnside1[29]++;
+        pointdata1[2]++;
       }
+      pointdata1[0]++;
+      pointdata1[8]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside1[10]++;
+        returnside1[30]++;
+        pointdata1[1]++;
       }else if(isside==1){
         returnside1[11]++;
+        returnside1[31]++;
+        pointdata1[2]++;
       }
+      pointdata1[0]++;
+      pointdata1[10]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.returnmiss1 = function(){  
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
@@ -283,113 +370,330 @@ $scope.returnmiss1 = function(){
     if(faultcount==0){
       if(isside==0){
         returnside1[12]++;
+        returnside1[24]++;
       }else if(isside==1){
         returnside1[14]++;
+        returnside1[25]++;
       }
+      pointdata2[0]++;
+      pointdata2[3]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside1[16]++;
+        returnside1[26]++;
       }else if(isside==1){
         returnside1[18]++;
+        returnside1[27]++;
       }
+      pointdata2[0]++;
+      pointdata2[5]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
       if(isside==0){
         returnside1[13]++;
+        returnside1[28]++;
       }else if(isside==1){
         returnside1[15]++;
+        returnside1[29]++;
       }
+      pointdata2[0]++;
+      pointdata2[4]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside1[17]++;
+        returnside1[30]++;
       }else if(isside==1){
         returnside1[19]++;
+        returnside1[31]++;
       }
+      pointdata2[0]++;
+      pointdata2[6]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.win1 = function(){  
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
+  if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[3]++;
+      }else if(faultcount==1){
+        pointdata1[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[4]++;
+      }else if(faultcount==1){
+        pointdata1[6]++;
+      }
+    }
+    pointdata1[0]++;
+  }else if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[7]++;
+      }else if(faultcount==1){
+        pointdata1[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[8]++;
+      }else if(faultcount==1){
+        pointdata1[10]++;
+      }
+    }
+    pointdata1[0]++;
+  }
   ClickPoint(1,point1);
   if(isStroke==0){
     if(isside==0){
       shotdata1[0]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata1[1]++;
+      pointdata1[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata1[8]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata1[9]++;
+      pointdata1[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.side1 = function(){  
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[3]++;
+      }else if(faultcount==1){
+        pointdata2[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[4]++;
+      }else if(faultcount==1){
+        pointdata2[6]++;
+      }
+    }
+    pointdata2[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[7]++;
+      }else if(faultcount==1){
+        pointdata2[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[8]++;
+      }else if(faultcount==1){
+        pointdata2[10]++;
+      }
+    }
+    pointdata2[0]++;
+  }
   ClickPoint(2,point2);
   if(isStroke==0){
     if(isside==0){
       shotdata1[2]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[3]++;
+      pointdata2[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata1[10]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[11]++;
+      pointdata2[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.back1 = function(){  
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[3]++;
+      }else if(faultcount==1){
+        pointdata2[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[4]++;
+      }else if(faultcount==1){
+        pointdata2[6]++;
+      }
+    }
+    pointdata2[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[7]++;
+      }else if(faultcount==1){
+        pointdata2[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[8]++;
+      }else if(faultcount==1){
+        pointdata2[10]++;
+      }
+    }
+    pointdata2[0]++;
+  }
   ClickPoint(2,point2);
   if(isStroke==0){
     if(isside==0){
       shotdata1[4]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[5]++;
+      pointdata2[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata1[12]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[13]++;
+      pointdata2[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.net1 = function(){  
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[3]++;
+      }else if(faultcount==1){
+        pointdata2[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[4]++;
+      }else if(faultcount==1){
+        pointdata2[6]++;
+      }
+    }
+    pointdata2[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[7]++;
+      }else if(faultcount==1){
+        pointdata2[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[8]++;
+      }else if(faultcount==1){
+        pointdata2[10]++;
+      }
+    }
+    pointdata2[0]++;
+  }
   ClickPoint(2,point2);
   if(isStroke==0){
     if(isside==0){
       shotdata1[6]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[7]++;
+      pointdata2[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata1[14]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata1[15]++;
+      pointdata2[2]++;
+    }
+  }
+  faultcount=0;
+  isStroke=0;
+}
+$scope.unerror1 = function(){
+  ForeBack();
+  ConfirmSide();
+  point2++;
+  displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[3]++;
+      }else if(faultcount==1){
+        pointdata2[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[4]++;
+      }else if(faultcount==1){
+        pointdata2[6]++;
+      }
+    }
+    pointdata2[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[7]++;
+      }else if(faultcount==1){
+        pointdata2[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[8]++;
+      }else if(faultcount==1){
+        pointdata2[10]++;
+      }
+    }
+    pointdata2[0]++;
+  }
+  ClickPoint(2,point2);
+  if(isStroke==0){
+    if(isside==0){
+      shotdata1[16]++;
+      pointdata2[1]++;
+    }else if(isside==1){
+      shotdata1[17]++;
+      pointdata2[2]++;
+    }
+  }else if(isStroke==1){
+    if(isside==0){
+      shotdata1[18]++;
+      pointdata2[1]++;
+    }else if(isside==1){
+      shotdata1[19]++;
+      pointdata2[2]++;
     }
   }
   faultcount=0;
@@ -397,83 +701,140 @@ $scope.net1 = function(){
 }
 //-------player2ボタンクリック挙動------------------------------------------------
 $scope.servicein2 = function(){
+  ForeBack();
   displayReceiver();
   if(foreback == 0){
     if(faultcount==0){
       serverside2[0]++;
+      serverside2[12]++;
     }else if(faultcount==1){
       serverside2[2]++;
+      serverside2[13]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
-      serverside2[2]++;
+      serverside2[1]++;
+      serverside2[14]++;
     }else if(faultcount==1){
       serverside2[3]++;
+      serverside2[15]++;
     }
   }
   isStroke=0;
 }
 $scope.serviceace2 = function(){  
+  ForeBack();
   point2++;
   displayServer();
   ClickPoint(2,point2);
   if(foreback == 0){
     if(faultcount==0){
+      serverside2[0]++;
       serverside2[4]++;
+      serverside2[12]++;
+      pointdata2[0]++;
+      pointdata2[3]++;
     }else if(faultcount==1){
-      serverside2[5]++;
+      serverside2[2]++;
+      serverside2[6]++;
+      serverside2[13]++;
+      pointdata2[0]++;
+      pointdata2[5]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
-      serverside2[6]++;
+      serverside2[1]++;
+      serverside2[5]++;
+      serverside2[14]++;
+      pointdata2[0]++;
+      pointdata2[4]++;
     }else if(faultcount==1){
+      serverside2[3]++;
       serverside2[7]++;
+      serverside2[15]++;
+      pointdata2[0]++;
+      pointdata2[6]++;
     }
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.fault2 = function(){  
+  ForeBack();
   $scope.faultbutton2=false;
   $scope.doublefaultbutton2=true;
   if(foreback==0){
     serverside2[8]++;
+    serverside2[12]++;
   }else if(foreback==1){
     serverside2[9]++;
+    serverside2[14]++;
   }
   faultcount=1;
 }
 $scope.doublefault2 = function(){
+  ForeBack();
   point1++;
   displayServer();
   ClickPoint(1,point1);
   if(foreback==0){
     serverside2[10]++;
+    serverside2[13]++;
+    pointdata1[0]++;
   }else if(foreback==1){
     serverside2[11]++;
+    serverside2[15]++;
+    pointdata1[0]++;
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.returnin2 = function(){  
+  ForeBack();
+  ConfirmSide();
   displayType(5);
   if(foreback==0){
     if(faultcount==0){
-      returnside2[0]++;
+      if(isside==0){
+        returnside2[0]++;
+        returnside2[24]++;
+      }else if(isside==1){
+        returnside2[20]++;
+        returnside2[25]++;
+      }
     }else if(faultcount==1){
-      returnside2[2]++;
+      if(isside==0){
+        returnside2[2]++;
+        returnside2[26]++;
+      }else if(isside==1){
+        returnside2[22]++;
+        returnside2[27]++;
+      }
     }
   }else if(foreback==1){
     if(faultcount==0){
-      returnside2[1]++;
+      if(isside==0){
+        returnside2[1]++;
+        returnside2[28]++;
+      }else if(isside==1){
+        returnside2[21]++;
+        returnside2[29]++;
+      }
     }else if(faultcount==1){
-      returnside[3]++;
+      if(isside==0){
+        returnside2[3]++;
+        returnside2[30]++;
+      }else if(isside==1){
+        returnside2[23]++;
+        returnside2[31]++;
+      }
     }
   }
-  faultcount=0;
   isStroke=0;
 }
 $scope.returnace2 = function(){
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
@@ -482,35 +843,60 @@ $scope.returnace2 = function(){
     if(faultcount==0){
       if(isside==0){
         returnside2[4]++;
+        returnside2[24]++;
+        pointdata2[1]++;
       }else if(isside==1){
         returnside2[5]++;
+        returnside2[25]++;
+        pointdata2[2]++;
       }
+      pointdata2[0]++;
+      pointdata2[7]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside2[8]++;
+        returnside2[26]++;
+        pointdata2[1]++;
       }else if(isside==1){
         returnside2[9]++;
+        returnside2[27]++;
+        pointdata2[2]++;
       }
+      pointdata2[0]++;
+      pointdata2[9]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
       if(isside==0){
         returnside2[6]++;
+        retunrside1[28]++;
+        pointdata2[1]++;
       }else if(isside==1){
         returnside2[7]++;
+        returnside2[29]++;
+        pointdata2[2]++;
       }
+      pointdata2[0]++;
+      pointdata2[8]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside2[10]++;
+        returnside2[30]++;
+        pointdata2[1]++;
       }else if(isside==1){
         returnside2[11]++;
+        returnside2[31]++;
+        pointdata2[2]++;
       }
+      pointdata2[0]++;
+      pointdata2[10]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.returnmiss2 = function(){
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
@@ -519,113 +905,330 @@ $scope.returnmiss2 = function(){
     if(faultcount==0){
       if(isside==0){
         returnside2[12]++;
+        returnside2[24]++;
       }else if(isside==1){
         returnside2[14]++;
+        returnside2[25]++;
       }
+      pointdata1[0]++;
+      pointdata1[3]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside2[16]++;
+        returnside2[26]++;
       }else if(isside==1){
         returnside2[18]++;
+        returnside2[27]++;
       }
+      pointdata1[0]++;
+      pointdata1[5]++;
     }
   }else if(foreback==1){
     if(faultcount==0){
       if(isside==0){
         returnside2[13]++;
+        returnside2[28]++;
       }else if(isside==1){
         returnside2[15]++;
+        returnside2[29]++;
       }
+      pointdata1[0]++;
+      pointdata1[4]++;
     }else if(faultcount==1){
       if(isside==0){
         returnside2[17]++;
+        returnside2[30]++;
       }else if(isside==1){
         returnside2[19]++;
+        returnside2[31]++;
       }
+      pointdata1[0]++;
+      pointdata1[6]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.win2 = function(){  
+  ForeBack();
   ConfirmSide();
   point2++;
   displayServer();
+  if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[3]++;
+      }else if(faultcount==1){
+        pointdata2[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[4]++;
+      }else if(faultcount==1){
+        pointdata2[6]++;
+      }
+    }
+    pointdata2[0]++;
+  }else if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata2[7]++;
+      }else if(faultcount==1){
+        pointdata2[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata2[8]++;
+      }else if(faultcount==1){
+        pointdata2[10]++;
+      }
+    }
+    pointdata2[0]++;
+  }
   ClickPoint(2,point2);
   if(isStroke==0){
     if(isside==0){
       shotdata2[0]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata2[1]++;
+      pointdata2[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata2[8]++;
+      pointdata2[1]++;
     }else if(isside==1){
       shotdata2[9]++;
+      pointdata2[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.side2 = function(){  
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[3]++;
+      }else if(faultcount==1){
+        pointdata1[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[4]++;
+      }else if(faultcount==1){
+        pointdata1[6]++;
+      }
+    }
+    pointdata1[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[7]++;
+      }else if(faultcount==1){
+        pointdata1[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[8]++;
+      }else if(faultcount==1){
+        pointdata1[10]++;
+      }
+    }
+    pointdata1[0]++;
+  }
   ClickPoint(1,point1);
   if(isStroke==0){
     if(isside==0){
       shotdata2[2]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[3]++;
+      pointdata1[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata2[10]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[11]++;
+      pointdata1[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.back2 = function(){  
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[3]++;
+      }else if(faultcount==1){
+        pointdata1[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[4]++;
+      }else if(faultcount==1){
+        pointdata1[6]++;
+      }
+    }
+    pointdata1[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[7]++;
+      }else if(faultcount==1){
+        pointdata1[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[8]++;
+      }else if(faultcount==1){
+        pointdata1[10]++;
+      }
+    }
+    pointdata1[0]++;
+  }
   ClickPoint(1,point1);
   if(isStroke==0){
     if(isside==0){
       shotdata2[4]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[5]++;
+      pointdata1[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata2[12]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[13]++;
+      pointdata1[2]++;
     }
   }
   faultcount=0;
   isStroke=0;
 }
 $scope.net2 = function(){  
+  ForeBack();
   ConfirmSide();
   point1++;
   displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[3]++;
+      }else if(faultcount==1){
+        pointdata1[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[4]++;
+      }else if(faultcount==1){
+        pointdata1[6]++;
+      }
+    }
+    pointdata1[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[7]++;
+      }else if(faultcount==1){
+        pointdata1[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[8]++;
+      }else if(faultcount==1){
+        pointdata1[10]++;
+      }
+    }
+    pointdata1[0]++;
+  }
   ClickPoint(1,point1);
   if(isStroke==0){
     if(isside==0){
       shotdata2[6]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[7]++;
+      pointdata1[2]++;
     }
   }else if(isStroke==1){
     if(isside==0){
       shotdata2[14]++;
+      pointdata1[1]++;
     }else if(isside==1){
       shotdata2[15]++;
+      pointdata1[2]++;
+    }
+  }
+  faultcount=0;
+  isStroke=0;
+}
+$scope.unerror2 = function(){
+  ForeBack();
+  ConfirmSide();
+  point1++;
+  displayServer();
+  if(Nserverchange==1 || Nserverchange==3){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[3]++;
+      }else if(faultcount==1){
+        pointdata1[5]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[4]++;
+      }else if(faultcount==1){
+        pointdata1[6]++;
+      }
+    }
+    pointdata1[0]++;
+  }else if(Nserverchange==0 || Nserverchange==2){
+    if(foreback==0){
+      if(faultcount==0){
+        pointdata1[7]++;
+      }else if(faultcount==1){
+        pointdata1[9]++;
+      }
+    }else if(foreback==1){
+      if(faultcount==0){
+        pointdata1[8]++;
+      }else if(faultcount==1){
+        pointdata1[10]++;
+      }
+    }
+    pointdata1[0]++;
+  }
+  ClickPoint(1,point1);
+  if(isStroke==0){
+    if(isside==0){
+      shotdata2[16]++;
+      pointdata1[1]++;
+    }else if(isside==1){
+      shotdata2[17]++;
+      pointdata1[2]++;
+    }
+  }else if(isStroke==1){
+    if(isside==0){
+      shotdata2[18]++;
+      pointdata1[1]++;
+    }else if(isside==1){
+      shotdata2[19]++;
+      pointdata1[2]++;
     }
   }
   faultcount=0;
@@ -707,7 +1310,6 @@ function ScorePoint(check,point){
 }
 
 function GamePoint(check,gamepoint){
-  foreback = 0;//fore
   ServerChange();
   if(gamepoint < gamecount || gamepoint1 == gamecount && gamepoint2 == (gamecount-1) || gamepoint1 == (gamecount-1) && gamepoint2 == gamecount ){
     ClearPoint();
@@ -822,11 +1424,20 @@ function ClearPoint(){
 }
 
 function ClickPoint(check,point){
+  console.log("foreback = "+foreback);
   if(!isTiebreak){
     ScorePoint(check,point);
   }else if(isTiebreak){
     TieBreak(check,point);
   }
+}
+function ForeBack(){
+    if((point1+point2)%2 == 0){
+      foreback = 0;
+    }else{
+      foreback = 1;
+    }
+    console.log("foreback = "+foreback+"&& isside = "+isside+"&& faultcount ="+faultcount+"Nserverchange = "+Nserverchange);
 }
   function ServerChange(){
     Nserverchange++;
@@ -1035,11 +1646,30 @@ function ConfirmSide(){
       }
     })
   }
+function PointUpdate(){
+  socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2});
+  console.log(serverside1);
+}
 })
 
 //---view game in real time controller-----------------------------------------------------
-.controller('ViewgameCtrl',function($scope){
-
+.controller('ViewgameCtrl',function($scope,socket){
+    var tennisdatas = new Array();
+    $scope.tennisdatas = tennisdatas;
+    socket.on('create-tennis',function(tennisdata){
+        tennisdata.forEach(function(data){
+            if(data.startdata.realtime==true){
+              tennisdatas.push(data);
+              console.log(data);
+            }
+        });
+    });
+    socket.on('tennis-start',function(data){
+        tennisdatas.push(data);
+    });
+    socket.on('pointtext-update',function(data){
+    
+    });
 })
 
 

@@ -64,12 +64,14 @@ var TennisSchema = new mongoose.Schema({
         set:Number,
         game:Number,
         tiebreak:Boolean,
-        deuce:Boolean
+        deuce:Boolean,
+        starttime:Number,
+        finishtime:Number
       },
-      PointData:{point:[Number]},
-      ServerSide:{point:[Number]},
-      ReturnSide:{point:[Number]},
-      ShotPoint:{point:[Number]},
+      PointData1:{point:[Number]},
+      ServerSide1:{point:[Number]},
+      ReturnSide1:{point:[Number]},
+      ShotPoint1:{point:[Number]},
       PointData2:{point:[Number]},
       ServerSide2:{point:[Number]},
       ReturnSide2:{point:[Number]},
@@ -92,7 +94,9 @@ var PPTennisSchema = new mongoose.Schema({
         set:Number,
         game:Number,
         tiebreak:Boolean,
-        deuce:Boolean
+        deuce:Boolean,
+        starttime:Number,
+        finishtime:Number
       },
       PointData1:{point:[Number]},
       ServerSide1:{point:[Number]},
@@ -123,7 +127,6 @@ io.sockets.on('connection',function(socket){
         if(err){console.log(err);}
         //接続したユーザーにテニスデータを送る
         socket.emit('create-tennis',items);
-        socket.broadcast.json.emit('create-tennis',items);
     });
     //-------チャットを表示する----------------------
     socket.on('send-chat',function(data){
@@ -141,8 +144,13 @@ io.sockets.on('connection',function(socket){
        tennis.startdata = data.tennis;
        tennis.save();
        socket.emit('tennis-start',tennis);
-       socket.broadcast.json.emit('tennis-start');
-    });
+       socket.broadcast.json.emit('tennis-start',tennis);
+   });
+   socket.on('point-update',function(data){
+       Tennis.findOne({_id:data.dataid},function(err,tennis){
+           console.log(tennis._id);
+        });
+   });
 });
 //------------------------------------------------------------------------------------------
 if(app.get('env') === 'development'){

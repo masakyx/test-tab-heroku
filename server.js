@@ -77,7 +77,7 @@ var TennisSchema = new mongoose.Schema({
       ReturnSide2:{point:[Number]},
       ShotPoint2:{point:[Number]},
       PointText:{
-        server:String,
+        server:[String],
         text:[String]
       }
 });
@@ -107,7 +107,7 @@ var PPTennisSchema = new mongoose.Schema({
       ReturnSide2:{point:[Number]},
       ShotPoint2:{point:[Number]},
       PointText:{
-        server:String,
+        server:[String],
         text:[String]
       }
 });
@@ -142,13 +142,31 @@ io.sockets.on('connection',function(socket){
        var tennis = new Tennis();
        console.log
        tennis.startdata = data.tennis;
+       tennis.PointText.server[0]="●";
+       tennis.PointText.server[1]="";
+       for(var i=0;i<6;i++){
+        tennis.PointText.text[i]="0";
+       }
        tennis.save();
        socket.emit('tennis-start',tennis);
        socket.broadcast.json.emit('tennis-start',tennis);
    });
    socket.on('point-update',function(data){
        Tennis.findOne({_id:data.dataid},function(err,tennis){
-           console.log(tennis._id);
+           tennis.PointData1.point=data.pointdata1;
+           tennis.PointData2.point=data.pointdata2;
+           tennis.ServerSide1.point=data.server1;
+           tennis.ServerSide2.point=data.server2;
+           tennis.ReturnSide1.point=data.return1;
+           tennis.ReturnSide2.point=data.return2;
+           tennis.ShotPoint1.point=data.shot1;
+           tennis.ShotPoint2.point=data.shot2;
+           tennis.PointText.text=data.pointtext;
+           tennis.PointText.server=data.server;
+           tennis.save();
+           socket.emit('point-update',tennis);
+           socket.broadcast.json.emit('point-update',tennis);
+           console.log("アップデートされたぞ");
         });
    });
 });

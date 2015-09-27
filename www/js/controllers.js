@@ -139,7 +139,9 @@ var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0),
 var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
         serverside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-        shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+      shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+var pointtext = new Array("0","0","0","0","0","0");
+var server = new Array("●","");
 //---------初期設定--------------------------------------------------------------------------
     $scope.agcreater = creater;
     $scope.agserver1 = TennisID.all().player1;
@@ -254,6 +256,7 @@ $scope.doublefault1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.returnin1 = function(){
   ForeBack();
@@ -359,6 +362,7 @@ $scope.returnace1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.returnmiss1 = function(){  
   ForeBack();
@@ -413,6 +417,7 @@ $scope.returnmiss1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.win1 = function(){  
   ForeBack();
@@ -470,6 +475,7 @@ $scope.win1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.side1 = function(){  
   ForeBack();
@@ -527,6 +533,7 @@ $scope.side1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.back1 = function(){  
   ForeBack();
@@ -584,6 +591,7 @@ $scope.back1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.net1 = function(){  
   ForeBack();
@@ -641,6 +649,7 @@ $scope.net1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.unerror1 = function(){
   ForeBack();
@@ -698,6 +707,7 @@ $scope.unerror1 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 //-------player2ボタンクリック挙動------------------------------------------------
 $scope.servicein2 = function(){
@@ -789,6 +799,7 @@ $scope.doublefault2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.returnin2 = function(){  
   ForeBack();
@@ -894,6 +905,7 @@ $scope.returnace2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.returnmiss2 = function(){
   ForeBack();
@@ -948,6 +960,7 @@ $scope.returnmiss2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.win2 = function(){  
   ForeBack();
@@ -1005,6 +1018,7 @@ $scope.win2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.side2 = function(){  
   ForeBack();
@@ -1062,6 +1076,7 @@ $scope.side2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.back2 = function(){  
   ForeBack();
@@ -1119,6 +1134,7 @@ $scope.back2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.net2 = function(){  
   ForeBack();
@@ -1176,6 +1192,7 @@ $scope.net2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 $scope.unerror2 = function(){
   ForeBack();
@@ -1233,12 +1250,14 @@ $scope.unerror2 = function(){
   }
   faultcount=0;
   isStroke=0;
+  PointUpdate();
 }
 
 //--------チェンジボタンクリック挙動-----------------------------------------------------
 $scope.serverchange = function(){
   ServerChange();
   faultcount=0;
+  PointUpdate();
 }
 $scope.courtchange = function(){
   faultcount=0;
@@ -1646,29 +1665,50 @@ function ConfirmSide(){
       }
     })
   }
-function PointUpdate(){
-  socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2});
-  console.log(serverside1);
-}
+  function PointUpdate(){
+    pointtext[0]=$scope.agpoint2;
+    pointtext[1]=$scope.agpoint1;
+    pointtext[2]=$scope.aggame2;
+    pointtext[3]=$scope.aggame1;
+    pointtext[4]=$scope.agset2;
+    pointtext[5]=$scope.agset1;
+    if(Nserverchange==0 || Nserverchange==2){
+      server[0]="●";
+      server[1]="";
+    }else if(Nserverchange==1 || Nserverchange==3){
+      server[0]="";
+      server[1]="●";
+    }
+    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,server:server});
+  }
 })
 
 //---view game in real time controller-----------------------------------------------------
-.controller('ViewgameCtrl',function($scope,socket){
+.controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate){
+
     var tennisdatas = new Array();
     $scope.tennisdatas = tennisdatas;
     socket.on('create-tennis',function(tennisdata){
         tennisdata.forEach(function(data){
             if(data.startdata.realtime==true){
               tennisdatas.push(data);
-              console.log(data);
             }
+            $ionicFrostedDelegate.update();
+            $ionicScrollDelegate.scrollBottom(true);
         });
     });
     socket.on('tennis-start',function(data){
         tennisdatas.push(data);
+    $ionicFrostedDelegate.update();
+    $ionicScrollDelegate.scrollBottom(true);
     });
-    socket.on('pointtext-update',function(data){
-    
+    socket.on('point-update',function(data){
+      $scope.tennisdatas.forEach(function(tennis){
+          if(tennis._id == data._id){
+            tennis.PointText.text = data.PointText.text;
+            tennis.PointText.server = data.PointText.server;
+          }
+      });
     });
 })
 

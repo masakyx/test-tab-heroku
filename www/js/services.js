@@ -4,9 +4,9 @@ angular.module('starter.services', [])
 //--socket-factory------------------------------------------------------------------
 .factory('socket',function($rootScope){
     // var socket = io.connect('https://tennis-app-ios-0605.herokuapp.com/');
-    //var socket = io.connect(location.href+"/");
+    var socket = io.connect(location.href+"/");
     //local version ios  ->
-    var socket = io.connect("http://localhost:5000");
+   // var socket = io.connect("http://localhost:5000");
     //local version android ->
       //var socket = io.connect("http://10.0.2.2:5000");
     return {

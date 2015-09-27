@@ -4,6 +4,7 @@
   <div ng-repeat="tennisdata in tennisdatas">
     <div class="card positive">
       <p class="dark">開始時間:{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
+      <p class="dark">CREATER : {{tennisdata.startdata.creater}}</p>
       <div class="row header">
         <div align="center" class="col vPlayer dark">試合状況</div>
         <div align="center" class="col vPlayer1 dark">{{tennisdata.startdata.player1+"/"+tennisdata.startdata.player3}}</div>
@@ -11,23 +12,23 @@
       </div>
       <div class="row">
         <div align="center" class="col vServer dark">Server</div>
-        <div align="center" class="col vServer1">Server1</div>
-        <div align="center" class="col vServer2">Server2</div>
+        <div align="center" class="col vServer1" >{{tennisdata.PointText.server[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.PointText.server[1]}}</div>
       </div>
       <div class="row">
-        <div align="center" class="col vSet dark">Set</div>
-        <div align="center" class="col vSet1">Set1</div>
-        <div align="center" class="col vSet2">Set2</div>
+        <div align="center" class="col vSet dark">SET</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointText.text[5]}}</div>
+        <div align="center" class="col vSet2">{{tennisdata.PointText.text[4]}}</div>
       </div>
       <div class="row">
-        <div align="center" class="col vGame dark">Game</div>
-        <div align="center" class="col vGame1">Game1</div>
-        <div align="center" class="col vGame2">Game2</div>
+        <div align="center" class="col vGame dark">GAME</div>
+        <div align="center" class="col vGame1">{{tennisdata.PointText.text[3]}}</div>
+        <div align="center" class="col vGame2">{{tennisdata.PointText.text[2]}}</div>
       </div>
       <div class="row">
-        <div align="center" class="col vScore dark">Score</div>
-        <div align="center" class="col vScore1">Score1</div>
-        <div align="center" class="col vScore2">Score2</div>
+        <div align="center" class="col vScore dark">SCORE</div>
+        <div align="center" class="col vScore1">{{tennisdata.PointText.text[1]}}</div>
+        <div align="center" class="col vScore2">{{tennisdata.PointText.text[0]}}</div>
       </div>
     </div>
   </div>

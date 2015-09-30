@@ -45,13 +45,11 @@ var ChatSchema = new mongoose.Schema({
     date:String,
     name:String,
     message:String,
-    category:String,
     time:Number,
-    playername1:String,
-    playername2:String,
-    winner:String
 });
 var TennisSchema = new mongoose.Schema({
+      winner:String,
+      finishtime:Number,
       startdata:{
         ID:String,
         realtime:Boolean,
@@ -65,8 +63,7 @@ var TennisSchema = new mongoose.Schema({
         game:Number,
         tiebreak:Boolean,
         deuce:Boolean,
-        starttime:Number,
-        finishtime:Number
+        starttime:Number
       },
       PointData1:{point:[Number]},
       ServerSide1:{point:[Number]},
@@ -82,6 +79,8 @@ var TennisSchema = new mongoose.Schema({
       }
 });
 var PPTennisSchema = new mongoose.Schema({
+      winner:String,
+      finishtime:Number,
       startdata:{
         ID:String,
         realtime:Boolean,
@@ -95,8 +94,7 @@ var PPTennisSchema = new mongoose.Schema({
         game:Number,
         tiebreak:Boolean,
         deuce:Boolean,
-        starttime:Number,
-        finishtime:Number
+        starttime:Number
       },
       PointData1:{point:[Number]},
       ServerSide1:{point:[Number]},
@@ -111,13 +109,47 @@ var PPTennisSchema = new mongoose.Schema({
         text:[String]
       }
 });
+var GameData = new mongoose.Schema({
+      winner:String,
+      finishtime:Number,
+      startdata:{
+        ID:String,
+        realtime:Boolean,
+        creater:String,
+        player1:String,
+        player2:String,
+        player3:String,
+        player4:String,
+        gametype:String,
+        set:Number,
+        game:Number,
+        tiebreak:Boolean,
+        deuce:Boolean,
+        starttime:Number
+      },
+      PointData1:{point:[Number]},
+      ServerSide1:{point:[Number]},
+      ReturnSide1:{point:[Number]},
+      ShotPoint1:{point:[Number]},
+      PointData2:{point:[Number]},
+      ServerSide2:{point:[Number]},
+      ReturnSide2:{point:[Number]},
+      ShotPoint2:{point:[Number]},
+      PointText:{
+        server:[String],
+        text:[String]
+      }
+});
+
 var Chat = db.model('chat',ChatSchema);
 var Tennis = db.model('tennis',TennisSchema);
 var ppTennis = db.model('pptennis',PPTennisSchema);
+var Gamedata = db.model('gamedata',GameData);
 
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
+    console.log("connection");
     Chat.find(function(err,items){
         if(err){console.log(err);}
         //接続したユーザーにチャットデータを送る
@@ -149,7 +181,8 @@ io.sockets.on('connection',function(socket){
        }
        tennis.save();
        socket.emit('tennis-start',tennis);
-       socket.broadcast.json.emit('tennis-start',tennis);
+       socket.emit('tennis-viewer',tennis);
+       socket.broadcast.json.emit('tennis-viewer',tennis);
    });
    socket.on('point-update',function(data){
        Tennis.findOne({_id:data.dataid},function(err,tennis){
@@ -168,6 +201,29 @@ io.sockets.on('connection',function(socket){
            socket.broadcast.json.emit('point-update',tennis);
            console.log("アップデートされたぞ");
         });
+    });
+    socket.on('delete-data',function(data){
+        Tennis.findOne({_id:data.id},function(err,tennis){
+          tennis.winner=data.winner;
+          tennis.finishtime=data.finishtime;
+          tennis.save();
+          var gamedata = new Gamedata(tennis);
+          gamedata.save();
+          var timeData = new Date();
+          var month = timeData.getMonth()+1;
+          var chatdata = {
+            date:timeData.getFullYear()+"/"+month+"/"+timeData.getDate(),
+            name:"試合報告",
+            message:"勝者は"+data.winner+"です。",
+            time:data.finishtime,
+          }
+          var message = new Chat(chatdata);
+          socket.emit('send-chat',message);
+          socket.broadcast.json.emit('send-chat',message);
+          socket.emit('delete-data',tennis);
+          socket.broadcast.json.emit('delete-data',tennis);
+          tennis.remove();
+       }); 
    });
 });
 //------------------------------------------------------------------------------------------

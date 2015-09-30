@@ -3,8 +3,8 @@ angular.module('starter.services', [])
 
 //--socket-factory------------------------------------------------------------------
 .factory('socket',function($rootScope){
-    // var socket = io.connect('https://tennis-app-ios-0605.herokuapp.com/');
-    var socket = io.connect(location.href+"/");
+    var socket = io.connect('https://tennis-app-ios-0605.herokuapp.com/');
+    //var socket = io.connect(location.href+"/");
     //local version ios  ->
    // var socket = io.connect("http://localhost:5000");
     //local version android ->
@@ -30,49 +30,6 @@ angular.module('starter.services', [])
         }
     };
 })
-
-
-.factory('Datas',function(){
-    var datas = [
-      {
-        id:0,
-        name:"masaki",
-        result:45
-      },
-      {
-        id:1,
-        name:"daiki",
-        result:79
-      },
-      {
-        id:2,
-        name:"misaki",
-        result:98
-      },
-      {
-        id:3,
-        name:"hiroki",
-        result:23
-      },
-      {
-        id:4,
-        name:"cecilia",
-        result:100
-      },
-      {
-        id:5,
-        name:"nana",
-        result:30
-      }
-    ];
-
-    return {
-      all:function(){
-        return datas;
-      }
-    };
-})
-
 .factory('TennisID',function(){
     var tennisIDs = {
       ID:"a",
@@ -87,8 +44,7 @@ angular.module('starter.services', [])
       game:6,
       tiebreak:true,
       deuce:true,
-      starttime:1,
-      finishtime:1
+      starttime:1
     };
     return {
       all:function(){

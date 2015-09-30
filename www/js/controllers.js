@@ -1384,15 +1384,6 @@ function SetPoint(check,setpoint){
   $scope.aggame2="0";
   if(check==1){$scope.agset1=setpoint1;
   }else if(check==2){$scope.agset2=setpoint2;}
-  var time1 = new Date(),
-      year1 = time1.getFullYear(),
-      month1 = time1.getMonth()+1,
-      day1 = time1.getDate(),
-      ji1 = time1.getHours(),
-      hun1 = time1.getMinutes(),
-      byo1 = time1.getSeconds(),
-      finishtime = year1+"年"+month1+"月"+day1+"日"+ji1+"時"+hun1+"分"+byo1+"秒";
-  
   if(setcount == 1){
       if(setpoint1 == 1){
         if(gametype=="1"){winner=player1;
@@ -1432,8 +1423,10 @@ function SetPoint(check,setpoint){
     }
 }
 function FinishGame(){
+       var time=Date.now();
        window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
-        location.href = "#/tab/dash";
+       location.href = "#/tab/dash";
+       socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time});
 }
 function ClearPoint(){
   point1=0;
@@ -1697,7 +1690,7 @@ function ConfirmSide(){
             $ionicScrollDelegate.scrollBottom(true);
         });
     });
-    socket.on('tennis-start',function(data){
+    socket.on('tennis-viewer',function(data){
         tennisdatas.push(data);
     $ionicFrostedDelegate.update();
     $ionicScrollDelegate.scrollBottom(true);
@@ -1709,7 +1702,15 @@ function ConfirmSide(){
             tennis.PointText.server = data.PointText.server;
           }
       });
-    });
+  });
+  socket.on('delete-data',function(data){
+          tennisdatas.some(function(v,i){
+            if(v._id==data._id){
+              tennisdatas.splice(i,1);
+            }
+          });
+    console.log('deleteしたぞ');
+  });
 })
 
 
@@ -1724,7 +1725,6 @@ function ConfirmSide(){
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-  
   //-----チャット送信--------------------------------
   var messages = new Array();
   var timeData = new Date();
@@ -1744,11 +1744,7 @@ function ConfirmSide(){
         date:date,
         name:"Masaki",
         message:message,
-        category:"chat",
         time:time,
-        playername1:"player1",
-        playername2:"player2",
-        winner:"winner"   
       };
       $scope.message = "";
       socket.emit('send-chat',data);
@@ -1778,8 +1774,7 @@ function ConfirmSide(){
 })
 */
 //---my controller--------------
-.controller('DatalistCtrl',function($scope,Datas){
-    $scope.datas = Datas.all();
+.controller('DatalistCtrl',function($scope){
   
 })
 

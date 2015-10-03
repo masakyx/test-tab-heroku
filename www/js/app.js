@@ -77,15 +77,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         }
       }
     })
-    /* .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-      })*/
   //-----my data----------------
   .state('tab.data',{
     url: '/data',
@@ -95,6 +86,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
         controller:'DatalistCtrl'
       }
     }
+  })
+  .state('tab.datadetail',{
+      url:'/data/datadetail/:tennisdataId',
+      views:{
+        'tab-data':{
+          templateUrl:'templates/tab-data-detail.html',
+          controller:'DataDetailCtrl'
+        }
+      }
   })
   .state('tab.account', {
     url: '/account',

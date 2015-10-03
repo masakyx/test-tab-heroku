@@ -86,7 +86,7 @@ var Gamedata = db.model('gamedata',TennisSchema);
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
-    /*Chat.find(function(err,items){
+    Chat.find(function(err,items){
         if(err){console.log(err);}
         //接続したユーザーにチャットデータを送る
         socket.emit('create-chat',items);
@@ -95,8 +95,12 @@ io.sockets.on('connection',function(socket){
         if(err){console.log(err);}
         //接続したユーザーにテニスデータを送る
         socket.emit('create-tennis',items);
-    });*/
-    socket.on('connected',function(){  
+    });
+    Gamedata.find(function(err,items){
+        if(err){console.log(err);}
+        socket.emit('create-gamedata',items);
+    });
+   /*socket.on('connected',function(){  
       Chat.find(function(err,items){
           if(err){console.log(err);}
           //接続したユーザーにチャットデータを送る
@@ -107,7 +111,12 @@ io.sockets.on('connection',function(socket){
           //接続したユーザーにテニスデータを送る
           socket.emit('create-tennis',items);
       });
-    });
+      Gamedata.find(function(err,items){
+        if(err){console.log(err);}
+        socket.emit('create-gamedata',items);
+      })
+    });*/
+      
     //-------チャットを表示する----------------------
     socket.on('send-chat',function(data){
         console.log("messageきたぞ");
@@ -192,6 +201,8 @@ io.sockets.on('connection',function(socket){
           socket.emit('delete-data',tennis);
           socket.broadcast.json.emit('delete-data',tennis);
           tennis.remove();
+          socket.emit('add-gamedata',gamedata);
+          socket.broadcast.json.emit('add-gamedata',gamedata);
       });
       /*ppTennis.forEach(function(tennis){
           if(tennis.ID == data.id){

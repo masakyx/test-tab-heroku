@@ -108,8 +108,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 .controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket,$rootScope){
     //---------変数設定--------------------------------------------------------------
     //
-    $scope.$on('$ionicView.beforeLeave',function(){
-    });
+    /*$scope.$on('$ionicView.beforeLeave',function(){
+    });*/
     var tennisdata = TennisID.all();
 
 
@@ -1725,9 +1725,9 @@ function ConfirmSide(){
 
 //---view game in real time controller-----------------------------------------------------
 .controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate,$document){
-    $document.ready(function(){
+    /*$document.ready(function(){
         socket.emit('connected');
-    });
+    });*/
 
     var tennisdatas = new Array();
     $scope.tennisdatas = tennisdatas;
@@ -1773,9 +1773,10 @@ function ConfirmSide(){
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
-    $document.ready(function(){
+  //
+  /*$document.ready(function(){
         socket.emit('connected');
-    });
+    });*/
   //-----チャット送信--------------------------------
   var messages = new Array();
   var timeData = new Date();
@@ -1825,17 +1826,31 @@ function ConfirmSide(){
 })
 */
 //---my controller--------------
-.controller('DatalistCtrl',function($scope,$document,socket){
-    $document.ready(function(){
+.controller('DatalistCtrl',function($scope,$document,socket,TennisDataDetail){
+    /* $document.ready(function(){
         socket.emit('connected');
+    });*/
+    
+    var tennisdatas = new Array();
+    $scope.tennisdatas = tennisdatas;
+    socket.on('create-gamedata',function(gamedata){
+        gamedata.forEach(function(data){
+            tennisdatas.unshift(data);
+        });
+        TennisDataDetail.add(tennisdatas);
+        console.log(TennisDataDetail.all());
     });
-  
-})
+    socket.on('add-gamedata',function(gamedata){
+      tennisdatas.unshift(gamedata);
+      TennisDataDetail.all() = tennisdatas;
+    });
 
+})
+.controller('DataDetailCtrl',function($scope,TennisDataDetail,$stateParams){
+  $scope.tennisdata = TennisDataDetail.get($stateParams.tennisdataId);
+})
 .controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+
 })
 
 .controller('not',function($scope){

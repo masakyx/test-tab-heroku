@@ -105,8 +105,11 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 //----------------
 //--scoreboardCtrl----------------------------------------------------------------
 //----------------------
-.controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket){
+.controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket,$rootScope){
     //---------変数設定--------------------------------------------------------------
+    //
+    $scope.$on('$ionicView.beforeLeave',function(){
+    });
     var tennisdata = TennisID.all();
 
 
@@ -116,6 +119,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
         foreback = 0,//0=fore,1=back
         faultcount=0,//0=fault,1=double fault
         isStroke=0;//0=stroke,1=bolay
+
+    var isGameSet = false;
 
 
     var player1=TennisID.all().player1,
@@ -131,6 +136,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
         Nreceiverchange = 0;
 
     var isside = 0;//0=fore 1=back hand
+
+    var numaction = 0;
 //--------データ用変数の定義-----------------------------------------------------------------
 var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0),
         serverside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
@@ -226,6 +233,7 @@ $scope.serviceace1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.fault1 = function(){
   ForeBack();
@@ -257,6 +265,7 @@ $scope.doublefault1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.returnin1 = function(){
   ForeBack();
@@ -363,6 +372,7 @@ $scope.returnace1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.returnmiss1 = function(){  
   ForeBack();
@@ -418,6 +428,7 @@ $scope.returnmiss1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.win1 = function(){  
   ForeBack();
@@ -476,6 +487,7 @@ $scope.win1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.side1 = function(){  
   ForeBack();
@@ -534,6 +546,7 @@ $scope.side1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.back1 = function(){  
   ForeBack();
@@ -592,6 +605,7 @@ $scope.back1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.net1 = function(){  
   ForeBack();
@@ -650,6 +664,7 @@ $scope.net1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.unerror1 = function(){
   ForeBack();
@@ -708,6 +723,7 @@ $scope.unerror1 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 //-------player2ボタンクリック挙動------------------------------------------------
 $scope.servicein2 = function(){
@@ -769,6 +785,7 @@ $scope.serviceace2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.fault2 = function(){  
   ForeBack();
@@ -800,6 +817,7 @@ $scope.doublefault2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.returnin2 = function(){  
   ForeBack();
@@ -906,6 +924,7 @@ $scope.returnace2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.returnmiss2 = function(){
   ForeBack();
@@ -961,6 +980,7 @@ $scope.returnmiss2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.win2 = function(){  
   ForeBack();
@@ -1019,6 +1039,7 @@ $scope.win2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.side2 = function(){  
   ForeBack();
@@ -1077,6 +1098,7 @@ $scope.side2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.back2 = function(){  
   ForeBack();
@@ -1135,6 +1157,7 @@ $scope.back2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.net2 = function(){  
   ForeBack();
@@ -1193,6 +1216,7 @@ $scope.net2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 $scope.unerror2 = function(){
   ForeBack();
@@ -1251,6 +1275,7 @@ $scope.unerror2 = function(){
   faultcount=0;
   isStroke=0;
   PointUpdate();
+  FinishGame();
 }
 
 //--------チェンジボタンクリック挙動-----------------------------------------------------
@@ -1266,6 +1291,7 @@ $scope.pointback = function(){
   faultcount=0;
 }
 $scope.finishgame = function(){
+  ForceQuit();
 }
 //---------stroke or bolay button motion-----------------------------------------
 $scope.strokeClick1 = function(){
@@ -1389,52 +1415,71 @@ function SetPoint(check,setpoint){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }else if(setpoint2 == 1){
         if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }                                              
   }else if(setcount == 3){
       if(setpoint1 == 2){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }else if(setpoint2 == 2){
         if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }
   }else if(setcount == 5){
       if(setpoint1 == 3){
         if(gametype=="1"){winner=player1;
         }else{winner=player1+" & "+player3;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }else if(setpoint2 == 3){
         if(gametype=="1"){winner=player2;
         }else{winner=player2+" & "+player4;}
         console.log(winner + "が勝者です");
-        FinishGame();
+        isGameSet = true;
       }
     }
 }
 function FinishGame(){
-       var time=Date.now();
-       window.alert("ゲーム終了です。トップページへ戻ります！！試合結果の詳細は”試合データ”をみてください！！");
-       location.href = "#/tab/dash";
-       socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time});
+       if(isGameSet == true){
+          var time=Date.now(); 
+          var alertPopup = $ionicPopup.alert({
+            title:"ゲーム終了です。トップページに戻ります。試合結果の詳細は''試合データ''をみてください。"
+          });
+          location.href = "#/tab/dash";
+          socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time});
+        }
 }
+function ForceQuit(){
+          var confirmPopup = $ionicPopup.confirm({
+            title:'試合終了',
+            template:"試合終了でよろしいですか。",
+            cancelText:"Cancel",
+            cancelType:"button-calm",
+            okText:"OK",
+            okType:"button-energized"
+        });
+        confirmPopup.then(function(res){
+            if(res){
+              isGameSet = true;
+              FinishGame();
+            }
+          });
+    }
 function ClearPoint(){
   point1=0;
   point2=0;
   $scope.agpoint1="0";
   $scope.agpoint2="0";
 }
-
 function ClickPoint(check,point){
   console.log("foreback = "+foreback);
   if(!isTiebreak){
@@ -1659,6 +1704,7 @@ function ConfirmSide(){
     })
   }
   function PointUpdate(){
+    numaction++;
     pointtext[0]=$scope.agpoint2;
     pointtext[1]=$scope.agpoint1;
     pointtext[2]=$scope.aggame2;
@@ -1672,20 +1718,22 @@ function ConfirmSide(){
       server[0]="";
       server[1]="●";
     }
-    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,server:server});
+    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,server:server,numaction:numaction});
+    console.log(numaction);
   }
 })
 
 //---view game in real time controller-----------------------------------------------------
-.controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate){
+.controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate,$document){
+    $document.ready(function(){
+        socket.emit('connected');
+    });
 
     var tennisdatas = new Array();
     $scope.tennisdatas = tennisdatas;
     socket.on('create-tennis',function(tennisdata){
         tennisdata.forEach(function(data){
-            if(data.startdata.realtime==true){
               tennisdatas.push(data);
-            }
             $ionicFrostedDelegate.update();
             $ionicScrollDelegate.scrollBottom(true);
         });
@@ -1717,7 +1765,7 @@ function ConfirmSide(){
 //----------------
 //--ChatsCtrl------
 //----------------
-.controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate,TennisID) {
+.controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate,TennisID,$document) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -1725,6 +1773,9 @@ function ConfirmSide(){
   //
   //$scope.$on('$ionicView.enter', function(e) {
   //});
+    $document.ready(function(){
+        socket.emit('connected');
+    });
   //-----チャット送信--------------------------------
   var messages = new Array();
   var timeData = new Date();
@@ -1774,7 +1825,10 @@ function ConfirmSide(){
 })
 */
 //---my controller--------------
-.controller('DatalistCtrl',function($scope){
+.controller('DatalistCtrl',function($scope,$document,socket){
+    $document.ready(function(){
+        socket.emit('connected');
+    });
   
 })
 

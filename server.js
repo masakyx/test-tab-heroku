@@ -50,9 +50,9 @@ var ChatSchema = new mongoose.Schema({
 var TennisSchema = new mongoose.Schema({
       winner:String,
       finishtime:Number,
+      ID:String,
+      numaction:Number,
       startdata:{
-        ID:String,
-        realtime:Boolean,
         creater:String,
         player1:String,
         player2:String,
@@ -78,79 +78,15 @@ var TennisSchema = new mongoose.Schema({
         text:[String]
       }
 });
-var PPTennisSchema = new mongoose.Schema({
-      winner:String,
-      finishtime:Number,
-      startdata:{
-        ID:String,
-        realtime:Boolean,
-        creater:String,
-        player1:String,
-        player2:String,
-        player3:String,
-        player4:String,
-        gametype:String,
-        set:Number,
-        game:Number,
-        tiebreak:Boolean,
-        deuce:Boolean,
-        starttime:Number
-      },
-      PointData1:{point:[Number]},
-      ServerSide1:{point:[Number]},
-      ReturnSide1:{point:[Number]},
-      ShotPoint1:{point:[Number]},
-      PointData2:{point:[Number]},
-      ServerSide2:{point:[Number]},
-      ReturnSide2:{point:[Number]},
-      ShotPoint2:{point:[Number]},
-      PointText:{
-        server:[String],
-        text:[String]
-      }
-});
-var GameData = new mongoose.Schema({
-      winner:String,
-      finishtime:Number,
-      startdata:{
-        ID:String,
-        realtime:Boolean,
-        creater:String,
-        player1:String,
-        player2:String,
-        player3:String,
-        player4:String,
-        gametype:String,
-        set:Number,
-        game:Number,
-        tiebreak:Boolean,
-        deuce:Boolean,
-        starttime:Number
-      },
-      PointData1:{point:[Number]},
-      ServerSide1:{point:[Number]},
-      ReturnSide1:{point:[Number]},
-      ShotPoint1:{point:[Number]},
-      PointData2:{point:[Number]},
-      ServerSide2:{point:[Number]},
-      ReturnSide2:{point:[Number]},
-      ShotPoint2:{point:[Number]},
-      PointText:{
-        server:[String],
-        text:[String]
-      }
-});
-
 var Chat = db.model('chat',ChatSchema);
 var Tennis = db.model('tennis',TennisSchema);
-var ppTennis = db.model('pptennis',PPTennisSchema);
-var Gamedata = db.model('gamedata',GameData);
+var ppTennis = db.model('pptennis',TennisSchema);
+var Gamedata = db.model('gamedata',TennisSchema);
 
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
-    console.log("connection");
-    Chat.find(function(err,items){
+    /*Chat.find(function(err,items){
         if(err){console.log(err);}
         //接続したユーザーにチャットデータを送る
         socket.emit('create-chat',items);
@@ -159,6 +95,18 @@ io.sockets.on('connection',function(socket){
         if(err){console.log(err);}
         //接続したユーザーにテニスデータを送る
         socket.emit('create-tennis',items);
+    });*/
+    socket.on('connected',function(){  
+      Chat.find(function(err,items){
+          if(err){console.log(err);}
+          //接続したユーザーにチャットデータを送る
+          socket.emit('create-chat',items);
+      });
+      Tennis.find(function(err,items){
+          if(err){console.log(err);}
+          //接続したユーザーにテニスデータを送る
+          socket.emit('create-tennis',items);
+      });
     });
     //-------チャットを表示する----------------------
     socket.on('send-chat',function(data){
@@ -178,8 +126,12 @@ io.sockets.on('connection',function(socket){
        tennis.PointText.server[1]="";
        for(var i=0;i<6;i++){
         tennis.PointText.text[i]="0";
-       }
-       tennis.save();
+      }
+      tennis.save();
+      var pptennis = new ppTennis(tennis);
+      pptennis.ID = tennis._id;
+      pptennis.numaction = 0;
+      pptennis.save();
        socket.emit('tennis-start',tennis);
        socket.emit('tennis-viewer',tennis);
        socket.broadcast.json.emit('tennis-viewer',tennis);
@@ -196,7 +148,24 @@ io.sockets.on('connection',function(socket){
            tennis.ShotPoint2.point=data.shot2;
            tennis.PointText.text=data.pointtext;
            tennis.PointText.server=data.server;
+           tennis.numaction = data.numaction;
            tennis.save();
+           var pptennis = new ppTennis();
+           pptennis.startdata=tennis.startdata;
+           pptennis.PointData1.point=tennis.PointData1.point;
+           pptennis.ServerSide1.point=tennis.ServerSide1.point;
+           pptennis.ReturnSide1.point=tennis.ReturnSide1.point;
+           pptennis.ShotPoint1.point=tennis.ShotPoint1.point;
+           pptennis.startdata=tennis.startdata;
+           pptennis.PointData2.point=tennis.PointData2.point;
+           pptennis.ServerSide2.point=tennis.ServerSide2.point;
+           pptennis.ReturnSide2.point=tennis.ReturnSide2.point;
+           pptennis.ShotPoint2.point=tennis.ShotPoint2.point;
+           pptennis.PointText.server=tennis.PointText.server;
+           pptennis.PointText.text=tennis.PointText.text;
+           pptennis.ID = tennis._id;
+           pptennis.numaction = data.numaction;
+           pptennis.save();
            socket.emit('point-update',tennis);
            socket.broadcast.json.emit('point-update',tennis);
            console.log("アップデートされたぞ");
@@ -223,7 +192,13 @@ io.sockets.on('connection',function(socket){
           socket.emit('delete-data',tennis);
           socket.broadcast.json.emit('delete-data',tennis);
           tennis.remove();
-       }); 
+      });
+      /*ppTennis.forEach(function(tennis){
+          if(tennis.ID == data.id){
+            tennis.remove();
+            console.log("データを消しましたよ");
+          }
+      });*/
    });
 });
 //------------------------------------------------------------------------------------------

@@ -1,0 +1,65 @@
+<ion-view title="EASY MODE ★ CREATER::{{agcreater}}">
+  <ion-content>
+<div class="row row1">
+  <div class="col col1 card card1 item item-text-wrap">
+      <h2 align="center ">{{agplayer1}}</h2>
+  </div>
+  <div class="col col1 card card1 item item-text-wrap">
+      <h2 align="center ">{{agplayer2}}</h2>
+  </div>
+</div>
+<div class="row row1">
+  <div class="list list1 col col1">
+    <h1 align="center"  class="player1count counttext hugeh1">{{agset1}}</h1>
+    <h1 align="center"  class="player1count counttext hugeh1">{{aggame1}}</h1>
+    <h1 align="center"  class="player1count counttext hugeh1">{{agpoint1}}</h1>
+  </div>
+  <div class="list list1 col col1">
+    <h1 align="center"  class="counttext hugeh1">SET</h1>
+    <h1 align="center"  class="counttext hugeh1">GAME</h1>
+    <h1 align="center"  class="counttext hugeh1">POINT</h1>
+  </div>
+  <div class="list list1 col col1">
+    <h1 align="center"  class="player2count counttext hugeh1">{{agset2}}</h1>
+    <h1 align="center"  class="player2count counttext hugeh1">{{aggame2}}</h1>
+    <h1 align="center"  class="player2count counttext hugeh1">{{agpoint2}}</h1>
+  </div>
+</div>
+<div class="row">
+    <div class="card col col1" id="checkserver1" ng-show="checkserver11">
+      <h3 align="center">SERVER</h3>
+      <h3 align="center">{{agserver1}}</h3>
+    </div>
+    <div class="card col col1" id="checkreceiver2" ng-show="checkreceiver22">
+      <h3 align="center">RECEIVER</h3>
+      <h3 align="center">{{agreceiver2}}</h3>
+    </div>
+  </div>
+  <div class="row">
+    <div class="card col col1" id="checkreceiver1" ng-show="checkreceiver11">
+      <h3 align="center">RECEIVER</h3>
+      <h3 align="center">{{agreceiver1}}</h3>
+    </div>
+    <div class="card col col1" id="checkserver2" ng-show="checkserver22">
+      <h3 align="center">SERVER</h3>
+      <h3 align="center">{{agserver2}}</h3>
+    </div>
+  </div>
+  <div class="row row1">
+    <div class="col col1 hugeh1">
+      <h2><input type="button" class="player1count " value="POINT" name="point1" ng-click="point1()"></h2>
+    </div>
+    <div class="col col1 hugeh1">
+      <h2><input type="button" class="player2count " value="POINT" name="point2" ng-click="point2()"></h2>
+    </div>
+  </div>
+<div class="row row1">
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-loop-strong"  name="serverchange" ng-click="serverchange2()">SERVER CHANGE</button>
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-loop-strong"  name="courtchange" ng-click="courtchange2()">COURT CHANGE</button>
+</div>
+<div class="row row1">  
+      <button type="button" class="middlebutton col col1 button icon-left ion-ios-refresh" name="pointback" ng-click="pointback()">POINT BACK</button>
+      <button type="button" class="middlebutton col col1 button icon-left ion-power" name="finishgame" ng-click="finishgame()">試合終了</button>
+</div>
+  </ion-content>
+</ion-view>

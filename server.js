@@ -75,7 +75,8 @@ var TennisSchema = new mongoose.Schema({
       ShotPoint2:{point:[Number]},
       PointText:{
         server:[String],
-        text:[String]
+        text:[String],
+        point:[Number]
       }
 });
 var Chat = db.model('chat',ChatSchema);
@@ -134,7 +135,8 @@ io.sockets.on('connection',function(socket){
        tennis.PointText.server[0]="●";
        tennis.PointText.server[1]="";
        for(var i=0;i<6;i++){
-        tennis.PointText.text[i]="0";
+         tennis.PointText.text[i]="0";
+         tennis.PointText.point[i]=0;
       }
       tennis.save();
       var pptennis = new ppTennis(tennis);
@@ -156,6 +158,7 @@ io.sockets.on('connection',function(socket){
            tennis.ShotPoint1.point=data.shot1;
            tennis.ShotPoint2.point=data.shot2;
            tennis.PointText.text=data.pointtext;
+           tennis.PointText.point=data.pointtext2;
            tennis.PointText.server=data.server;
            tennis.numaction = data.numaction;
            tennis.save();
@@ -165,13 +168,13 @@ io.sockets.on('connection',function(socket){
            pptennis.ServerSide1.point=tennis.ServerSide1.point;
            pptennis.ReturnSide1.point=tennis.ReturnSide1.point;
            pptennis.ShotPoint1.point=tennis.ShotPoint1.point;
-           pptennis.startdata=tennis.startdata;
            pptennis.PointData2.point=tennis.PointData2.point;
            pptennis.ServerSide2.point=tennis.ServerSide2.point;
            pptennis.ReturnSide2.point=tennis.ReturnSide2.point;
            pptennis.ShotPoint2.point=tennis.ShotPoint2.point;
            pptennis.PointText.server=tennis.PointText.server;
            pptennis.PointText.text=tennis.PointText.text;
+           pptennis.PointText.point=tennis.PointText.point;
            pptennis.ID = tennis._id;
            pptennis.numaction = data.numaction;
            pptennis.save();
@@ -210,7 +213,36 @@ io.sockets.on('connection',function(socket){
             console.log("データを消しましたよ");
           }
       });*/
-   });
+  });
+  socket.on('point-back',function(data){
+      Tennis.findOne({_id:data.id},function(err,tennis){
+        if(data.num != 0){
+          ppTennis.findOne({$and:[{ID:data.id},{numaction:data.num}]},function(err,pptennis){
+              console.log("pptennisの"+pptennis.numaction+"を消去した");
+              pptennis.remove();
+          });
+          ppTennis.findOne({$and:[{ID:data.id},{numaction:data.num-1}]},function(err,pptennis){
+              console.log("pptennisの"+pptennis.numaction+"にうわがきした");
+              tennis.PointData1.point=pptennis.PointData1.point;
+              tennis.ServerSide1.point=pptennis.ServerSide1.point;
+              tennis.ReturnSide1.point=pptennis.ReturnSide1.point;
+              tennis.ShotPoint1.point=pptennis.ShotPoint1.point;
+              tennis.PointData2.point=pptennis.PointData2.point;
+              tennis.ServerSide2.point=pptennis.ServerSide2.point;
+              tennis.ReturnSide2.point=pptennis.ReturnSide2.point;
+              tennis.ShotPoint2.point=pptennis.ShotPoint2.point;
+              tennis.PointText.server=pptennis.PointText.server;
+              tennis.PointText.text=pptennis.PointText.text;
+              tennis.PointText.point=pptennis.PointText.point;
+              tennis.numaction = data.numaction;
+              tennis.save();
+              socket.emit('point-back',pptennis);
+              socket.emit('point-update',pptennis);
+              socket.broadcast.json.emit('point-update',tennis);
+          });
+        }
+      })    
+  })
 });
 //------------------------------------------------------------------------------------------
 if(app.get('env') === 'development'){

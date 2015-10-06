@@ -10,6 +10,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
     $scope.setChoice = "1";
     $scope.gameChoice = "6";
     $scope.gametype =  "1";
+    $scope.modeChoice = "1";
     $scope.agtiebreak = true;
     $scope.agdeuce = true;
     $scope.player1 = "Player1";
@@ -96,9 +97,9 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
     }
        socket.on("tennis-start",function(data){
         tennisdata.ID = data._id;
-        console.log(data);
         console.log(tennisdata);
-        location.href = "#/tab/dash/scoreboard";
+        if($scope.modeChoice==0)location.href = "#/tab/dash/easyscoreboard";
+        else if($scope.modeChoice==1)location.href = "#/tab/dash/scoreboard";
     });
 })
 
@@ -134,6 +135,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 
     var Nserverchange = 0,
         Nreceiverchange = 0;
+    var serverchange2 = 0;
 
     var isside = 0;//0=fore 1=back hand
 
@@ -148,6 +150,7 @@ var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
         returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
       shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 var pointtext = new Array("0","0","0","0","0","0");
+var pointtext2 = new Array(0,0,0,0,0,0);
 var server = new Array("●","");
 //---------初期設定--------------------------------------------------------------------------
     $scope.agcreater = creater;
@@ -173,6 +176,8 @@ var server = new Array("●","");
     $scope.faultbutton1 = true;
     $scope.strokebutton1 = true;
     $scope.strokebutton2 = true;
+    $scope.checkserver11 = true;
+    $scope.checkreceiver22 = true;
     //-------player1ボタンクリック挙動------------------------------------------------
 $scope.servicein1 = function(){
   ForeBack();
@@ -1277,6 +1282,9 @@ $scope.unerror2 = function(){
   PointUpdate();
   FinishGame();
 }
+$scope.serverchange2 = function(){
+  ServerChangeEasy();
+}
 
 //--------チェンジボタンクリック挙動-----------------------------------------------------
 $scope.serverchange = function(){
@@ -1288,6 +1296,7 @@ $scope.courtchange = function(){
   faultcount=0;
 }
 $scope.pointback = function(){
+  PointBack();
   faultcount=0;
 }
 $scope.finishgame = function(){
@@ -1355,12 +1364,15 @@ function ScorePoint(check,point){
 }
 
 function GamePoint(check,gamepoint){
+  var xx = gamecount-1,
+      yy = xx+2;
   ServerChange();
+  ServerChangeEasy();
   if(gamepoint < gamecount || gamepoint1 == gamecount && gamepoint2 == (gamecount-1) || gamepoint1 == (gamecount-1) && gamepoint2 == gamecount ){
     ClearPoint();
     if(check==1){$scope.aggame1=gamepoint1
-    }else if(check==2){$scope.aggame2=gamepoint2}                  
-  }else if(gamepoint == gamecount && gamepoint1 < (gamecount-1) || gamepoint == gamecount && gamepoint2 <(gamecount-1) || gamepoint1 == (gamecount+1) && gamepoint2 == (gamecount-1) || gamepoint1 == (gamecount-1) && gamepoint2 == (gamecount+1)){
+    }else if(check==2){$scope.aggame2=gamepoint2}             
+  }else if(gamepoint == gamecount && gamepoint1 < (gamecount-1) || gamepoint == gamecount && gamepoint2 <(gamecount-1) || gamepoint1 == yy && gamepoint2 == xx || gamepoint1 == xx && gamepoint2 == yy){
     if(gamepoint1 > gamepoint2){
       setpoint1++;
       SetPoint(1,setpoint1);
@@ -1711,6 +1723,12 @@ function ConfirmSide(){
     pointtext[3]=$scope.aggame1;
     pointtext[4]=$scope.agset2;
     pointtext[5]=$scope.agset1;
+    pointtext2[0]=setpoint1;
+    pointtext2[1]=setpoint2;
+    pointtext2[2]=gamepoint1;
+    pointtext2[3]=gamepoint2;
+    pointtext2[4]=point1;
+    pointtext2[5]=point2;
     if(Nserverchange==0 || Nserverchange==2){
       server[0]="●";
       server[1]="";
@@ -1718,8 +1736,70 @@ function ConfirmSide(){
       server[0]="";
       server[1]="●";
     }
-    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,server:server,numaction:numaction});
-    console.log(numaction);
+    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,pointtext2:pointtext2,server:server,numaction:numaction});
+  }
+  function PointBack(){
+    socket.emit('point-back',{num:numaction,id:tennisdata.ID});
+  }
+  socket.on('point-back',function(data){
+      numaction=data.numaction;
+      $scope.agpoint2=data.PointText.text[0];
+      $scope.agpoint1=data.PointText.text[1];
+      $scope.aggame2=data.PointText.text[2];
+      $scope.aggame1=data.PointText.text[3];
+      $scope.agset2=data.PointText.text[4];
+      $scope.agset1=data.PointText.text[5];
+      setpoint1=data.PointText.point[0];
+      setpoint2=data.PointText.point[1];
+      gamepoint1=data.PointText.point[2];
+      gamepoint2=data.PointText.point[3];
+      point1=data.PointText.point[4];
+      point2=data.PointText.point[5];
+      for(var i=0;i<pointdata1.length;i++)pointdata1[i]=data.PointData1.point;
+      for(var i=0;i<serverside1.length;i++)serverside1[i]=data.ServerSide1.point;
+      for(var i=0;i<returnside1.length;i++)returnside1[i]=data.ReturnSide1.point;
+      for(var i=0;i<shotdata1.length;i++)shotdata1[i]=data.ShotPoint1.point;
+      for(var i=0;i<pointdata2.length;i++)pointdata2[i]=data.PointData2.point;
+      for(var i=0;i<serverside2.length;i++)serverside2[i]=data.ServerSide2.point;
+      for(var i=0;i<returnside2.length;i++)returnside2[i]=data.ReturnSide2.point;
+      for(var i=0;i<shotdata2.length;i++)shotdata2[i]=data.ShotPoint2.point;
+      if(data.PointText.server[0]==""){
+        Nserverchange=0;
+        serverchange2=0;
+      }else{
+        Nserverchange=1;
+        serverchange2=1
+      }
+      ServerChange();
+      ServerChangeEasy();
+  });
+  //Easy Mode----------------------------------------------------------
+  $scope.point1 = function(){
+    point1++;
+    ClickPoint(1,point1);
+    PointUpdate();
+    FinishGame();
+  }
+  $scope.point2 = function(){
+    point2++;
+    ClickPoint(2,point2);
+    PointUpdate();
+    FinishGame();
+  }
+  function ServerChangeEasy(){
+      serverchange2++;
+      if(serverchange2 == 1){
+        $scope.checkserver22 = true;
+        $scope.checkreceiver11 = true;
+        $scope.checkserver11 = false;
+        $scope.checkreceiver22 = false;
+      }else if(serverchange2 == 2){
+        $scope.checkserver11 = true;
+        $scope.checkreceiver22 = true;
+        $scope.checkserver22 = false;
+        $scope.checkreceiver11 = false;
+        serverchange2=0;
+      }
   }
 })
 
@@ -1841,17 +1921,19 @@ function ConfirmSide(){
         console.log(TennisDataDetail.all());
     });
     socket.on('add-gamedata',function(gamedata){
-      tennisdatas.unshift(gamedata);
-      TennisDataDetail.all() = tennisdatas;
+        tennisdatas.unshift(gamedata);
+        TennisDataDetail.add(tennisdatas);
     });
-
 })
 .controller('DataDetailCtrl',function($scope,TennisDataDetail,$stateParams){
-  $scope.tennisdata = TennisDataDetail.get($stateParams.tennisdataId);
+    $scope.tennisdata = TennisDataDetail.get($stateParams.tennisdataId);
+    console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
 .controller('AccountCtrl', function($scope) {
 
 })
-
+.controller('EasyScoreBoardCtrl',function($scope,$controller){
+    $controller('scoreboardCtrl',{$scope:$scope});
+})
 .controller('not',function($scope){
 });

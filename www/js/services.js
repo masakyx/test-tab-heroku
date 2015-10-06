@@ -32,6 +32,7 @@ angular.module('starter.services', [])
 })
 .factory('TennisDataDetail',function(){
     var tennisdatas = new Array();
+    var returndata;
     return {
       all:function(){
         return tennisdatas;
@@ -40,11 +41,11 @@ angular.module('starter.services', [])
         tennisdatas = data;
       },
       get:function(tennisdataId){
-        tennisdatas.find(function(v,index){
-          return v._id == tennisdataId;
-        });
-      }
-    };
+        for(var i=0;i<tennisdatas.length;i++){
+          if(tennisdatas[i]._id==tennisdataId)return tennisdatas[i];
+        }
+     }
+   }
 })
 .factory('TennisID',function(){
     var tennisIDs = {

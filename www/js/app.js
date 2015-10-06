@@ -59,6 +59,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
           }
       }
   })
+  .state('tab.easyscoreboard',{
+      url:'/dash/easyscoreboard',
+      views:{
+          'tab-dash':{
+            templateUrl:'templates/easyscoreboard.html',
+            controller:'scoreboardCtrl'
+          }
+      }
+  })
   .state('tab.realtime',{
       url:'/view-game-realtime',
       views:{

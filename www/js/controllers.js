@@ -152,6 +152,7 @@ var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
 var pointtext = new Array("0","0","0","0","0","0");
 var pointtext2 = new Array(0,0,0,0,0,0);
 var server = new Array("●","");
+var ActionTennis = new Array();
 //---------初期設定--------------------------------------------------------------------------
     $scope.agcreater = creater;
     $scope.agserver1 = TennisID.all().player1;
@@ -1736,25 +1737,33 @@ function ConfirmSide(){
       server[0]="";
       server[1]="●";
     }
+  console.log(ActionTennis);
     socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,pointtext2:pointtext2,server:server,numaction:numaction});
   }
   function PointBack(){
-    socket.emit('point-back',{num:numaction,id:tennisdata.ID});
+    if(numaction==0){}
+    else{
+      socket.emit('point-back',{num:numaction,id:tennisdata.ID});
+      $scope.agpoint2=ActionTennis[numaction-1].PointText.text[0];
+      $scope.agpoint1=ActionTennis[numaction-1].PointText.text[1];
+      $scope.aggame2=ActionTennis[numaction-1].PointText.text[2];
+      $scope.aggame1=ActionTennis[numaction-1].PointText.text[3];
+   $scope.agset2=ActionTennis[numaction-1].PointText.text[4];
+      $scope.agset1=ActionTennis[numaction-1].PointText.text[5];
+      setpoint1=ActionTennis[numaction-1].PointText.point[0];
+      setpoint2=ActionTennis[numaction-1].PointText.point[1];
+      gamepoint1=ActionTennis[numaction-1].PointText.point[2];
+      gamepoint2=ActionTennis[numaction-1].PointText.point[3];
+      point1=ActionTennis[numaction-1].PointText.point[4];
+      point2=ActionTennis[numaction-1].PointText.point[5];
+      ActionTennis.splice(numaction,1);
+    }
   }
+  socket.on('add-tennisdata',function(data){
+    ActionTennis.push(data);
+  })
   socket.on('point-back',function(data){
       numaction=data.numaction;
-      $scope.agpoint2=data.PointText.text[0];
-      $scope.agpoint1=data.PointText.text[1];
-      $scope.aggame2=data.PointText.text[2];
-      $scope.aggame1=data.PointText.text[3];
-      $scope.agset2=data.PointText.text[4];
-      $scope.agset1=data.PointText.text[5];
-      setpoint1=data.PointText.point[0];
-      setpoint2=data.PointText.point[1];
-      gamepoint1=data.PointText.point[2];
-      gamepoint2=data.PointText.point[3];
-      point1=data.PointText.point[4];
-      point2=data.PointText.point[5];
       for(var i=0;i<pointdata1.length;i++)pointdata1[i]=data.PointData1.point;
       for(var i=0;i<serverside1.length;i++)serverside1[i]=data.ServerSide1.point;
       for(var i=0;i<returnside1.length;i++)returnside1[i]=data.ReturnSide1.point;

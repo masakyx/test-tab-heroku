@@ -145,6 +145,7 @@ io.sockets.on('connection',function(socket){
       pptennis.save();
        socket.emit('tennis-start',tennis);
        socket.emit('tennis-viewer',tennis);
+       socket.emit('add-tennisdata',tennis);
        socket.broadcast.json.emit('tennis-viewer',tennis);
    });
    socket.on('point-update',function(data){
@@ -180,6 +181,7 @@ io.sockets.on('connection',function(socket){
            pptennis.save();
            socket.emit('point-update',tennis);
            socket.broadcast.json.emit('point-update',tennis);
+           socket.emit('add-tennisdata',pptennis);
            console.log("アップデートされたぞ");
         });
     });

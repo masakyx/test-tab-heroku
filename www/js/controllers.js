@@ -1789,7 +1789,7 @@ function ConfirmSide(){
       ServerChange();
       ServerChangeEasy();
       numaction=numaction-1;
-      ActionTennis.splice(numaction,1);
+      ActionTennis.splice(numaction+1,1);
     }
   }
   socket.on('add-tennisdata',function(data){

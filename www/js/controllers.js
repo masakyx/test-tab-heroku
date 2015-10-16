@@ -1771,14 +1771,14 @@ function ConfirmSide(){
       point2=ActionTennis[numaction-1].PointText.point[5];
       
       
-      for(var i=0;i<pointdata1.length;i++)pointdata1[i]=ActionTennis[numaction-1].PointData1.point;
-      for(var i=0;i<serverside1.length;i++)serverside1[i]=ActionTennis[numaction-1].ServerSide1.point;
-      for(var i=0;i<returnside1.length;i++)returnside1[i]=ActionTennis[numaction-1].ReturnSide1.point;
-      for(var i=0;i<shotdata1.length;i++)shotdata1[i]=ActionTennis[numaction-1].ShotPoint1.point;
-      for(var i=0;i<pointdata2.length;i++)pointdata2[i]=ActionTennis[numaction-1].PointData2.point;
-      for(var i=0;i<serverside2.length;i++)serverside2[i]=ActionTennis[numaction-1].ServerSide2.point;
-      for(var i=0;i<returnside2.length;i++)returnside2[i]=ActionTennis[numaction-1].ReturnSide2.point;
-     // for(var i=0;i<shotdata2.length;i++)shotdata2[i]=ActionTennis[numaction-1].ShotPoint2.point;
+      for(var i=0;i<pointdata1.length;i++){pointdata1[i]=ActionTennis[numaction-1].PointData1.point;}
+        for(var i=0;i<serverside1.length;i++){serverside1[i]=ActionTennis[numaction-1].ServerSide1.point;}
+        for(var i=0;i<returnside1.length;i++){returnside1[i]=ActionTennis[numaction-1].ReturnSide1.point;}
+        for(var i=0;i<shotdata1.length;i++){shotdata1[i]=ActionTennis[numaction-1].ShotPoint1.point;}
+        for(var i=0;i<pointdata2.length;i++){pointdata2[i]=ActionTennis[numaction-1].PointData2.point;}
+        for(var i=0;i<serverside2.length;i++){serverside2[i]=ActionTennis[numaction-1].ServerSide2.point;}
+        for(var i=0;i<returnside2.length;i++){returnside2[i]=ActionTennis[numaction-1].ReturnSide2.point;}
+        for(var i=0;i<shotdata2.length;i++){shotdata2[i]=ActionTennis[numaction-1].ShotPoint2.point;}
       if(ActionTennis[numaction-1].PointText.server[0]==""){
         Nserverchange=0;
         serverchange2=0;

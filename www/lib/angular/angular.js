@@ -35,30 +35,6 @@
  * @returns {function(code:string, template:string, ...templateArgs): Error} minErr instance
  */
 
-//---jquery-----------------------------------------
-/*function buindJQuery(){
-    jQuery = window.jQuery;
-    if(jQuery){
-        jqLite = jQuery;
-        extend(jQuery.fn,{
-            scope: JQLitePrototype.scope,
-            isolateScope:JQLitePrototype.isolateScope,
-            controller:JQLitePrototype.controller,
-            injector:JQLitePrototype.injector,
-            inheritedData:JQLitePrototype.inheritedData
-        });
-
-        jqLitePatchJQueryRemove('remove',true,true,false);
-        jQLitePatchJQueryRemove('empty',false,false,false);
-        jQLitePatchJQueryRemove('html',false,false,true);
-
-    } else {
-        jqLite = JQLite;      
-    }
-    angular.element = jqLite;
-    console.log("jQueryを上書きしたよ！");
-}*/
-//-------------------------------------------------
 function minErr(module, ErrorConstructor) {
   ErrorConstructor = ErrorConstructor || Error;
   return function() {
@@ -16069,7 +16045,7 @@ function $TemplateRequestProvider() {
       };
 
       return $http.get(tpl, httpOptions)
-        ['finally'](function() {
+        .finally(function() {
           handleRequestFn.totalPendingRequests--;
         })
         .then(function(response) {

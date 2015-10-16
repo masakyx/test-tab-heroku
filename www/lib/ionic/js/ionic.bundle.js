@@ -35,30 +35,6 @@ window.ionic.version = '1.0.1';
       throw new Error("Method '$getByHandle' is implicitly added to each delegate service. Do not list it as a method.");
     }
 
-//---jquery-----------------------------------------
-function buindJQuery(){
-    jQuery = window.jQuery;
-    if(jQuery){
-        jqLite = jQuery;
-        extend(jQuery.fn,{
-            scope: JQLitePrototype.scope,
-            isolateScope:JQLitePrototype.isolateScope,
-            controller:JQLitePrototype.controller,
-            injector:JQLitePrototype.injector,
-            inheritedData:JQLitePrototype.inheritedData
-        });
-
-        jqLitePatchJQueryRemove('remove',true,true,false);
-        jQLitePatchJQueryRemove('empty',false,false,false);
-        jQLitePatchJQueryRemove('html',false,false,true);
-
-    } else {
-        jqLite = JQLite;      
-    }
-    angular.element = jqLite;
-    console.log("jQueryを上書きしたよ！");
-}
-//-------------------------------------------------
     function trueFn() { return true; }
 
     return ['$log', function($log) {

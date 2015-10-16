@@ -182,7 +182,7 @@ io.sockets.on('connection',function(socket){
            socket.emit('point-update',tennis);
            socket.broadcast.json.emit('point-update',tennis);
            socket.emit('add-tennisdata',pptennis);
-           console.log("アップデートされたぞ");
+           console.log(tennis.numaction+"にアップデートされたぞ");
         });
     });
     socket.on('delete-data',function(data){
@@ -238,12 +238,16 @@ io.sockets.on('connection',function(socket){
               tennis.PointText.point=pptennis.PointText.point;
               tennis.numaction = data.numaction;
               tennis.save();
-              socket.emit('point-back',pptennis);
+              //socket.emit('point-back',pptennis);
               socket.emit('point-update',pptennis);
               socket.broadcast.json.emit('point-update',tennis);
           });
         }
       })    
+  })
+  socket.on('server-change',function(data){
+      socket.emit('server-change',data);
+      socket.broadcast.json.emit('server-change',data);
   })
 });
 //------------------------------------------------------------------------------------------

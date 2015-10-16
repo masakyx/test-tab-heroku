@@ -1285,13 +1285,14 @@ $scope.unerror2 = function(){
 }
 $scope.serverchange2 = function(){
   ServerChangeEasy();
+  socket.emit("server-change",{server:server,id:tennisdata.ID});
 }
 
 //--------チェンジボタンクリック挙動-----------------------------------------------------
 $scope.serverchange = function(){
   ServerChange();
+  socket.emit("server-change",{server:server,id:tennisdata.ID});
   faultcount=0;
-  PointUpdate();
 }
 $scope.courtchange = function(){
   faultcount=0;
@@ -1515,9 +1516,13 @@ function ForeBack(){
       switch (Nserverchange){
         case 1:
           displayType(2);
+          server[0]="";
+          server[1]="●";
             break;
         case 2:  
           displayType(1);
+          server[0]="●";
+          server[1]="";
           Nserverchange=0;
           break;
       }
@@ -1526,19 +1531,27 @@ function ForeBack(){
         case 1:
           $scope.agserver2 = player2;
           displayType(2);
+          server[0]="";
+          server[1]="●";
           break;
         case 2:
           $scope.agserver1 = player3;
           displayType(1);
+          server[0]="●";
+          server[1]="";
           break;
         case 3:
           $scope.agserver2 = player4;
           displayType(2);
+          server[0]="";
+          server[1]="●";
           break;
         case 4:
           $scope.agserver1 = player1;
           displayType(1);
           Nserverchange=0;
+          server[0]="●";
+          server[1]="";
           break;
       }
     }
@@ -1730,18 +1743,18 @@ function ConfirmSide(){
     pointtext2[3]=gamepoint2;
     pointtext2[4]=point1;
     pointtext2[5]=point2;
-    if(Nserverchange==0 || Nserverchange==2){
+    /*if(Nserverchange==0 || Nserverchange==2){
       server[0]="●";
       server[1]="";
     }else if(Nserverchange==1 || Nserverchange==3){
       server[0]="";
       server[1]="●";
-    }
+    }*/
   console.log(ActionTennis);
     socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,pointtext2:pointtext2,server:server,numaction:numaction});
   }
   function PointBack(){
-    if(numaction==0){}
+    if(numaction===0 || numaction == null){}
     else{
       socket.emit('point-back',{num:numaction,id:tennisdata.ID});
       $scope.agpoint2=ActionTennis[numaction-1].PointText.text[0];
@@ -1756,13 +1769,33 @@ function ConfirmSide(){
       gamepoint2=ActionTennis[numaction-1].PointText.point[3];
       point1=ActionTennis[numaction-1].PointText.point[4];
       point2=ActionTennis[numaction-1].PointText.point[5];
+      
+      
+      for(var i=0;i<pointdata1.length;i++)pointdata1[i]=ActionTennis[numaction-1].PointData1.point;
+      for(var i=0;i<serverside1.length;i++)serverside1[i]=ActionTennis[numaction-1].ServerSide1.point;
+      for(var i=0;i<returnside1.length;i++)returnside1[i]=ActionTennis[numaction-1].ReturnSide1.point;
+      for(var i=0;i<shotdata1.length;i++)shotdata1[i]=ActionTennis[numaction-1].ShotPoint1.point;
+      for(var i=0;i<pointdata2.length;i++)pointdata2[i]=ActionTennis[numaction-1].PointData2.point;
+      for(var i=0;i<serverside2.length;i++)serverside2[i]=ActionTennis[numaction-1].ServerSide2.point;
+      for(var i=0;i<returnside2.length;i++)returnside2[i]=ActionTennis[numaction-1].ReturnSide2.point;
+      for(var i=0;i<shotdata2.length;i++)shotdata2[i]=ActionTennis[numaction-1].ShotPoint2.point;
+      if(ActionTennis[numaction-1].PointText.server[0]==""){
+        Nserverchange=0;
+        serverchange2=0;
+      }else{
+        Nserverchange=1;
+        serverchange2=1
+      }
+      ServerChange();
+      ServerChangeEasy();
+      numaction=numaction-1;
       ActionTennis.splice(numaction,1);
     }
   }
   socket.on('add-tennisdata',function(data){
     ActionTennis.push(data);
   })
-  socket.on('point-back',function(data){
+  /* socket.on('point-back',function(data){
       numaction=data.numaction;
       for(var i=0;i<pointdata1.length;i++)pointdata1[i]=data.PointData1.point;
       for(var i=0;i<serverside1.length;i++)serverside1[i]=data.ServerSide1.point;
@@ -1781,7 +1814,7 @@ function ConfirmSide(){
       }
       ServerChange();
       ServerChangeEasy();
-  });
+  }); */
   //Easy Mode----------------------------------------------------------
   $scope.point1 = function(){
     point1++;
@@ -1802,11 +1835,15 @@ function ConfirmSide(){
         $scope.checkreceiver11 = true;
         $scope.checkserver11 = false;
         $scope.checkreceiver22 = false;
+          server[0]="";
+          server[1]="●";
       }else if(serverchange2 == 2){
         $scope.checkserver11 = true;
         $scope.checkreceiver22 = true;
         $scope.checkserver22 = false;
         $scope.checkreceiver11 = false;
+          server[0]="●";
+          server[1]="";
         serverchange2=0;
       }
   }
@@ -1839,6 +1876,14 @@ function ConfirmSide(){
             tennis.PointText.server = data.PointText.server;
           }
       });
+  });
+  socket.on('server-change',function(data){
+      console.log(data.server);
+      $scope.tennisdatas.forEach(function(tennis){
+          if(tennis._id == data.id){
+            tennis.PointText.server = data.server;
+          }
+      })
   });
   socket.on('delete-data',function(data){
           tennisdatas.some(function(v,i){

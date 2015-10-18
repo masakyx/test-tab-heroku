@@ -3,7 +3,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 //----------------
 //--DashCtrl------
 //----------------
-.controller('DashCtrl', function($scope,TennisID,socket,$ionicPopup) {
+.controller('DashCtrl', function($scope,TennisID,socket,$ionicFrostedDelegate,$ionicScrollDelegate,$ionicPopup) {
     var id;
     var tennisdata = TennisID.all();
     
@@ -1851,15 +1851,16 @@ function ConfirmSide(){
 
 //---view game in real time controller-----------------------------------------------------
 .controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate,$document){
-    /*$document.ready(function(){
+    $document.ready(function(){
         socket.emit('connected');
-    });*/
+    });
 
     var tennisdatas = new Array();
     $scope.tennisdatas = tennisdatas;
     socket.on('create-tennis',function(tennisdata){
+      tennisdatas.splice(0,tennisdatas.length);
         tennisdata.forEach(function(data){
-              tennisdatas.push(data);
+            tennisdatas.push(data);
             $ionicFrostedDelegate.update();
             $ionicScrollDelegate.scrollBottom(true);
         });
@@ -1908,9 +1909,9 @@ function ConfirmSide(){
   //$scope.$on('$ionicView.enter', function(e) {
   //});
   //
-  /*$document.ready(function(){
+  $document.ready(function(){
         socket.emit('connected');
-    });*/
+    });
   //-----チャット送信--------------------------------
   var messages = new Array();
   var timeData = new Date();
@@ -1918,9 +1919,10 @@ function ConfirmSide(){
   var date = timeData.getFullYear()+"/"+month+"/"+timeData.getDate();
   $scope.messages = messages;
   $scope.submitclick = function(){
+    var chatname= $scope.chatname;
     var message = $scope.message;
-    if(message == ""){
-      window.alert("Messageを入力してください");
+    if(message == "" || chatname ==""){
+      window.alert("Name or Messageを入力してください");
     }else{
       var timeData = new Date();
       var month = timeData.getMonth()+1;
@@ -1928,17 +1930,18 @@ function ConfirmSide(){
       var time = Date.now();
       var data = {
         date:date,
-        name:"Masaki",
+        name:chatname,
         message:message,
         time:time,
       };
       $scope.message = "";
       socket.emit('send-chat',data);
     }
-    $ionicFrostedDelegate.update();
+    $ionicFrostedDelegate.update()
     $ionicScrollDelegate.scrollBottom(true);
   }
   socket.on('create-chat',function(chatdata){
+      messages.splice(0,messages.length);
       chatdata.forEach(function(data){
           if(data.date == date){
             messages.push(data);
@@ -1961,13 +1964,14 @@ function ConfirmSide(){
 */
 //---my controller--------------
 .controller('DatalistCtrl',function($scope,$document,socket,TennisDataDetail){
-    /* $document.ready(function(){
+    $document.ready(function(){
         socket.emit('connected');
-    });*/
+    });
     
     var tennisdatas = new Array();
     $scope.tennisdatas = tennisdatas;
     socket.on('create-gamedata',function(gamedata){
+      tennisdatas.splice(0,tennisdatas.length);
         gamedata.forEach(function(data){
             tennisdatas.unshift(data);
         });
@@ -1975,7 +1979,7 @@ function ConfirmSide(){
         console.log(TennisDataDetail.all());
     });
     socket.on('add-gamedata',function(gamedata){
-        tennisdatas.unshift(gamedata);
+        rennisdatas.unshift(gamedata);
         TennisDataDetail.add(tennisdatas);
     });
 })

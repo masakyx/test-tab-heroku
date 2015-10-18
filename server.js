@@ -87,6 +87,7 @@ var Gamedata = db.model('gamedata',TennisSchema);
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
+    /*
     Chat.find(function(err,items){
         if(err){console.log(err);}
         //接続したユーザーにチャットデータを送る
@@ -100,8 +101,8 @@ io.sockets.on('connection',function(socket){
     Gamedata.find(function(err,items){
         if(err){console.log(err);}
         socket.emit('create-gamedata',items);
-    });
-   /*socket.on('connected',function(){  
+    });*/
+   socket.on('connected',function(){  
       Chat.find(function(err,items){
           if(err){console.log(err);}
           //接続したユーザーにチャットデータを送る
@@ -116,7 +117,7 @@ io.sockets.on('connection',function(socket){
         if(err){console.log(err);}
         socket.emit('create-gamedata',items);
       })
-    });*/
+    });
       
     //-------チャットを表示する----------------------
     socket.on('send-chat',function(data){
@@ -143,6 +144,22 @@ io.sockets.on('connection',function(socket){
       pptennis.ID = tennis._id;
       pptennis.numaction = 0;
       pptennis.save();
+
+
+      var timeData = new Date();
+      var month = timeData.getMonth()+1;
+      var chatdata = {
+        date:timeData.getFullYear()+"/"+month+"/"+timeData.getDate(),
+        name:"試合報告",
+        message:tennis.startdata.player1+"/"+tennis.startdata.player3+"と"+tennis.startdata.player2+"/"+tennis.startdata.player4 +"試合が始まりました。試合状況をご確認ください。",
+        time:Date.now(),
+      }
+        var message = new Chat(chatdata);
+        message.save();
+      socket.emit('send-chat',message);
+      socket.broadcast.json.emit('send-chat',message);
+
+
        socket.emit('tennis-start',tennis);
        socket.emit('tennis-viewer',tennis);
        socket.emit('add-tennisdata',tennis);
@@ -197,10 +214,11 @@ io.sockets.on('connection',function(socket){
           var chatdata = {
             date:timeData.getFullYear()+"/"+month+"/"+timeData.getDate(),
             name:"試合報告",
-            message:"勝者は"+data.winner+"です。",
+            message:tennis.startdata.player1+"/"+tennis.startdata.player3+"と"+tennis.startdata.player2+"/"+tennis.startdata.player4 +"の試合が終わりました。勝者は"+data.winner+"です。",
             time:data.finishtime,
           }
-          var message = new Chat(chatdata);
+            var message = new Chat(chatdata);
+            message.save();
           socket.emit('send-chat',message);
           socket.broadcast.json.emit('send-chat',message);
           socket.emit('delete-data',tennis);

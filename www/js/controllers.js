@@ -1463,6 +1463,8 @@ function SetPoint(check,setpoint){
     }
 }
 function FinishGame(){
+  if(tennisdata.player1=="112233aabbddcceeii989jyjisegoku"){console.log("へんことしてんじゃねーよ！！");
+  }else{
        if(isGameSet == true){
           var time=Date.now(); 
           var alertPopup = $ionicPopup.alert({
@@ -1471,6 +1473,7 @@ function FinishGame(){
           location.href = "#/tab/dash";
           socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time});
         }
+      }
 }
 function ForceQuit(){
           var confirmPopup = $ionicPopup.confirm({
@@ -1730,19 +1733,21 @@ function ConfirmSide(){
     })
   }
   function PointUpdate(){
-    numaction++;
-    pointtext[0]=$scope.agpoint2;
-    pointtext[1]=$scope.agpoint1;
-    pointtext[2]=$scope.aggame2;
-    pointtext[3]=$scope.aggame1;
-    pointtext[4]=$scope.agset2;
-    pointtext[5]=$scope.agset1;
-    pointtext2[0]=setpoint1;
-    pointtext2[1]=setpoint2;
-    pointtext2[2]=gamepoint1;
-    pointtext2[3]=gamepoint2;
-    pointtext2[4]=point1;
-    pointtext2[5]=point2;
+    if(tennisdata.player1=="112233aabbddcceeii989jyjisegoku"){console.log("へんなデータつくってんじゃねーよ！！！！");
+     }else{
+        numaction++;
+        pointtext[0]=$scope.agpoint2;
+        pointtext[1]=$scope.agpoint1;
+        pointtext[2]=$scope.aggame2;
+        pointtext[3]=$scope.aggame1;
+        pointtext[4]=$scope.agset2;
+        pointtext[5]=$scope.agset1;
+        pointtext2[0]=setpoint1;
+        pointtext2[1]=setpoint2;
+        pointtext2[2]=gamepoint1;
+        pointtext2[3]=gamepoint2;
+        pointtext2[4]=point1;
+        pointtext2[5]=point2;
     /*if(Nserverchange==0 || Nserverchange==2){
       server[0]="●";
       server[1]="";
@@ -1751,8 +1756,9 @@ function ConfirmSide(){
       server[1]="●";
     }*/
   console.log(ActionTennis);
-    socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,pointtext2:pointtext2,server:server,numaction:numaction});
-  }
+  socket.emit('point-update',{dataid:tennisdata.ID,pointdata1:pointdata1,server1:serverside1,return1:returnside1,shot1:shotdata1,pointdata2:pointdata2,server2:serverside2,return2:returnside2,shot2:shotdata2,pointtext:pointtext,pointtext2:pointtext2,server:server,numaction:numaction});
+}
+}
   function PointBack(){
     if(numaction===0 || numaction == null){}
     else{
@@ -1867,8 +1873,8 @@ function ConfirmSide(){
     });
     socket.on('tennis-viewer',function(data){
         tennisdatas.push(data);
-    $ionicFrostedDelegate.update();
-    $ionicScrollDelegate.scrollBottom(true);
+        $ionicFrostedDelegate.update();
+        $ionicScrollDelegate.scrollBottom(true);
     });
     socket.on('point-update',function(data){
       $scope.tennisdatas.forEach(function(tennis){

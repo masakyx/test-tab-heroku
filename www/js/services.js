@@ -50,7 +50,7 @@ angular.module('starter.services', [])
 .factory('TennisID',function(){
     var tennisIDs = {
       creater:"No name",
-      player1:"a",
+      player1:"112233aabbddcceeii989jyjisegoku",
       player2:"a",
       player3:"",
       player4:"",

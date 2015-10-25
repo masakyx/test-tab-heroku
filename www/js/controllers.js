@@ -1856,7 +1856,7 @@ function ConfirmSide(){
 })
 
 //---view game in real time controller-----------------------------------------------------
-.controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate,$document){
+.controller('ViewgameCtrl',function($scope,socket,TennisID,$ionicFrostedDelegate,$ionicScrollDelegate,$document,$ionicPopup){
     $document.ready(function(){
         socket.emit('connected');
     });
@@ -1900,13 +1900,44 @@ function ConfirmSide(){
           });
     console.log('deleteしたぞ');
   });
+  socket.on('masaki-delete',function(data){
+      tennisdatas.some(function(v,i){
+          if(v._id==data.id){
+              tennisdatas.splice(i,1);
+          }
+      });
+  });
+  $scope.dblclickremovedata = function(myid){
+    $scope.data = {}
+    var myPopup = $ionicPopup.show({
+        template:'<input type="password" ng-model="data.password">',
+        title:'Dataを削除するパスワード',
+        subTitle:'パスワードを入力してください。',
+        scope:$scope,
+        buttons:[
+          {text:'Cancel'},
+          {
+            text:'Delete',
+            type:'button-assertive',
+            onTap:function(e){
+              if($scope.data.password == "masakidelete"){
+                socket.emit('masaki-delete',{id:myid});
+                console.log("削除するぜ!");
+              }else{
+                e.preventDefault();
+              }
+            }
+          }
+        ]
+    });
+  }
 })
 
 
 //----------------
 //--ChatsCtrl------
 //----------------
-.controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate,TennisID,$document) {
+.controller('ChatsCtrl', function($scope,socket,$ionicFrostedDelegate,$ionicScrollDelegate,TennisID,$document,$ionicPopup) {
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
   // To listen for when this page is active (for example, to refresh data),
@@ -1915,7 +1946,29 @@ function ConfirmSide(){
   //$scope.$on('$ionicView.enter', function(e) {
   //});
   //
+  var chatname;
   $document.ready(function(){
+    $scope.data = {}
+    var myPopup = $ionicPopup.show({
+        template:'<input type="text" ng-model="data.chatname">',
+        title:'Chat Name',
+        subTitle:'Chatで使う名前を入力してください。',
+        scope:$scope,
+        buttons:[
+          {
+            text:'決定',
+            type:'button-assertive',
+            onTap:function(e){
+              if($scope.data.chatname==null){
+                window.alert("名前を入力してください。"); 
+                e.preventDefault();
+              }else{
+                chatname = $scope.data.chatname;
+              }
+            }
+          }
+        ]
+    });
         socket.emit('connected');
     });
   //-----チャット送信--------------------------------
@@ -1925,10 +1978,9 @@ function ConfirmSide(){
   var date = timeData.getFullYear()+"/"+month+"/"+timeData.getDate();
   $scope.messages = messages;
   $scope.submitclick = function(){
-    var chatname= $scope.chatname;
     var message = $scope.message;
-    if(message == "" || chatname ==""){
-      window.alert("Name or Messageを入力してください");
+    if(message == ""){
+      window.alert("Messageを入力してください");
     }else{
       var timeData = new Date();
       var month = timeData.getMonth()+1;
@@ -1985,7 +2037,7 @@ function ConfirmSide(){
         console.log(TennisDataDetail.all());
     });
     socket.on('add-gamedata',function(gamedata){
-        rennisdatas.unshift(gamedata);
+        tennisdatas.unshift(gamedata);
         TennisDataDetail.add(tennisdatas);
     });
 })

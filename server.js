@@ -234,6 +234,14 @@ io.sockets.on('connection',function(socket){
           }
       });*/
   });
+      socket.on('masaki-delete',function(data){
+          Tennis.findOne({_id:data.id},function(err,tennis){
+              socket.emit('masaki-delete',{id:data.id});
+              socket.broadcast.json.emit('masaki-delete',{id:data.id});
+              tennis.remove();
+              console.log('masaki-deleteしたぞ');
+          });
+      });
   socket.on('point-back',function(data){
       Tennis.findOne({_id:data.id},function(err,tennis){
         if(data.num != 0){

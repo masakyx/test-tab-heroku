@@ -2,7 +2,7 @@
 <ion-content>
 <ul>
   <div ng-repeat="tennisdata in tennisdatas">
-    <div class="card positive" style="background-color:#e6ffff;">
+    <div class="card positive" style="background-color:#e6ffff;" ng-dblclick="dblclickremovedata(tennisdata._id)">
       <p class="dark">開始時間:{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
       <p class="dark">CREATER : {{tennisdata.startdata.creater}}</p>
       <div class="row header">

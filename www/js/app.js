@@ -11,19 +11,19 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','ngCordova'])
 
 .run(function($ionicPlatform,$cordovaGoogleAnalytics) {
-  $ionicPlatform.ready(function() {
-  function _waitForAnalytics(){
-    if(typeof analytics !== 'undifinded'){
-      $cordovaGoogleAnalytics.debugMode();
-      $cordovaGoogleAnalytics.startTrackerWithId('UA-62506453-2');
-      $cordovaGoogleAnalytics.trackView('Home Screen');
-    }else{
-      setTimeOut(function(){
-         _waitForAnalytics();
-      },250);
-    }
-  };
-  _waitForAnalytics();
+    $ionicPlatform.ready(function() {
+        /*function _waitForAnalytics(){
+        if(typeof analytics !== 'undifinded'){
+          $cordovaGoogleAnalytics.debugMode();
+          $cordovaGoogleAnalytics.startTrackerWithId('UA-62506453-2');
+          $cordovaGoogleAnalytics.trackView('Home Screen');
+        }else{
+          setTimeOut(function(){
+          _waitForAnalytics();
+          },250);
+        }
+      };
+  _waitForAnalytics();*/
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {

@@ -1964,6 +1964,17 @@ function ConfirmSide(){
                 e.preventDefault();
               }else{
                 chatname = $scope.data.chatname;
+                var timeData = new Date();
+                var month = timeData.getMonth()+1;
+                var date = timeData.getFullYear()+"/"+month+"/"+timeData.getDate();
+                var time = Date.now();
+                var data = {
+                        date:date,
+                        name:"ログイン情報",
+                        message:chatname+"がログインしました。",
+                        time:time,
+                };
+                socket.emit('send-chat',data);
               }
             }
           }

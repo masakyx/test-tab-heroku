@@ -1,5 +1,5 @@
 "use strict"
-angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.frostedGlass','ngAnimate'])
+angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.frostedGlass','ngAnimate','ngTouch'])
 //----------------
 //--DashCtrl------
 //----------------
@@ -1959,7 +1959,7 @@ function ConfirmSide(){
             text:'決定',
             type:'button-assertive',
             onTap:function(e){
-              if($scope.data.chatname==null){
+              if($scope.data.chatname==null || $scope.data.chatname==""){
                 window.alert("名前を入力してください。"); 
                 e.preventDefault();
               }else{
@@ -1979,7 +1979,7 @@ function ConfirmSide(){
   $scope.messages = messages;
   $scope.submitclick = function(){
     var message = $scope.message;
-    if(message == ""){
+    if(message == "" || message == null){
       window.alert("Messageを入力してください");
     }else{
       var timeData = new Date();
@@ -2021,7 +2021,42 @@ function ConfirmSide(){
 })
 */
 //---my controller--------------
-.controller('DatalistCtrl',function($scope,$document,socket,TennisDataDetail){
+.controller('DatalistCtrl',function($scope,$document,socket,TennisDataDetail,$ionicPopup){
+    $scope.data={
+      showDelete:false
+    }
+    $scope.deletetennisdata=function(myid){
+    $scope.data = {}
+    var myPopup = $ionicPopup.show({
+        template:'<input type="password" ng-model="data.password">',
+        title:'Dataを削除するパスワード',
+        subTitle:'パスワードを入力してください。',
+        scope:$scope,
+        buttons:[
+          {text:'Cancel'},
+          {
+            text:'Delete',
+            type:'button-assertive',
+            onTap:function(e){
+              if($scope.data.password == "masakidelete"){
+                socket.emit('masaki-tennis-delete',{id:myid});
+                console.log("削除するぜ!");
+              }else{
+                e.preventDefault();
+              }
+            }
+          }
+        ]
+    });
+      console.log(myid);
+    }
+  socket.on('masaki-tennis-delete',function(data){
+      tennisdatas.some(function(v,i){
+          if(v._id==data.id){
+              tennisdatas.splice(i,1);
+          }
+      });
+  });
     $document.ready(function(){
         socket.emit('connected');
     });

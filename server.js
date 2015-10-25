@@ -242,6 +242,13 @@ io.sockets.on('connection',function(socket){
               console.log('masaki-deleteしたぞ');
           });
       });
+      socket.on('masaki-tennis-delete',function(data){
+          Gamedata.findOne({_id:data.id},function(err,tennis){
+              socket.emit('masaki-tennis-delete',{id:data.id});
+              socket.broadcast.json.emit('masaki-tennis-delete',{id:data.id});
+              tennis.remove();
+          });
+      });
   socket.on('point-back',function(data){
       Tennis.findOne({_id:data.id},function(err,tennis){
         if(data.num != 0){

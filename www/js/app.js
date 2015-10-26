@@ -1,6 +1,3 @@
-
-
-
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
@@ -37,7 +34,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
-
   // Ionic uses AngularUI Router which uses the concept of states
   // Learn more here: https://github.com/angular-ui/ui-router
   // Set up the various states which the app can be in.
@@ -62,8 +58,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
       }
     }
   })
+ // .state('tab.scoreboard',{
+ //     url:'/dash/scoreboard',
+ //     views:{
+ //         'tab-dash':{
+ //           templateUrl:'templates/scoreboard.html',
+ //           controller:'scoreboardCtrl'
+ //         }
+ //     }
+ // })
   .state('tab.scoreboard',{
-      url:'/dash/scoreboard',
+      url:'/dash/scoreboard/:id',
       views:{
           'tab-dash':{
             templateUrl:'templates/scoreboard.html',

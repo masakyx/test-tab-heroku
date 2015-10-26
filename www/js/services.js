@@ -64,7 +64,10 @@ angular.module('starter.services', [])
     return {
       all:function(){
         return tennisIDs;
-      }
+      },
+	  set:function(tennisData){
+	  	tennisIDs = tennisData;	
+	  }
     };
 });
 

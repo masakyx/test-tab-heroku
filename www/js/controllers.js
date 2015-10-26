@@ -41,6 +41,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
           tiebreak = $scope.agtiebreak,
           deuce = $scope.agdeuce;
       if($scope.gametype == "1"){
+		  //シングルス
         if(creater == null || player1== null || player2== null){
           var alertPopup = $ionicPopup.alert({
             title:"名前を入力してください。"
@@ -60,12 +61,13 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
               tennisdata.game = game;
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
-              tennisdata.starttime=Date.now();
+              tennisdata.starttime = Date.now();
               socket.emit("tennis-start",{tennis:tennisdata});
             }
           });
         }
       }else{
+		  //ダブルス
         if(creater == null || player1== null || player2== null || player3==null ||player4 == null){
           var alertPopup = $ionicPopup.alert({
             title:"名前を入力してください。"
@@ -98,22 +100,37 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
        socket.on("tennis-start",function(data){
         tennisdata.ID = data._id;
         console.log(tennisdata);
-        if($scope.modeChoice==0)location.href = "#/tab/dash/easyscoreboard";
-        else if($scope.modeChoice==1)location.href = "#/tab/dash/scoreboard";
+        if($scope.modeChoice==0)location.href = "#/tab/dash/easyscoreboard/" + tennisdata.ID;
+        else if($scope.modeChoice==1)location.href = "#/tab/dash/scoreboard/" + tennisdata.ID;
+		// IDでURLを分けない場合
+        //if($scope.modeChoice==0)location.href = "#/tab/dash/easyscoreboard";
+        //else if($scope.modeChoice==1)location.href = "#/tab/dash/scoreboard";
     });
 })
 
 //----------------
 //--scoreboardCtrl----------------------------------------------------------------
 //----------------------
-.controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket,$rootScope){
+.controller('scoreboardCtrl',function($scope,TennisID,$ionicPopup,socket,$rootScope,$stateParams){
+	if (TennisID.all()["ID"] == null) {
+		console.log("resumed but ID is no defined.");	
+		//IDを元にテニスの情報を持ってくる
+		socket.emit('resume-game', $stateParams.id);
+		//取得した情報をコールバックで受け取る。socket使わないもっとうまい方法あるかも。
+		socket.on('resume-success', function(tennisInstance){
+			TennisID.set(tennisInstance);
+			console.log(TennisID.all());
+		});
+	} else {
+		//IDがバインドされている場合は必ず新規
+		//do nothing.
+		console.log("you made a new game.")	
+	}
     //---------変数設定--------------------------------------------------------------
     //
     /*$scope.$on('$ionicView.beforeLeave',function(){
     });*/
     var tennisdata = TennisID.all();
-
-
     var setpoint1=0,setpoint2=0,gamepoint1=0,gamepoint2=0,point1=0,point2=0;
     var winner="途中で終了しました。";
     var isTiebreak = false,

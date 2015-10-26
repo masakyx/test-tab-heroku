@@ -8,6 +8,11 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     http = require('http');
 
+//なんとか耐えるように
+process.on('uncaughtException', function(err) {
+    console.log(err);
+});
+
 var app = express();
 app.set('views',path.join(__dirname,'templates'));
 app.use(express.static('www'));
@@ -165,6 +170,12 @@ io.sockets.on('connection',function(socket){
        socket.emit('add-tennisdata',tennis);
        socket.broadcast.json.emit('tennis-viewer',tennis);
    });
+   socket.on('resume-game',function(gameID){
+	   console.log(gameID);
+	   Tennis.findOne({_id:gameID}, function(err, tennisInstance){
+		   io.sockets.emit('resume-success', tennisInstance);
+	   });
+   });
    socket.on('point-update',function(data){
        Tennis.findOne({_id:data.dataid},function(err,tennis){
             tennis.PointData1.point=data.pointdata1;
@@ -204,8 +215,8 @@ io.sockets.on('connection',function(socket){
     });
     socket.on('delete-data',function(data){
         Tennis.findOne({_id:data.id},function(err,tennis){
-          tennis.winner=data.winner;
-          tennis.finishtime=data.finishtime;
+          tennis.winner = data.winner;
+          tennis.finishtime = data.finishtime;
           tennis.save();
           var gamedata = new Gamedata(tennis);
           gamedata.save();
@@ -304,7 +315,7 @@ app.use(function(err,req,res,next){
 
 if(process.argv[1] == __filename){
   server.listen(app.get('port'),function(){
-    console.log("Express server listening on port" + app.get('port'));
+    console.log("Express server listening on port " + app.get('port'));
   });
 }
 /*app.listen(app.get('port'), function () {

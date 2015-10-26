@@ -118,7 +118,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 		socket.emit('resume-game', $stateParams.id);
 		//取得した情報をコールバックで受け取る。socket使わないもっとうまい方法あるかも。
 		socket.on('resume-success', function(tennisInstance){
-			TennisID.set(tennisInstance);
+			TennisID.set(tennisInstance.startdata);
 			console.log(TennisID.all());
 		});
 	} else {
@@ -170,6 +170,8 @@ var pointtext = new Array("0","0","0","0","0","0");
 var pointtext2 = new Array(0,0,0,0,0,0);
 var server = new Array("●","");
 var ActionTennis = new Array();
+var gamecountsave = new Array(),
+    numgamecount = 0;
 //---------初期設定--------------------------------------------------------------------------
     $scope.agcreater = creater;
     $scope.agserver1 = TennisID.all().player1;
@@ -1434,11 +1436,18 @@ function TieBreak(check,point){
 function SetPoint(check,setpoint){
   //セットポイントのカウント
   //ゲームカウントの保存
+  numgamecount++;
+  if(numgamecount==1){gamecountsave[0]=gamepoint1;gamecountsave[1]=gamepoint2;
+  }else if(numgamecount==2){gamecountsave[2]=gamepoint1;gamecountsave[3]=gamepoint2;
+  }else if(numgamecount==3){gamecountsave[4]=gamepoint1;gamecountsave[5]=gamepoint2;
+  }else if(numgamecount==4){gamecountsave[6]=gamepoint1;gamecountsave[7]=gamepoint2;
+  }else if(numgamecount==5){gamecountsave[8]=gamepoint1;gamecountsave[9]=gamepoint2;}
   ClearPoint();
   gamepoint1=0;
   gamepoint2=0;
   $scope.aggame1="0";
   $scope.aggame2="0";
+  console.log(gamecountsave);
   if(check==1){$scope.agset1=setpoint1;
   }else if(check==2){$scope.agset2=setpoint2;}
   if(setcount == 1){
@@ -1482,13 +1491,19 @@ function SetPoint(check,setpoint){
 function FinishGame(){
   if(tennisdata.player1=="112233aabbddcceeii989jyjisegoku"){console.log("へんことしてんじゃねーよ！！");
   }else{
-       if(isGameSet == true){
+    if(isGameSet == true){
+          var gamecounttext=new Array();
+          if(numgamecount==1){gamecounttext[0]=gamecountsave[0]+"-"+gamecountsave[1]+":"}
+          else if(numgamecount==2){gamecounttext[0]=gamecountsave[0]+"-"+gamecountsave[1]+":"+gamecountsave[2]+"-"+gamecountsave[3]+":"}
+          else if(numgamecount==3){gamecounttext[0]=gamecountsave[0]+"-"+gamecountsave[1]+":"+gamecountsave[2]+"-"+gamecountsave[3]+":"+gamecountsave[4]+"-"+gamecountsave[5]+":"}
+          else if(numgamecount==4){gamecounttext[0]=gamecountsave[0]+"-"+gamecountsave[1]+":"+gamecountsave[2]+"-"+gamecountsave[3]+":"+gamecountsave[4]+"-"+gamecountsave[5]+":"+gamecountsave[6]+"-"+gamecountsave[7]+":"}
+          else if(numgamecount==5){gamecounttext[0]=gamecountsave[0]+"-"+gamecountsave[1]+":"+gamecountsave[2]+"-"+gamecountsave[3]+":"+gamecountsave[4]+"-"+gamecountsave[5]+":"+gamecountsave[6]+"-"+gamecountsave[7]+":"+gamecountsave[8]+"-"+gamecountsave[9]+":"}
           var time=Date.now(); 
           var alertPopup = $ionicPopup.alert({
             title:"ゲーム終了です。トップページに戻ります。試合結果の詳細は''試合データ''をみてください。"
           });
           location.href = "#/tab/dash";
-          socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time});
+          socket.emit('delete-data',{id:tennisdata.ID,winner:winner,finishtime:time,gamecounttext:gamecounttext});
         }
       }
 }

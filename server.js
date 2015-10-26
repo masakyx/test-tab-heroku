@@ -81,7 +81,8 @@ var TennisSchema = new mongoose.Schema({
       PointText:{
         server:[String],
         text:[String],
-        point:[Number]
+        point:[Number],
+        gamecount:[String]
       }
 });
 var Chat = db.model('chat',ChatSchema);
@@ -219,13 +220,14 @@ io.sockets.on('connection',function(socket){
           tennis.finishtime = data.finishtime;
           tennis.save();
           var gamedata = new Gamedata(tennis);
+          gamedata.PointText.gamecount=data.gamecounttext;
           gamedata.save();
           var timeData = new Date();
           var month = timeData.getMonth()+1;
           var chatdata = {
             date:timeData.getFullYear()+"/"+month+"/"+timeData.getDate(),
             name:"試合報告",
-            message:tennis.startdata.player1+"/"+tennis.startdata.player3+"と"+tennis.startdata.player2+"/"+tennis.startdata.player4 +"の試合が終わりました。勝者は"+data.winner+"です。",
+            message:tennis.startdata.player1+"/"+tennis.startdata.player3+"と"+tennis.startdata.player2+"/"+tennis.startdata.player4 +"の試合が終わりました。勝者は"+data.winner+"です。ゲームカウントは"+data.gamecounttext[0]+"です。",
             time:data.finishtime,
           }
             var message = new Chat(chatdata);

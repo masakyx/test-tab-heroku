@@ -77,7 +77,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
       }
   })
   .state('tab.easyscoreboard',{
-      url:'/dash/easyscoreboard',
+      url:'/dash/easyscoreboard/:id',
       views:{
           'tab-dash':{
             templateUrl:'templates/easyscoreboard.html',

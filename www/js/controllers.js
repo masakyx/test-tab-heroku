@@ -3,7 +3,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 //----------------
 //--DashCtrl------
 //----------------
-.controller('DashCtrl', function($scope,TennisID,socket,$ionicFrostedDelegate,$ionicScrollDelegate,$ionicPopup,$cordovaGoogleAnalytics) {
+.controller('DashCtrl', function($scope,TennisID,socket,$ionicFrostedDelegate,$ionicScrollDelegate,$ionicPopup) {
     var id;
     var tennisdata = TennisID.all();
     

@@ -2,11 +2,11 @@
 <ion-content ng-controller="DashCtrl">
 <div class="list">
         <div class="item item-divider" align="center">シングルス・ダブルス</div>
-        <div class="row" ng-click="choseType()">
-          <ion-radio ng-model="gametype" ng-value="1" class="col positive" name="gametype">
+        <div class="row" >
+          <ion-radio ng-model="gametype" ng-value="1" ng-change="choseType()"class="col positive" name="gametype">
             シングルス
             </ion-radio>
-            <ion-radio ng-model="gametype" ng-value="2" class="col positive" name="gametype">
+            <ion-radio ng-model="gametype" ng-value="2" ng-change="choseType()"class="col positive" name="gametype">
             ダブルス
             </ion-radio>
         </div>

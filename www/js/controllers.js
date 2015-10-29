@@ -2006,7 +2006,7 @@ function ConfirmSide(){
                         message:chatname+"がログインしました。",
                         time:time,
                 };
-                socket.emit('send-chat',data);
+                //socket.emit('send-chat',data);
               }
             }
           }

@@ -2007,6 +2007,8 @@ function ConfirmSide(){
                         time:time,
                 };
                 socket.emit('send-login',data);
+                $ionicFrostedDelegate.update();
+                $ionicScrollDelegate.scrollBottom(true);
               }
             }
           }
@@ -2048,14 +2050,14 @@ function ConfirmSide(){
             messages.push(data);
           }
       });
-      $ionicFrostedDelegate.update();
-      $ionicScrollDelegate.scrollBottom(true);
+      //$ionicFrostedDelegate.update();
+      //$ionicScrollDelegate.scrollBottom(true);
   });
   socket.on('send-chat',function(data){
       messages.push(data);
       console.log(data);
-      $ionicFrostedDelegate.update();
-      $ionicScrollDelegate.scrollBottom(true);
+      //$ionicFrostedDelegate.update();
+      //$ionicScrollDelegate.scrollBottom(true);
   });
 })
 

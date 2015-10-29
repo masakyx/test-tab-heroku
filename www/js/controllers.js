@@ -2003,10 +2003,10 @@ function ConfirmSide(){
                 var data = {
                         date:date,
                         name:"ログイン情報",
-                        message:chatname+"がログインしました。",
+                        message:chatname,
                         time:time,
                 };
-                //socket.emit('send-chat',data);
+                socket.emit('send-login',data);
               }
             }
           }

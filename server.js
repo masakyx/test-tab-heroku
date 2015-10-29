@@ -52,6 +52,10 @@ var ChatSchema = new mongoose.Schema({
     message:String,
     time:Number,
 });
+var LoginSchema = new mongoose.Schema({
+    chatname:String,
+    time:Number
+});
 var TennisSchema = new mongoose.Schema({
       winner:String,
       finishtime:Number,
@@ -89,7 +93,7 @@ var Chat = db.model('chat',ChatSchema);
 var Tennis = db.model('tennis',TennisSchema);
 var ppTennis = db.model('pptennis',TennisSchema);
 var Gamedata = db.model('gamedata',TennisSchema);
-
+var LoginInfo = db.model('logininfo',LoginSchema);
 //-----socket.io----------------------------------------------------------------------------
 var io = require('socket.io').listen(server);
 io.sockets.on('connection',function(socket){
@@ -247,7 +251,13 @@ io.sockets.on('connection',function(socket){
           }
       });*/
   });
-      socket.on('masaki-delete',function(data){
+  socket.on('send-login',function(data){
+        var logininfo = new LoginInfo();
+        logininfo.chatname=data.message;
+        logininfo.time=data.time;
+        logininfo.save();
+  });
+  socket.on('masaki-delete',function(data){
           Tennis.findOne({_id:data.id},function(err,tennis){
               socket.emit('masaki-delete',{id:data.id});
               socket.broadcast.json.emit('masaki-delete',{id:data.id});

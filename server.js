@@ -179,7 +179,11 @@ io.sockets.on('connection',function(socket){
 	   console.log(gameID);
 	   Tennis.findOne({_id:gameID}, function(err, tennisInstance){
 		   io.sockets.emit('resume-success', tennisInstance);
-	   });
+     });
+     ppTennis.find(function(err,items){
+         if(err)console.log(err);
+         socket.emit('resume-data',items);
+     }); 
    });
    socket.on('point-update',function(data){
        Tennis.findOne({_id:data.dataid},function(err,tennis){

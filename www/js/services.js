@@ -8,7 +8,8 @@ angular.module('starter.services', [])
     //local version ios  ->
     var socket = io.connect(location.host+"/" || "localhost:5000" || "10.0.2.2:5000");
     //local version android ->
-      //var socket = io.connect("http://10.0.2.2:5000");
+    //var socket = io.connect("http://10.0.2.2:5000");
+    //var socket = io.connect('http://localhost:5000')
     return {
         on:function(eventName,callback){
           socket.on(eventName,function(){

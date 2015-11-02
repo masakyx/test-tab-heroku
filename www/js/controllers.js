@@ -120,7 +120,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 		//IDを元にテニスの情報を持ってくる
 		socket.emit('resume-game', $stateParams.id);
 		//取得した情報をコールバックで受け取る。socket使わないもっとうまい方法あるかも。
-		socket.on('resume-success', function(tennisInstance){
+    socket.on('resume-success', function(tennisInstance){
+        numaction = tennisInstance.numaction;
         TennisID.set(tennisInstance.startdata);
         point1=tennisInstance.PointText.point[4];
         point2=tennisInstance.PointText.point[5];
@@ -164,7 +165,13 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
         $scope.checkserver11 = true;
         $scope.checkreceiver22 = true;
         tennisdata = TennisID.all();
-		});
+        if(numaction==null)numaction=0;console.log('numaction = null');
+    });
+    socket.on('resume-data',function(Tennis){
+        Tennis.forEach(function(data){
+              if(data.ID==TennisID.all().ID)ActionTennis.push(data);
+        });
+    })
 	} else {
 		//IDがバインドされている場合は必ず新規
 		//do nothing.
@@ -1811,7 +1818,7 @@ function ConfirmSide(){
   }
   function PointUpdate(){
     if(tennisdata.player1=="112233aabbddcceeii989jyjisegoku"){console.log("へんなデータつくってんじゃねーよ！！！！");
-     }else{
+    }else{
         numaction++;
         pointtext[0]=$scope.agpoint2;
         pointtext[1]=$scope.agpoint1;

@@ -3,7 +3,10 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 //----------------
 //--DashCtrl------
 //----------------
-.controller('DashCtrl', function($scope,TennisID,socket,$ionicFrostedDelegate,$ionicScrollDelegate,$ionicPopup) {
+.controller('DashCtrl', function($scope,TennisID,socket,$ionicFrostedDelegate,$ionicScrollDelegate,$ionicPopup,$cordovaGoogleAnalytics) {
+
+
+
     var id;
     var tennisdata = TennisID.all();
     
@@ -118,8 +121,49 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 		socket.emit('resume-game', $stateParams.id);
 		//取得した情報をコールバックで受け取る。socket使わないもっとうまい方法あるかも。
 		socket.on('resume-success', function(tennisInstance){
-			TennisID.set(tennisInstance.startdata);
-			console.log(TennisID.all());
+        TennisID.set(tennisInstance.startdata);
+        point1=tennisInstance.PointText.point[4];
+        point2=tennisInstance.PointText.point[5];
+        gamepoint1=tennisInstance.PointText.point[2];
+        gamepoint2=tennisInstance.PointText.point[3];
+        setpoint1=tennisInstance.PointText.point[1];
+        setpoint2=tennisInstance.PointText.point[0];
+        TennisID.all().ID = $stateParams.id;
+			  console.log(TennisID.all());
+        player1=TennisID.all().player1;
+        player2=TennisID.all().player2;
+        player3=TennisID.all().player3;
+        player4=TennisID.all().player4;
+        creater=TennisID.all().creater;
+        gametype=TennisID.all().gametype;
+        setcount=TennisID.all().set;
+        gamecount=TennisID.all().game;
+        $scope.agcreater = creater;
+        $scope.agserver1 = TennisID.all().player1;
+        $scope.agreceiver1 = TennisID.all().player1;
+        $scope.agserver2 = TennisID.all().player2;
+        $scope.agreceiver2 = TennisID.all().player2;
+        if(gametype == "1"){
+          $scope.agplayer1 = player1;
+          $scope.agplayer2 = player2;
+        }else{
+          $scope.agplayer1 = player1+" & "+player3;
+          $scope.agplayer2 = player2+" & "+player4;
+        }
+        $scope.agset1 = tennisInstance.PointText.text[5];
+        $scope.aggame1 = tennisInstance.PointText.text[3];
+        $scope.agpoint1 = tennisInstance.PointText.text[1];
+        $scope.agset2 = tennisInstance.PointText.text[4];
+        $scope.aggame2 = tennisInstance.PointText.text[2];
+        $scope.agpoint2 = tennisInstance.PointText.text[0];
+        $scope.serverbutton1 = true;
+        $scope.checkserver1 = true;
+        $scope.faultbutton1 = true;
+        $scope.strokebutton1 = true;
+        $scope.strokebutton2 = true;
+        $scope.checkserver11 = true;
+        $scope.checkreceiver22 = true;
+        tennisdata = TennisID.all();
 		});
 	} else {
 		//IDがバインドされている場合は必ず新規
@@ -130,7 +174,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
     //
     /*$scope.$on('$ionicView.beforeLeave',function(){
     });*/
-    var tennisdata = TennisID.all();
+   var tennisdata = TennisID.all();
+   console.log(TennisID.all());
     var setpoint1=0,setpoint2=0,gamepoint1=0,gamepoint2=0,point1=0,point2=0;
     var winner="途中で終了しました。";
     var isTiebreak = false,

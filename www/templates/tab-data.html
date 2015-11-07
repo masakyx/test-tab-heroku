@@ -12,7 +12,7 @@
     </div>
   </ul>-->
   <ion-list show-delete="data.showDelete">
-  <ion-item ng-repeat="tennisdata in tennisdatas | orderBy:'-startdata.starttime'"item="tennisdata" ng-click="dataclick({{tennisdata.mode}},tennisdata._id)" class="item-remove-animate item-icon-right">
+  <ion-item ng-repeat="tennisdata in tennisdatas | orderBy:'-startdata.starttime'"item="tennisdata" ng-click="dataclick(tennisdata.mode,tennisdata._id)" class="item-remove-animate item-icon-right">
           {{tennisdata.startdata.player1}}  {{tennisdata.startdata.player3}}  -VS-  {{tennisdata.startdata.player2}}  {{tennisdata.startdata.player4}}
           <p>{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
           <i class="ion-chevron-right icon"></i>

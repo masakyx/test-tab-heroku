@@ -61,6 +61,7 @@ var TennisSchema = new mongoose.Schema({
       finishtime:Number,
       ID:String,
       numaction:Number,
+      mode:Number,
       startdata:{
         creater:String,
         player1:String,
@@ -141,14 +142,15 @@ io.sockets.on('connection',function(socket){
    socket.on('tennis-start',function(data){
        console.log("テニスデータが作成されたぞ");
        var tennis = new Tennis();
-       console.log
        tennis.startdata = data.tennis;
        tennis.PointText.server[0]="●";
        tennis.PointText.server[1]="";
        for(var i=0;i<6;i++){
          tennis.PointText.text[i]="0";
          tennis.PointText.point[i]=0;
-      }
+       }
+       tennis.mode=data.mode;
+       console.log(data.mode);
       tennis.save();
       var pptennis = new ppTennis(tennis);
       pptennis.ID = tennis._id;
@@ -214,6 +216,7 @@ io.sockets.on('connection',function(socket){
            pptennis.PointText.text=tennis.PointText.text;
            pptennis.PointText.point=tennis.PointText.point;
            pptennis.ID = tennis._id;
+           pptennis.mode = tennis.mode;
            pptennis.numaction = data.numaction;
            pptennis.save();
            socket.emit('point-update',tennis);

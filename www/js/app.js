@@ -122,6 +122,15 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services','n
         }
       }
   })
+  .state('tab.dataeasy',{
+      url:'/data/dataeasy/:tennisdataId',
+      views:{
+        'tab-data':{
+          templateUrl:'templates/tab-data-easy.html',
+          controller:'DataDetailCtrl'
+        }
+      }
+  })
   .state('tab.account', {
     url: '/account',
     views: {

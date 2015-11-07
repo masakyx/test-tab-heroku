@@ -7,7 +7,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 
 
 
-    var id;
+    var id,
+        mode;
     var tennisdata = TennisID.all();
     
     $scope.setChoice = "1";
@@ -43,6 +44,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
           game = $scope.gameChoice,
           tiebreak = $scope.agtiebreak,
           deuce = $scope.agdeuce;
+          mode = $scope.modeChoice;
       if($scope.gametype == "1"){
 		  //シングルス
         if(creater == null || player1== null || player2== null){
@@ -65,7 +67,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
               tennisdata.starttime = Date.now();
-              socket.emit("tennis-start",{tennis:tennisdata});
+              socket.emit("tennis-start",{tennis:tennisdata,mode:mode});
             }
           });
         }
@@ -94,7 +96,7 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
               tennisdata.tiebreak = tiebreak;
               tennisdata.deuce = deuce;
               tennisdata.starttime=Date.now();
-              socket.emit("tennis-start",{tennis:tennisdata});
+              socket.emit("tennis-start",{tennis:tennisdata,mode:mode});
             } 
           });
         }
@@ -2172,9 +2174,16 @@ function ConfirmSide(){
         tennisdatas.unshift(gamedata);
         TennisDataDetail.add(tennisdatas);
     });
+    $scope.dataclick=function(mode,id){
+      console.log(mode);
+      if(mode==1) location.href="#/tab/data/datadetail/"+id ;
+      else location. href="#/tab/data/dataeasy/"+id ;
+   
+    }
 })
 .controller('DataDetailCtrl',function($scope,TennisDataDetail,$stateParams){
-    $scope.tennisdata = TennisDataDetail.get($stateParams.tennisdataId);
+    var tennisdata  = TennisDataDetail.get($stateParams.tennisdataId);
+    $scope.tennisdata = tennisdata;
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
 .controller('AccountCtrl', function($scope) {

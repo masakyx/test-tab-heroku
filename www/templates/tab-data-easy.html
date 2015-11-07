@@ -1,5 +1,11 @@
 <ion-view title="{{tennisdata.startdata.player1}}">
   <ion-content>
-    <h2>EASYデータの詳細はまだ実装してないのでまっててねー♡</h2>
+    <div class="card positive" style="background-color:#e6ffff;" on-double-tap="dblclickremovedata(tennisdata._id)">
+      <p class="dark">試合時間:{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}~{{tennisdata.finishtime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
+      <p class="dark">CREATER : {{tennisdata.startdata.creater}}</p>
+      <p class="dark">Player : {{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}} -VS- {{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</p>
+      <p class="dark">勝者 : {{tennisdata.winner}}</p>
+      <p class="dark">スコア : {{tennisdata.PointText.gamecount[0]}}</p>
+    </div>
   </ion-content>
 </ion-view>

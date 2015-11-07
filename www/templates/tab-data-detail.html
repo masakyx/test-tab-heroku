@@ -1,5 +1,403 @@
 <ion-view title="{{tennisdata.startdata.player1}}">
   <ion-content>
-    <h2>データの詳細はまだ実装してないのでまっててねー♡</h2>
+    <div class="card positive" style="background-color:#e6ffff;" on-double-tap="dblclickremovedata(tennisdata._id)">
+      <p class="dark">試合時間:{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}~{{tennisdata.finishtime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
+      <p class="dark">CREATER : {{tennisdata.startdata.creater}}</p>
+      <p class="dark">Player : {{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}} -VS- {{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</p>
+      <p class="dark">勝者 : {{tennisdata.winner}}</p>
+      <p class="dark">スコア : {{tennisdata.PointText.gamecount[0]}}</p>
+    </div>
+    <div class="card positive" style="background-color:#e6ffff;">
+      <h4>ポイントデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">ポイントデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">獲得ポイント</div>
+        <div align="center" class="col vServer1" >{{tennisdata.PointData1.point[1]}}/{{tennisdata.PointData1.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.PointData1.point[2]}}/{{tennisdata.PointData1.point[0]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサーブINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[3]}}/{{tennisdata.ServerSide1.point[0]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[4]}}/{{tennisdata.ServerSide1.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[5]}}/{{tennisdata.ServerSide1.point[2]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[6]}}/{{tennisdata.ServerSide1.point[3]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサーブのリターンINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[7]}}/{{tennisdata.ReturnSide1.point[0]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[8]}}/{{tennisdata.ReturnSide1.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブのリターンINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[9]}}/{{tennisdata.ReturnSide1.point[2]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData1.point[10]}}/{{tennisdata.ReturnSide1.point[3]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#e6ffff;">
+      <h4>サーブデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">サーブデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ファーストサーブ</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ServerSide1.point[0]}}/{{tennisdata.ServerSide1.point[12]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ServerSide1.point[1]}}/{{tennisdata.ServerSide1.point[14]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブ</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[2]}}/{{tennisdata.ServerSide1.point[13]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[3]}}/{{tennisdata.ServerSide1.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサービスエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[4]}}/{{tennisdata.ServerSide1.point[12]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[5]}}/{{tennisdata.ServerSide1.point[14]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサービスエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[6]}}/{{tennisdata.ServerSide1.point[13]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[7]}}/{{tennisdata.ServerSide1.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ダブルフォルト</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[10]}}/{{tennisdata.ServerSide1.point[12]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide1.point[11]}}/{{tennisdata.ServerSide1.point[14]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#e6ffff;">
+      <h4>リターンデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">リターンデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">フォアハンドのファーストサーブリターンIN</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ReturnSide1.point[0]}}/{{tennisdata.ReturnSide1.point[24]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ReturnSide1.point[1]}}/{{tennisdata.ReturnSide1.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[20]}}/{{tennisdata.ReturnSide1.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[21]}}/{{tennisdata.ReturnSide1.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[2]}}/{{tennisdata.ReturnSide1.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[3]}}/{{tennisdata.ReturnSide1.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[22]}}/{{tennisdata.ReturnSide1.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[23]}}/{{tennisdata.ReturnSide1.point[31]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのファーストサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[4]}}/{{tennisdata.ReturnSide1.point[24]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[6]}}/{{tennisdata.ReturnSide1.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[5]}}/{{tennisdata.ReturnSide1.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[7]}}/{{tennisdata.ReturnSide1.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[8]}}/{{tennisdata.ReturnSide1.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[10]}}/{{tennisdata.ReturnSide1.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[9]}}/{{tennisdata.ReturnSide1.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[11]}}/{{tennisdata.ReturnSide1.point[31]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのファーストサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[12]}}/{{tennisdata.ReturnSide1.point[24]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[13]}}/{{tennisdata.ReturnSide1.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[14]}}/{{tennisdata.ReturnSide1.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[15]}}/{{tennisdata.ReturnSide1.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[16]}}/{{tennisdata.ReturnSide1.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[17]}}/{{tennisdata.ReturnSide1.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[18]}}/{{tennisdata.ReturnSide1.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide1.point[19]}}/{{tennisdata.ReturnSide1.point[31]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#e6ffff;">
+      <h4>ショットデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player1}} {{tennisdata.startdata.player3}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">ショットデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアハンド</div>
+        <div align="center" class="col vPlayer2 dark">バックハンド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークwinning shot</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークside out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[2]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[3]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークback out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[4]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[5]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークnet</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[6]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[7]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークunforced error</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[16]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[17]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーwinning shot</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[8]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[9]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーside out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[10]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[11]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーback out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[12]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[13]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーnet</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[14]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーunforced error</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[18]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[19]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#d5ffcc;">
+      <h4>ポイントデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">ポイントデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">獲得ポイント</div>
+        <div align="center" class="col vServer1" >{{tennisdata.PointData2.point[1]}}/{{tennisdata.PointData2.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.PointData2.point[2]}}/{{tennisdata.PointData2.point[0]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサーブINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[3]}}/{{tennisdata.ServerSide2.point[0]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[4]}}/{{tennisdata.ServerSide2.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[5]}}/{{tennisdata.ServerSide2.point[2]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[6]}}/{{tennisdata.ServerSide2.point[3]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサーブのリターンINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[7]}}/{{tennisdata.ReturnSide2.point[0]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[8]}}/{{tennisdata.ReturnSide2.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブのリターンINからのポイント</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[9]}}/{{tennisdata.ReturnSide2.point[2]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.PointData2.point[10]}}/{{tennisdata.ReturnSide2.point[3]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#d5ffcc;">
+      <h4>サーブデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">サーブデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ファーストサーブ</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ServerSide2.point[0]}}/{{tennisdata.ServerSide2.point[12]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ServerSide2.point[1]}}/{{tennisdata.ServerSide2.point[14]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサーブ</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[2]}}/{{tennisdata.ServerSide2.point[13]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[3]}}/{{tennisdata.ServerSide2.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ファーストサービスエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[4]}}/{{tennisdata.ServerSide2.point[12]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[5]}}/{{tennisdata.ServerSide2.point[14]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">セカンドサービスエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[6]}}/{{tennisdata.ServerSide2.point[13]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[7]}}/{{tennisdata.ServerSide2.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">ダブルフォルト</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[10]}}/{{tennisdata.ServerSide2.point[12]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ServerSide2.point[11]}}/{{tennisdata.ServerSide2.point[14]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#d5ffcc;">
+      <h4>リターンデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">リターンデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアサイド</div>
+        <div align="center" class="col vPlayer2 dark">バックサイド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">フォアハンドのファーストサーブリターンIN</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ReturnSide2.point[0]}}/{{tennisdata.ReturnSide2.point[24]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ReturnSide2.point[1]}}/{{tennisdata.ReturnSide2.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[20]}}/{{tennisdata.ReturnSide2.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[21]}}/{{tennisdata.ReturnSide2.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[2]}}/{{tennisdata.ReturnSide2.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[3]}}/{{tennisdata.ReturnSide2.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブリターンIN</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[22]}}/{{tennisdata.ReturnSide2.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[23]}}/{{tennisdata.ReturnSide2.point[31]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのファーストサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[4]}}/{{tennisdata.ReturnSide2.point[24]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[6]}}/{{tennisdata.ReturnSide2.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[5]}}/{{tennisdata.ReturnSide2.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[7]}}/{{tennisdata.ReturnSide2.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[8]}}/{{tennisdata.ReturnSide2.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[10]}}/{{tennisdata.ReturnSide2.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブをリターンエース</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[9]}}/{{tennisdata.ReturnSide2.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[11]}}/{{tennisdata.ReturnSide2.point[31]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのファーストサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[12]}}/{{tennisdata.ReturnSide2.point[24]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[13]}}/{{tennisdata.ReturnSide2.point[28]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのファーストサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[14]}}/{{tennisdata.ReturnSide2.point[25]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[15]}}/{{tennisdata.ReturnSide2.point[29]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">フォアハンドのセカンドサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[16]}}/{{tennisdata.ReturnSide2.point[26]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[17]}}/{{tennisdata.ReturnSide2.point[30]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vSet dark">バックハンドのセカンドサーブをリターンミス</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[18]}}/{{tennisdata.ReturnSide2.point[27]}}</div>
+        <div align="center" class="col vSet1">{{tennisdata.ReturnSide2.point[19]}}/{{tennisdata.ReturnSide2.point[31]}}</div>
+      </div>
+    </div>
+    <div class="card positive" style="background-color:#d5ffcc;">
+      <h4>ショットデータ</h4>
+      <h2 class="dark">{{tennisdata.startdata.player2}} {{tennisdata.startdata.player4}}</h2>
+      <div class="row header">
+        <div align="center" class="col vPlayer dark">ショットデータ</div>
+        <div align="center" class="col vPlayer1 dark">フォアハンド</div>
+        <div align="center" class="col vPlayer2 dark">バックハンド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークwinning shot</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[1]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークside out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[2]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[3]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークback out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[4]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[5]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークnet</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[6]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[7]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ストロークunforced error</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[16]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[17]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーwinning shot</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[8]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[9]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーside out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[10]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[11]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーback out</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[12]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[13]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーnet</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[14]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[15]}}</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">ボレーunforced error</div>
+        <div align="center" class="col vServer1" >{{tennisdata.ShotPoint2.point[18]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.ShotPoint2.point[19]}}</div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>

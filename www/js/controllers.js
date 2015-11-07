@@ -215,11 +215,11 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0),
         serverside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         returnside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-        shotdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    shotdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
         serverside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
-      shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+    shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 var pointtext = new Array("0","0","0","0","0","0");
 var pointtext2 = new Array(0,0,0,0,0,0);
 var server = new Array("●","");

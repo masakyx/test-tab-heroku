@@ -1,4 +1,4 @@
-<ion-view title="{{tennisdata.startdata.player1}}">
+<ion-view title="記録モード：DETAIL">
   <ion-content>
     <div class="card positive" style="background-color:#e6ffff;" on-double-tap="dblclickremovedata(tennisdata._id)">
       <p class="dark">試合時間:{{tennisdata.startdata.starttime | date:'yyyy年MM月dd日HH時mm分ss秒'}}~{{tennisdata.finishtime | date:'yyyy年MM月dd日HH時mm分ss秒'}}</p>
@@ -14,11 +14,6 @@
         <div align="center" class="col vPlayer dark">ポイントデータ</div>
         <div align="center" class="col vPlayer1 dark">フォアサイド</div>
         <div align="center" class="col vPlayer2 dark">バックサイド</div>
-      </div>
-      <div class="row">
-        <div align="center" class="col vServer dark">獲得ポイント</div>
-        <div align="center" class="col vServer1" >{{tennisdata.PointData1.point[1]}}/{{tennisdata.PointData1.point[0]}}</div>
-        <div align="center" class="col vServer2">{{tennisdata.PointData1.point[2]}}/{{tennisdata.PointData1.point[0]}}</div>
       </div>
       <div class="row">
         <div align="center" class="col vSet dark">ファーストサーブINからのポイント</div>
@@ -153,6 +148,11 @@
         <div align="center" class="col vPlayer2 dark">バックハンド</div>
       </div>
       <div class="row">
+        <div align="center" class="col vServer dark">獲得ポイント</div>
+        <div align="center" class="col vServer1" >{{tennisdata.PointData1.point[1]}}/{{tennisdata.PointData1.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.PointData1.point[2]}}/{{tennisdata.PointData1.point[0]}}</div>
+      </div>
+      <div class="row">
         <div align="center" class="col vServer dark">ストロークwinning shot</div>
         <div align="center" class="col vServer1" >{{tennisdata.ShotPoint1.point[0]}}</div>
         <div align="center" class="col vServer2">{{tennisdata.ShotPoint1.point[1]}}</div>
@@ -210,11 +210,6 @@
         <div align="center" class="col vPlayer dark">ポイントデータ</div>
         <div align="center" class="col vPlayer1 dark">フォアサイド</div>
         <div align="center" class="col vPlayer2 dark">バックサイド</div>
-      </div>
-      <div class="row">
-        <div align="center" class="col vServer dark">獲得ポイント</div>
-        <div align="center" class="col vServer1" >{{tennisdata.PointData2.point[1]}}/{{tennisdata.PointData2.point[0]}}</div>
-        <div align="center" class="col vServer2">{{tennisdata.PointData2.point[2]}}/{{tennisdata.PointData2.point[0]}}</div>
       </div>
       <div class="row">
         <div align="center" class="col vSet dark">ファーストサーブINからのポイント</div>
@@ -347,6 +342,11 @@
         <div align="center" class="col vPlayer dark">ショットデータ</div>
         <div align="center" class="col vPlayer1 dark">フォアハンド</div>
         <div align="center" class="col vPlayer2 dark">バックハンド</div>
+      </div>
+      <div class="row">
+        <div align="center" class="col vServer dark">獲得ポイント</div>
+        <div align="center" class="col vServer1" >{{tennisdata.PointData2.point[1]}}/{{tennisdata.PointData2.point[0]}}</div>
+        <div align="center" class="col vServer2">{{tennisdata.PointData2.point[2]}}/{{tennisdata.PointData2.point[0]}}</div>
       </div>
       <div class="row">
         <div align="center" class="col vServer dark">ストロークwinning shot</div>

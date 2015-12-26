@@ -2265,28 +2265,54 @@ function ConfirmSide(){
     $scope.tennisdata = tennisdata;
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
-.controller('AccountCtrl', function($scope,Flick,$document){
+.controller('AccountCtrl', function($scope,$document){
     var TouchZone = document.getElementById('touchzone');
 
     var startX,
         startY,
+        FirstFlag = false,
+        SecondFlag = false,
+        RightFlag = false,
+        nRightFlag = false,
+        LeftFlag = false,
+        nLeftFlag = false,
+        UpFlag = false,
+        nUpFlag = false,
+        DownFlag = false,
+        nDownFlag = false,
+        DownRightFlag = false,
+        DownLeftFlag = false,
+        UpRightFlag = false,
+        UpLeftFlag = false,
+        ApexFlag = false,
         Lflag = false,
-        vflag = false,
-        hflag = false,
-        apex = false,
         begintime;
     var moveX = new Array();
     var moveY = new Array();
+
+    var ajustX = 50,
+        ajustY = 50;//ぶれ幅の割る数
 
     var L_Flick = function(){
     }
 
     var if_touchstart = function(evt){
       if(evt.touches.length == 1){
-        vflag=true;
-        hflag=false;
-        Lflag=false;
-        apex=false;
+        FirstFlag=true;
+        SecondFlag = false;
+        RightFlag = false;
+        nRightFlag = false;
+        LeftFlag = false;
+        nLeftFlag = false;
+        UpFlag = false;
+        nUpFlag = false;
+        DownFlag = false;
+        nDownFlag = false;
+        DownRightFlag = false;
+        DownLeftFlag = false;
+        UpRightFlag = false;
+        UpLeftFlag = false;
+        ApexFlag=false;
         startX = evt.touches[0].pageX - window.pageXOffset;
         startY = evt.touches[0].pageY - window.pageYOffset;
         begintime = new Date().getTime();
@@ -2300,31 +2326,85 @@ function ConfirmSide(){
       var currenttime = new Date().getTime();
       moveX[0] = evt.touches[0].pageX - window.pageXOffset - startX;
       moveY[0] = evt.touches[0].pageY - window.pageYOffset - startY;
-      if(vflag){
-        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/100){
-          vflag = false;
-          hflag = true;
+      if(FirstFlag){
+        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nDownFlag){
+          DownFlag = true;
           console.log("↓↓↓検知");
         }
-      }
-      if(hflag && moveX[0] > window.innerWidth/15 && !apex){
-          console.log("頂点検知");
-          startY = evt.touches[0].pageY - window.pageYOffset;
-          startX = evt.touches[0].pageX - window.pageXOffset - window.innerWidth/15;
-          apex = true;
-      }
-      if(hflag && moveX[0] > window.innerWidth/10  && Math.abs(moveY[0]) < window.innerWidth/70){
+        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nUpFlag){
+          UpFlag = true;
+          console.log("↑↑↑検知");
+        }
+        if(moveX[0] > window.innerWidth/14 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nRightFlag){
+          FirstFlag = false;
+          SecondFlag = true;
+          RightFlag = true;
           console.log("→→→検知");
-          Lflag = true;
+        }
+        if(moveX[0] < -window.innerWidth/14 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nLeftFlag){
+          FirstFlag = false;
+          SecondFlag = true;
+          LeftFlag = true;
+          console.log("←←←検知");
+        }
+        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          nDownFlag = true;
+        }
+        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          nUpFlag = true;
+        }
+        if(moveX[0] > window.innerWidth/14 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          nRightFlag = true;
+        }
+        if(moveX[0] < -window.innerWidth/14 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          nLeftFlag = true;
+        }
+      }
+      if(SecondFlag){
+        if(RightFlag && Math.abs(moveY[0]) > window.innerHeight/15 && !ApexFlag || LeftFlag && Math.abs(moveY[0]) > window.innerHeight/15 && !ApexFlag){
+            console.log("頂点検知");
+            startY = evt.touches[0].pageY - window.pageYOffset - moveY[0];
+            startX = evt.touches[0].pageX - window.pageXOffset;
+            ApexFlag = true;
+        }
+        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX ){
+          DownFlag = true;
+          console.log("↓↓↓検知");
+          if(RightFlag){
+            DownRightFlag = true;
+          }else if(LeftFlag){
+            DownLeftFlag = true;
+          }
+        }
+        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX){
+          UpFlag = true;
+          console.log("↑↑↑検知");
+          if(LeftFlag){
+            UpLeftFlag = true;
+          }else if(RightFlag){
+            UpRightFlag = true;
+          }
+        }
       }
     };
 
     var if_touchend = function(evt){
-      if(Lflag){
-        console.log("L字フリック");
-        Lflag=false;
-        vflag=false;
-        hflag=false;
+      if(DownFlag && !ApexFlag){
+        console.log("Downフリック");
+      }else if(UpFlag && ! ApexFlag){
+        console.log("Upフリック");
+      }else if(RightFlag && !ApexFlag){
+        console.log("Rightフリック");
+      }else if(LeftFlag && !ApexFlag){
+        console.log("Leftフリック");
+      }else if(DownLeftFlag){
+        console.log("DownLeftフリック");
+      }else if(DownRightFlag){
+        console.log("DownRightフリック");
+      }else if(UpRightFlag){
+        console.log("UpRightフリック");
+      }else if(UpLeftFlag){
+        console.log("UpLeftフリック");
       }
     }
     TouchZone.addEventListener('touchstart',if_touchstart,false);

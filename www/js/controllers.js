@@ -1,5 +1,5 @@
 "use strict"
-angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.frostedGlass','ngAnimate','ngTouch'])
+angular.module('starter.controllers',['ionic','ionic.contrib.frostedGlass','ngAnimate','ngTouch'])
 //----------------
 //--DashCtrl------
 //----------------
@@ -193,6 +193,8 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
         isStroke=0;//0=stroke,1=bolay
 
     var isGameSet = false;
+    var isGamePoint1 = false,
+        isGamePoint2 = false;//ブレイクポイント、キープポイントの獲得率
 
 
     var player1=TennisID.all().player1,
@@ -212,11 +214,11 @@ angular.module('starter.controllers',['ui.bootstrap','ionic','ionic.contrib.fros
 
     var numaction = 0;
 //--------データ用変数の定義-----------------------------------------------------------------
-var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0),
+var pointdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         serverside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         returnside1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
     shotdata1 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0),
+var pointdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         serverside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
         returnside2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0),
     shotdata2 = new Array(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
@@ -1334,6 +1336,7 @@ $scope.unerror2 = function(){
     pointdata1[0]++;
   }
   ClickPoint(1,point1);
+  PointChance();
   if(isStroke==0){
     if(isside==0){
       shotdata2[16]++;
@@ -1399,6 +1402,74 @@ $scope.bolayClick2 = function(){
   isStroke=0;
 }
 //---------関数------------------------------------------------------------------
+function PointChance(){
+  if(isGamePoint1){
+    if(Nserverchange==1 || Nserverchange == 3){
+      if(isside==0){
+        pointdata1[15]++;
+      }else if(isside==1){
+        pointdata1[16]++;
+      }
+    }else if(Nserverchange==2 || Nserverchange==0){
+      if(isside==0){
+        pointdata1[17]++;
+      }else if(isside==1){
+        pointdata1[18]++;
+      }
+    }
+  }else if(isGamePoint2){
+    if(Nserverchange==0 || Nserverchange == 2){
+      if(isside==0){
+        pointdata2[15]++;
+      }else if(isside==1){
+        pointdata2[16]++;
+      }
+    }else if(Nserverchange==1 || Nserverchange==3){
+      if(isside==0){
+        pointdata2[17]++;
+      }else if(isside==1){
+        pointdata2[18]++;
+      }
+    }
+  }else{
+    isGamePoint1=false;
+    isGamePoint2=false;
+  }
+}
+function PointChanceGet(){
+  if(isGamePoint1){
+    if(Nserverchange==0 || Nserverchange == 2){
+      if(isside==0){
+        pointdata1[11]++;
+      }else if(isside==1){
+        pointdata1[12]++;
+      }
+    }else if(Nserverchange==1 || Nserverchange==3){
+      if(isside==0){
+        pointdata1[13]++;
+      }else if(isside==1){
+        pointdata1[14]++;
+      }
+    }
+  }else if(isGamePoint2){
+    if(Nserverchange==1 || Nserverchange == 3){
+      if(isside==0){
+        pointdata2[11]++;
+      }else if(isside==1){
+        pointdata2[12]++;
+      }
+    }else if(Nserverchange==0 || Nserverchange==2){
+      if(isside==0){
+        pointdata2[13]++;
+      }else if(isside==1){
+        pointdata2[14]++;
+      }
+    }
+  }else{
+    isGamePoint1=false;
+    isGamePoint2=false;
+  }
+}
 function ScorePoint(check,point){
      if(point == 1){
        if(check==1){$scope.agpoint1="15";
@@ -1407,17 +1478,19 @@ function ScorePoint(check,point){
        if(check==1){$scope.agpoint1="30";
        }else if(check==2){$scope.agpoint2="30";}                  
      }else if(point == 3 && point1 < 3 || point == 3 && point2 < 3){
-       if(check==1){$scope.agpoint1="40";
-       }else if(check==2){$scope.agpoint2="40";}                  
+       if(check==1){$scope.agpoint1="40";isGamePoint1=true;
+       }else if(check==2){$scope.agpoint2="40";isGamePoint2=true;}
+       //PointChance();
      }else if(point1 == 3 && point2 == 3){
        $scope.agpoint1="DEUCE";
        $scope.agpoint2="DEUCE";
      }else if(point1 == 3 && point2 == 4 || point1 == 4 && point2 == 3){
        if(point1 > point2){
-         $scope.agpoint1="Ad";
+         $scope.agpoint1="Ad";isGamePoint1=true;
        }else if(point2 > point1){
-         $scope.agpoint2="Ad";
+         $scope.agpoint2="Ad";isGamePoint2=true;
        }
+       //PointChance();
      }else if(point1 == 4 && point2 == 4){
        point1 = 3; point2 = 3;
        $scope.agpoint1="DEUCE"; $scope.agpoint2="DEUCE";
@@ -1439,6 +1512,7 @@ function ScorePoint(check,point){
 }
 
 function GamePoint(check,gamepoint){
+  //PointChanceGet();
   var xx = gamecount-1,
       yy = xx+2;
   ServerChange();
@@ -1471,6 +1545,10 @@ function TieBreak(check,point){
   if(point < 7 || point1 > 5 && point2 > 5 && (point1-point2) == 1 || point1 > 5 && point2 > 5 && (point2-point1)==1 || point1 == point2){
     if(check==1){$scope.agpoint1=point1;
     }else if(check==2){$scope.agpoint2=point2;}
+  }else if(point1==6 && point2 < 6 || point2==6 && point1 < 6 || point1 > 5 && point2 > 5 && (point1-point2)==1 || point1 > 5 && point2 > 5 && (point2-point1)==1){
+    if(point1>point2)isGamePoint1=true;
+    else if(point2>point1)isGamePoint2=true;
+    //PointChance();
   }else if(point1 > 5 && point2 > 5 && (point1-point2)==2 || point1 > 5 && point2 > 5 && (point2-point1)==2 || point1 == 7 && point2 < 6 || point1 < 6 && point2 == 7){
     $scope.aggame1="0";
     $scope.aggame2="0";
@@ -1584,12 +1662,13 @@ function ClearPoint(){
   $scope.agpoint2="0";
 }
 function ClickPoint(check,point){
-  console.log("foreback = "+foreback);
   if(!isTiebreak){
     ScorePoint(check,point);
   }else if(isTiebreak){
     TieBreak(check,point);
   }
+  console.log(pointdata1[11]+"/"+pointdata1[12]+"/"+pointdata1[13]+"/"+pointdata1[14]+"/"+pointdata1[15]+"/"+pointdata1[16]+"/"+pointdata1[17]+"/"+pointdata1[18]);
+  console.log(pointdata2[11]+"/"+pointdata2[12]+"/"+pointdata2[13]+"/"+pointdata2[14]+"/"+pointdata2[15]+"/"+pointdata2[16]+"/"+pointdata2[17]+"/"+pointdata2[18]);
 }
 function ForeBack(){
     if((point1+point2)%2 == 0){
@@ -2186,8 +2265,71 @@ function ConfirmSide(){
     $scope.tennisdata = tennisdata;
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
-.controller('AccountCtrl', function($scope) {
+.controller('AccountCtrl', function($scope,Flick,$document){
+    var TouchZone = document.getElementById('touchzone');
 
+    var startX,
+        startY,
+        Lflag = false,
+        vflag = false,
+        hflag = false,
+        apex = false,
+        begintime;
+    var moveX = new Array();
+    var moveY = new Array();
+
+    var L_Flick = function(){
+    }
+
+    var if_touchstart = function(evt){
+      if(evt.touches.length == 1){
+        vflag=true;
+        hflag=false;
+        Lflag=false;
+        apex=false;
+        startX = evt.touches[0].pageX - window.pageXOffset;
+        startY = evt.touches[0].pageY - window.pageYOffset;
+        begintime = new Date().getTime();
+        moveX[0] = 0;
+        moveY[0] = 0;
+      }
+      console.log(startX+"/"+startY);
+    };
+
+    var if_touchmove = function(evt){
+      var currenttime = new Date().getTime();
+      moveX[0] = evt.touches[0].pageX - window.pageXOffset - startX;
+      moveY[0] = evt.touches[0].pageY - window.pageYOffset - startY;
+      if(vflag){
+        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/100){
+          vflag = false;
+          hflag = true;
+          console.log("↓↓↓検知");
+        }
+      }
+      if(hflag && moveX[0] > window.innerWidth/15 && !apex){
+          console.log("頂点検知");
+          startY = evt.touches[0].pageY - window.pageYOffset;
+          startX = evt.touches[0].pageX - window.pageXOffset - window.innerWidth/15;
+          apex = true;
+      }
+      if(hflag && moveX[0] > window.innerWidth/10  && Math.abs(moveY[0]) < window.innerWidth/70){
+          console.log("→→→検知");
+          Lflag = true;
+      }
+    };
+
+    var if_touchend = function(evt){
+      if(Lflag){
+        console.log("L字フリック");
+        Lflag=false;
+        vflag=false;
+        hflag=false;
+      }
+    }
+    TouchZone.addEventListener('touchstart',if_touchstart,false);
+    TouchZone.addEventListener('touchmove',if_touchmove,false);
+    TouchZone.addEventListener('touchend',if_touchend,false);
 })
 .controller('EasyScoreBoardCtrl',function($scope,$controller){
     $controller('scoreboardCtrl',{$scope:$scope});

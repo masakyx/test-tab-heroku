@@ -49,5 +49,22 @@
 <div class="card confirmcard2" ng-show="rallyplay2">
   <h3 align="center ">RALLY {{agplayer2}}</h3>
 </div>
+<div class="row row1">
+  <div class="col col1">
+    <ul>
+      <div ng-repeat="gesture1 in gestures1 | orderBy:'num':true">
+        <p>'{{gesture1.num}}':{{gesture1.item}}</p>
+      </div>
+    </ul>
+  </div>
+  <div class="col col1">
+    <ul>
+      <div ng-repeat="gesture2 in gestures2 | orderBy:'num':true">
+        <p>'{{gesture2.num}}':{{gesture2.item}}</p>
+      </div>
+    </ul>
+  </div>
+</div>
+  
 </ion-content>
 </ion-view>

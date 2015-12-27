@@ -2047,17 +2047,24 @@ function ConfirmSide(){
     var moveX = new Array();
     var moveY = new Array();
 
-    var ajustX = 50,
-        ajustY = 50;//ぶれ幅の割る数
+    var ajustX = 20,
+        ajustY = 20;//ぶれ幅の割る数
     //-------viewの初期設定-------------------------------------------------
     $scope.Fserplay1 = true;
     //------------------分岐変数-----------------------------------------------
     var whichserver = 0;//0=player1, 1=player2
     var rallycount = 0;
+    var gestureNum=0;
     //---------ジェスチャーのフェーズの変数----------------------------------
     var ServerPhase = true,
         ReturnPhase = false,
         RallyPhase = false;
+    //-----------ジェスチャーの表示------------------------------------
+    var gestures1 = new Array();
+    var gestures2 = new Array();
+    $scope.gestures1 = gestures1;
+    $scope.gestures2 = gestures2;
+
 //--------------ジェスチャーの実装--------------------------------------
     var if_touchstart = function(evt){
       if(evt.touches.length == 1){
@@ -2227,65 +2234,95 @@ function ConfirmSide(){
         faultcount=0;
         rallycount=0;
       }
+      gestureNum=0;
+      gestures1.length=0;
+      gestures2.length=0;
     }
-    function UpFlick(){
+  function Itempush(n,action){
+    gestureNum++;
+    if(n==1){
+      gestures1.push({item:action,num:gestureNum});
+    }else if(n==2){
+      gestures2.push({item:action,num:gestureNum});
+    }
+  }
+
+
+  function UpFlick(e){
+    $scope.$apply(function(){
       if(ServerPhase){
         //スピンサーブの実装
         console.log("スピンサーブ");
         if(whichserver==0 && faultcount==0){
           $scope.Fserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"スピンサーブ");
         }else if(whichserver==0 && faultcount==1){
           $scope.Sserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"スピンサーブ");
         }else if(whichserver==1 && faultcount==0){
           $scope.Fserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"スピンサーブ");
         }else if(whichserver==1 && faultcount==1){
           $scope.Sserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"スピンサーブ");
         }
         ServerPhase=false;
         ReturnPhase=true;
       }
-    }
-    function DownFlick(){
+    });
+  }
+  function DownFlick(e){
+    $scope.$apply(function(){
       if(ServerPhase){
        //スライスサーブの実装
         console.log("スライスサーブ");
         if(whichserver==0 && faultcount==0){
           $scope.Fserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"スライスサーブ");
         }else if(whichserver==0 && faultcount==1){
           $scope.Sserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"スライスサーブ");
         }else if(whichserver==1 && faultcount==0){
           $scope.Fserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"スライスサーブ");
         }else if(whichserver==1 && faultcount==1){
           $scope.Sserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"スライスサーブ");
         }
         ServerPhase=false;
         ReturnPhase=true;
       }
-    }
-    function RightFlick(){
+    });
+  }
+  function RightFlick(e){
+    $scope.$apply(function(){
       if(ServerPhase){
         //フラットサーブの実装
         console.log("フラットサーブ");
         if(whichserver==0 && faultcount==0){
           $scope.Fserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"フラットサーブ");
         }else if(whichserver==0 && faultcount==1){
           $scope.Sserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"フラットサーブ");
         }else if(whichserver==1 && faultcount==0){
           $scope.Fserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"フラットサーブ");
         }else if(whichserver==1 && faultcount==1){
           $scope.Sserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"フラットサーブ");
         }
         ServerPhase=false;
         ReturnPhase=true;
@@ -2295,15 +2332,19 @@ function ConfirmSide(){
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"フォアフラットリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"フォアフラットリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"フォアフラットリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"フォアフラットリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
@@ -2315,54 +2356,68 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアフラットショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアフラットショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアフラットショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアフラットショット");
           }
         }
       }
-    }
+    });
+  }
 
-    function LeftFlick(){
+  function LeftFlick(e){
+    $scope.$apply(function(){
       if(ServerPhase){
         //フラットサーブの実装
         console.log("フラットサーブ");
         if(whichserver==0 && faultcount==0){
           $scope.Fserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"フラットサーブ");
         }else if(whichserver==0 && faultcount==1){
           $scope.Sserplay1=false;
           $scope.recplay2=true;
+          Itempush(1,"フラットサーブ");
         }else if(whichserver==1 && faultcount==0){
           $scope.Fserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"フラットサーブ");
         }else if(whichserver==1 && faultcount==1){
           $scope.Sserplay2=false;
           $scope.recplay1=true;
+          Itempush(2,"フラットサーブ");
         }
         ServerPhase=false;
         ReturnPhase=true;
@@ -2372,15 +2427,19 @@ function ConfirmSide(){
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"バックフラットリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"バックフラットリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"バックフラットリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rally2=true;
+          Itempush(1,"バックフラットリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
@@ -2392,58 +2451,71 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックフラットショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックフラットショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックフラットショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックフラットショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックフラットショット");
           }
         }
       }
-    }
+    });
+  }
 
-    function RightDownFlick(){
+  function RightDownFlick(e){
+    $scope.$apply(function(){
       if(ReturnPhase){
         //フォアスライスリターンの実装
         console.log("フォアスライスリターン");
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"フォアスライスリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"フォアスライスリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"フォアスライスリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rally2=true;
+          Itempush(1,"フォアスライスリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
-        
       }else if(RallyPhase){
         //フォアスライスショットの実装
         console.log("フォアスライスショット");
@@ -2452,58 +2524,71 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアスライスショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアスライスショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアスライスショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアスライスショット");
           }
         }
       }
-    }
+    });
+  }
 
-    function RightUpFlick(){
+  function RightUpFlick(e){
+    $scope.$apply(function(){
       if(ReturnPhase){
         //フォアスピンリターンの実装
         console.log("フォアスピンリターン");
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"フォアスピンリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"フォアスピンリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"フォアスピンリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rally2=true;
+          Itempush(1,"フォアスピンリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
-        
       }else if(RallyPhase){
         //フォアスピンショットの実装
         console.log("フォアスピンショット");
@@ -2512,57 +2597,70 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアスピンショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"フォアスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"フォアスピンショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアスピンショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"フォアスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"フォアスピンショット");
           }
         }
       }
-    }
-    function LeftDownFlick(){
+    });
+  }
+  function LeftDownFlick(e){
+    $scope.$apply(function(){
       if(ReturnPhase){
         //バックスライスリターンの実装
         console.log("バックスライスリターン");
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"バックスライスリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"バックスライスリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"バックスライスリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rally2=true;
+          Itempush(1,"バックスライスリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
-        
       }else if(RallyPhase){
         //バックスライスショットの実装
         console.log("バックスライスショット");
@@ -2571,57 +2669,70 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックスライスショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックスライスショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックスライスショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックスライスショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックスライスショット");
           }
         }
       }
-    }
-    function LeftUpFlick(){
+    });
+  }
+  function LeftUpFlick(e){
+    $scope.$apply(function(){
       if(ReturnPhase){
         //バックスピンリターンの実装
         console.log("バックスピンリターン");
         if(whichserver==0 && faultcount==0){
           $scope.recplay2=false;
           $scope.rallyplay1=true; 
+          Itempush(2,"バックスピンリターン");
         }else if(whichserver==0 && faultcount==1){
           $scope.recplay2=false;
           $scope.rallyplay1=true;
+          Itempush(2,"バックスピンリターン");
         }else if(whichserver==1 && faultcount==0){
           $scope.recplay1=false;
           $scope.rallyplay2=true;
+          Itempush(1,"バックスピンリターン");
         }else if(whichserver==1 && faultcount==1){
           $scope.recplay1=false;
           $scope.rally2=true;
+          Itempush(1,"バックスピンリターン");
         }
         ReturnPhase=false;
         RallyPhase=true;
-        
       }else if(RallyPhase){
         //バックスピンショットの実装
         console.log("バックスピンショット");
@@ -2630,37 +2741,46 @@ function ConfirmSide(){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックスピンショット");
           }
         }else if(whichserver==0 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay1=false;
             $scope.rallyplay2=true;
+            Itempush(1,"バックスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay1=true;
             $scope.rallyplay2=false;
+            Itempush(2,"バックスピンショット");
           }
         }else if(whichserver==1 && faultcount==0){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックスピンショット");
           }
         }else if(whichserver==1 && faultcount==1){
           if(rallycount%2 == 1){
             $scope.rallyplay2=false;
             $scope.rallyplay1=true;
+            Itempush(2,"バックスピンショット");
           }else if(rallycount%2 == 0){
             $scope.rallyplay2=true;
             $scope.rallyplay1=false;
+            Itempush(1,"バックスピンショット");
           }
         }
       }
-    }
+    });
+  }
     TouchZone.addEventListener('touchstart',if_touchstart,false);
     TouchZone.addEventListener('touchmove',if_touchmove,false);
     TouchZone.addEventListener('touchend',if_touchend,false);

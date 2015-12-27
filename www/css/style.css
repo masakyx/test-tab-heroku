@@ -33,8 +33,19 @@
   margin:10px 5px;
   text-align:center;
 }
+.confirmcard1{
+  background-color:#ffd500;
+  margin-top:3px;
+}
+.confirmcard2{
+  background-color:#00ffff;
+  margin-top:3px;
+}
 .full-image1{
   width:40%;
+}
+.row2{
+  padding:2px;
 }
 #checkserver1,#checkreceiver1{
   background-color:#ffd500;

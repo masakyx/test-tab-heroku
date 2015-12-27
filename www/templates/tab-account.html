@@ -1,4 +1,53 @@
 <ion-view view-title="Account" >
-<ion-content id="touchzone">
+<ion-content has-bouncing="false" id="touchzone" on-double-tap="DoubleTap()">
+<div class="row row1">
+  <div class="col col1 card card1 item item-text-wrap">
+      <p align="center">{{agplayer1}}</p>
+  </div>
+  <div class="col col1 card card1 item item-text-wrap">
+      <p align="center">{{agplayer2}}</p>
+  </div>
+</div>
+<div class="row row1">
+  <div class="list list1 col col1">
+    <h1 align="center"  class="player1count counttext">{{agset1}}</h1>
+    <h1 align="center"  class="player1count counttext">{{aggame1}}</h1>
+    <h1 align="center"  class="player1count counttext">{{agpoint1}}</h1>
+  </div>
+  <div class="list list1 col col1">
+    <h1 align="center"  class="counttext">SET</h1>
+    <h1 align="center"  class="counttext">GAME</h1>
+    <h1 align="center"  class="counttext">POINT</h1>
+  </div>
+  <div class="list list1 col col1">
+    <h1 align="center"  class="player2count counttext">{{agset2}}</h1>
+    <h1 align="center"  class="player2count counttext">{{aggame2}}</h1>
+    <h1 align="center"  class="player2count counttext">{{agpoint2}}</h1>
+  </div>
+</div>
+<div class="card confirmcard1" ng-show="Fserplay1">
+  <h3 align="center ">FIRST SERVE {{agplayer1}}</h3>
+</div>
+<div class="card confirmcard1" ng-show="Sserplay1">
+  <h3 align="center ">SECOND SERVE {{agplayer1}}</h3>
+</div>
+<div class="card confirmcard1" ng-show="recplay1">
+  <h3 align="center ">RECEIVE {{agplayer1}}</h3>
+</div>
+<div class="card confirmcard1" ng-show="rallyplay1">
+  <h3 align="center ">RALLY {{agplayer1}}</h3>
+</div>
+<div class="card confirmcard2" ng-show="Fserplay2">
+  <h3 align="center ">FIRST SERVE {{agplayer2}}</h3>
+</div>
+<div class="card confirmcard2" ng-show="Sserplay2">
+  <h3 align="center ">SECOND SERVE {{agplayer2}}</h3>
+</div>
+<div class="card confirmcard2" ng-show="recplay2">
+  <h3 align="center ">RECEIVER {{agplayer2}}</h3>
+</div>
+<div class="card confirmcard2" ng-show="rallyplay2">
+  <h3 align="center ">RALLY {{agplayer2}}</h3>
+</div>
 </ion-content>
 </ion-view>

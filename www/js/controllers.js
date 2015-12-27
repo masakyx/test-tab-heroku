@@ -2017,7 +2017,654 @@ function ConfirmSide(){
           server[1]="";
         serverchange2=0;
       }
-  }
+    }
+
+
+
+    //--------------------------Gesture Mode-----------------------------------------
+    var TouchZone = document.getElementById('touchzone');
+    //-------------------初期設定------------------------------------------
+    //変数--------------
+    var startX,
+        startY,
+        FirstFlag = false,
+        SecondFlag = false,
+        RightFlag = false,
+        nRightFlag = false,
+        LeftFlag = false,
+        nLeftFlag = false,
+        UpFlag = false,
+        nUpFlag = false,
+        DownFlag = false,
+        nDownFlag = false,
+        DownRightFlag = false,
+        DownLeftFlag = false,
+        UpRightFlag = false,
+        UpLeftFlag = false,
+        ApexFlag = false,
+        Lflag = false,
+        begintime;
+    var moveX = new Array();
+    var moveY = new Array();
+
+    var ajustX = 50,
+        ajustY = 50;//ぶれ幅の割る数
+    //-------viewの初期設定-------------------------------------------------
+    $scope.Fserplay1 = true;
+    //------------------分岐変数-----------------------------------------------
+    var whichserver = 0;//0=player1, 1=player2
+    var rallycount = 0;
+    //---------ジェスチャーのフェーズの変数----------------------------------
+    var ServerPhase = true,
+        ReturnPhase = false,
+        RallyPhase = false;
+//--------------ジェスチャーの実装--------------------------------------
+    var if_touchstart = function(evt){
+      if(evt.touches.length == 1){
+        FirstFlag=true;
+        SecondFlag = false;
+        RightFlag = false;
+        nRightFlag = false;
+        LeftFlag = false;
+        nLeftFlag = false;
+        UpFlag = false;
+        nUpFlag = false;
+        DownFlag = false;
+        nDownFlag = false;
+        DownRightFlag = false;
+        DownLeftFlag = false;
+        UpRightFlag = false;
+        UpLeftFlag = false;
+        ApexFlag=false;
+        startX = evt.touches[0].pageX - window.pageXOffset;
+        startY = evt.touches[0].pageY - window.pageYOffset;
+        begintime = new Date().getTime();
+        moveX[0] = 0;
+        moveY[0] = 0;
+      }
+    };
+
+    var if_touchmove = function(evt){
+      var currenttime = new Date().getTime();
+      moveX[0] = evt.touches[0].pageX - window.pageXOffset - startX;
+      moveY[0] = evt.touches[0].pageY - window.pageYOffset - startY;
+      if(FirstFlag){
+        if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nDownFlag){
+          DownFlag = true;
+        }
+        if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nUpFlag){
+          UpFlag = true;
+        }
+        if(moveX[0] > window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nRightFlag){
+          FirstFlag = false;
+          SecondFlag = true;
+          RightFlag = true;
+        }
+        if(moveX[0] < -window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nLeftFlag){
+          FirstFlag = false;
+          SecondFlag = true;
+          LeftFlag = true;
+        }
+        if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          nDownFlag = true;
+        }
+        if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          nUpFlag = true;
+        }
+        if(moveX[0] > window.innerWidth/18 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          nRightFlag = true;
+        }
+        if(moveX[0] < -window.innerWidth/18 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          nLeftFlag = true;
+        }
+      }
+      if(SecondFlag){
+        if(RightFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag || LeftFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag){
+            startY = evt.touches[0].pageY - window.pageYOffset - moveY[0];
+            startX = evt.touches[0].pageX - window.pageXOffset;
+            ApexFlag = true;
+        }
+        if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX ){
+          DownFlag = true;
+          if(RightFlag){
+            DownRightFlag = true;
+          }else if(LeftFlag){
+            DownLeftFlag = true;
+          }
+        }
+        if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX){
+          UpFlag = true;
+          if(LeftFlag){
+            UpLeftFlag = true;
+          }else if(RightFlag){
+            UpRightFlag = true;
+          }
+        }
+      }
+    };
+
+    var if_touchend = function(evt){
+      if(DownFlag && !ApexFlag){
+        DownFlick();
+      }else if(UpFlag && ! ApexFlag){
+        UpFlick()
+      }else if(RightFlag && !ApexFlag){
+        RightFlick(); 
+      }else if(LeftFlag && !ApexFlag){
+        LeftFlick();
+      }else if(DownLeftFlag){
+        LeftDownFlick();
+      }else if(DownRightFlag){
+        RightDownFlick();
+      }else if(UpRightFlag){
+        RightUpFlick();
+      }else if(UpLeftFlag){
+        LeftUpFlick();
+      }
+    }
+    //-------------double tap--------------------------------------
+    $scope.DoubleTap = function(){
+      if(ServerPhase){
+        //フォルトの実装
+        console.log("フォルト");
+        if(whichserver==0 && faultcount==0){
+          faultcount++;
+          $scope.Fserplay1 = false;
+          $scope.Sserplay1 = true;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Fserplay1 = true;
+          $scope.Sserplay1 = false;
+          faultcount = 0;
+        }else if(whichserver==1 && faultcount==0){
+          faultcount++;
+          $scope.Fserplay2 = false;
+          $scope.Sserplay2 = true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2 = true;
+          $scope.Sserplay2 = false;
+          faultcount = 0;
+        }
+      }else if(RallyPhase && rallycount==0){
+        //リターンミスの実装->ミスのボタンを表示させる
+        console.log("リターンミス");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1 = true;
+          $scope.rallyplay1=false;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Fserplay1 = true;
+          $scope.rallyplay1 = false;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2 = true;
+          $scope.rallyplay2=false;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2 = true;
+          $scope.rallyplay2 = false;
+        }
+        RallyPhase=false;
+        ServerPhase=true;
+        faultcount=0;
+      }else if(RallyPhase && rallycount > 0){
+        //ラリーミスの実装->ミスの種類ボタンを表示させる
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1 = true;
+          $scope.rallyplay1=false;
+          $scope.rallyplay2 = false;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Fserplay1 = true;
+          $scope.rallyplay1 = false;
+          $scope.rallyplay2 = false;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2 = true;
+          $scope.rallyplay2=false;
+          $scope.rallyplay1 = false;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2 = true;
+          $scope.rallyplay2 = false;
+          $scope.rallyplay1 = false;
+        }
+        RallyPhase=false;
+        ServerPhase=true;
+        faultcount=0;
+        rallycount=0;
+      }
+    }
+    function UpFlick(){
+      if(ServerPhase){
+        //スピンサーブの実装
+        console.log("スピンサーブ");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Sserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2=false;
+          $scope.recplay1=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.Sserplay2=false;
+          $scope.recplay1=true;
+        }
+        ServerPhase=false;
+        ReturnPhase=true;
+      }
+    }
+    function DownFlick(){
+      if(ServerPhase){
+       //スライスサーブの実装
+        console.log("スライスサーブ");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Sserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2=false;
+          $scope.recplay1=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.Sserplay2=false;
+          $scope.recplay1=true;
+        }
+        ServerPhase=false;
+        ReturnPhase=true;
+      }
+    }
+    function RightFlick(){
+      if(ServerPhase){
+        //フラットサーブの実装
+        console.log("フラットサーブ");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Sserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2=false;
+          $scope.recplay1=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.Sserplay2=false;
+          $scope.recplay1=true;
+        }
+        ServerPhase=false;
+        ReturnPhase=true;
+      }else if(ReturnPhase){
+        //フォアフラットリターンの実装
+        console.log("フォアフラットリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+      }else if(RallyPhase){
+        //フォアフラットショットの実装
+        console.log("フォアフラットショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+
+    function LeftFlick(){
+      if(ServerPhase){
+        //フラットサーブの実装
+        console.log("フラットサーブ");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Sserplay1=false;
+          $scope.recplay2=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2=false;
+          $scope.recplay1=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.Sserplay2=false;
+          $scope.recplay1=true;
+        }
+        ServerPhase=false;
+        ReturnPhase=true;
+      }else if(ReturnPhase){
+        //バックフラットリターンの実装
+        console.log("バックフラットリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rally2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+      }else if(RallyPhase){
+        //バックフラットショットの実装
+        console.log("バックフラットショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+
+    function RightDownFlick(){
+      if(ReturnPhase){
+        //フォアスライスリターンの実装
+        console.log("フォアスライスリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rally2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+        
+      }else if(RallyPhase){
+        //フォアスライスショットの実装
+        console.log("フォアスライスショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+
+    function RightUpFlick(){
+      if(ReturnPhase){
+        //フォアスピンリターンの実装
+        console.log("フォアスピンリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rally2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+        
+      }else if(RallyPhase){
+        //フォアスピンショットの実装
+        console.log("フォアスピンショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+    function LeftDownFlick(){
+      if(ReturnPhase){
+        //バックスライスリターンの実装
+        console.log("バックスライスリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rally2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+        
+      }else if(RallyPhase){
+        //バックスライスショットの実装
+        console.log("バックスライスショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+    function LeftUpFlick(){
+      if(ReturnPhase){
+        //バックスピンリターンの実装
+        console.log("バックスピンリターン");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rally2=true;
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+        
+      }else if(RallyPhase){
+        //バックスピンショットの実装
+        console.log("バックスピンショット");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+          }
+        }
+      }
+    }
+    TouchZone.addEventListener('touchstart',if_touchstart,false);
+    TouchZone.addEventListener('touchmove',if_touchmove,false);
+    TouchZone.addEventListener('touchend',if_touchend,false);
+
 })
 
 //---view game in real time controller-----------------------------------------------------
@@ -2265,9 +2912,10 @@ function ConfirmSide(){
     $scope.tennisdata = tennisdata;
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
-.controller('AccountCtrl', function($scope,$document){
+.controller('AccountCtrl', function($scope,$document,$cordovaToast){
     var TouchZone = document.getElementById('touchzone');
-
+    //-------------------初期設定------------------------------------------
+    //変数--------------
     var startX,
         startY,
         FirstFlag = false,
@@ -2292,10 +2940,24 @@ function ConfirmSide(){
 
     var ajustX = 50,
         ajustY = 50;//ぶれ幅の割る数
-
-    var L_Flick = function(){
-    }
-
+    //-------viewの初期設定-------------------------------------------------
+    $scope.Fserplay1 = true;
+    $scope.agset1 = 1;
+    $scope.aggame1 = 1
+    $scope.agpoint1 = 1;
+    $scope.agset2 = 1;
+    $scope.aggame2 = 1;
+    $scope.agpoint2 = 1;
+    $scope.agplayer1 = "a";
+    $scope.agplayer2 = "a";
+    //---------ジェスチャーのフェーズの変数----------------------------------
+    var ServerPhase = true,
+        ReceiverPhase = false,
+        RallyPhase = false;
+        $scope.DoubleTap = function(){
+          console.log("tapp");
+        }
+//--------------ジェスチャーの実装--------------------------------------
     var if_touchstart = function(evt){
       if(evt.touches.length == 1){
         FirstFlag=true;
@@ -2319,7 +2981,6 @@ function ConfirmSide(){
         moveX[0] = 0;
         moveY[0] = 0;
       }
-      console.log(startX+"/"+startY);
     };
 
     var if_touchmove = function(evt){
@@ -2407,6 +3068,7 @@ function ConfirmSide(){
         console.log("UpLeftフリック");
       }
     }
+
     TouchZone.addEventListener('touchstart',if_touchstart,false);
     TouchZone.addEventListener('touchmove',if_touchmove,false);
     TouchZone.addEventListener('touchend',if_touchend,false);

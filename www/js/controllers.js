@@ -1667,8 +1667,8 @@ function ClickPoint(check,point){
   }else if(isTiebreak){
     TieBreak(check,point);
   }
-  console.log(pointdata1[11]+"/"+pointdata1[12]+"/"+pointdata1[13]+"/"+pointdata1[14]+"/"+pointdata1[15]+"/"+pointdata1[16]+"/"+pointdata1[17]+"/"+pointdata1[18]);
-  console.log(pointdata2[11]+"/"+pointdata2[12]+"/"+pointdata2[13]+"/"+pointdata2[14]+"/"+pointdata2[15]+"/"+pointdata2[16]+"/"+pointdata2[17]+"/"+pointdata2[18]);
+  //console.log(pointdata1[11]+"/"+pointdata1[12]+"/"+pointdata1[13]+"/"+pointdata1[14]+"/"+pointdata1[15]+"/"+pointdata1[16]+"/"+pointdata1[17]+"/"+pointdata1[18]);
+  //console.log(pointdata2[11]+"/"+pointdata2[12]+"/"+pointdata2[13]+"/"+pointdata2[14]+"/"+pointdata2[15]+"/"+pointdata2[16]+"/"+pointdata2[17]+"/"+pointdata2[18]);
 }
 function ForeBack(){
     if((point1+point2)%2 == 0){
@@ -1680,6 +1680,28 @@ function ForeBack(){
 }
   function ServerChange(){
     Nserverchange++;
+    if(whichserver==1){
+      $scope.Fserplay1=true;
+      $scope.SserPlay1=false;
+      $scope.recplay1=false;
+      $scope.rallyplay1=false;
+      $scope.Fserplay2=false;
+      $scope.SserPlay2=false;
+      $scope.recplay2=false;
+      $scope.rallyplay2=false;
+      whichserver=-1;
+    }else if(whichserver==0){
+      $scope.Fserplay1=false;
+      $scope.SserPlay1=false;
+      $scope.recplay1=false;
+      $scope.rallyplay1=false;
+      $scope.Fserplay2=true;
+      $scope.SserPlay2=false;
+      $scope.recplay2=false;
+      $scope.rallyplay2=false;
+    }
+    whichserver++;
+    console.log("server=="+whichserver);
     if(gametype == "1"){
       switch (Nserverchange){
         case 1:
@@ -2171,6 +2193,7 @@ function ConfirmSide(){
     }
     //-------------double tap--------------------------------------
     $scope.DoubleTap = function(){
+      console.log(whichserver);
       if(ServerPhase){
         //フォルトの実装
         console.log("フォルト");
@@ -2182,15 +2205,22 @@ function ConfirmSide(){
           $scope.Fserplay1 = true;
           $scope.Sserplay1 = false;
           faultcount = 0;
+          point2++;
+          ClickPoint(2,point2);
         }else if(whichserver==1 && faultcount==0){
           faultcount++;
           $scope.Fserplay2 = false;
           $scope.Sserplay2 = true;
-        }else if(whichserver==1 && faultcount==0){
+        }else if(whichserver==1 && faultcount==1){
           $scope.Fserplay2 = true;
           $scope.Sserplay2 = false;
           faultcount = 0;
+          point1++;
+          ClickPoint(1,point1);
         }
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
       }else if(RallyPhase && rallycount==0){
         //リターンミスの実装->ミスのボタンを表示させる
         console.log("リターンミス");
@@ -2203,13 +2233,13 @@ function ConfirmSide(){
         }else if(whichserver==1 && faultcount==0){
           $scope.Fserplay2 = true;
           $scope.rallyplay2=false;
-        }else if(whichserver==1 && faultcount==0){
+        }else if(whichserver==1 && faultcount==1){
           $scope.Fserplay2 = true;
           $scope.rallyplay2 = false;
         }
         RallyPhase=false;
         ServerPhase=true;
-        faultcount=0;
+        MissType(1);
       }else if(RallyPhase && rallycount > 0){
         //ラリーミスの実装->ミスの種類ボタンを表示させる
         if(whichserver==0 && faultcount==0){
@@ -2224,19 +2254,41 @@ function ConfirmSide(){
           $scope.Fserplay2 = true;
           $scope.rallyplay2=false;
           $scope.rallyplay1 = false;
-        }else if(whichserver==1 && faultcount==0){
+        }else if(whichserver==1 && faultcount==1){
           $scope.Fserplay2 = true;
           $scope.rallyplay2 = false;
           $scope.rallyplay1 = false;
         }
         RallyPhase=false;
         ServerPhase=true;
-        faultcount=0;
-        rallycount=0;
+        MissType(1);
       }
-      gestureNum=0;
-      gestures1.length=0;
-      gestures2.length=0;
+    }
+    function MissType(v){
+      if(v==1){
+        $scope.Misstype = true;
+        ServerPhase=false;
+        ReturnPhase=false;
+        RallyPhase=false;
+        if(whichserver==0){
+          if(gestureNum%2 == 0){
+              $scope.shotplay2=true;
+            }else if(gestureNum%2 == 1){
+              $scope.shotplay1=true;
+          }
+        }else if(whichserver==1){
+          if(gestureNum%2 == 0){
+              $scope.shotplay1=true;
+            }else if(gestureNum%2 == 1){
+              $scope.shotplay2=true;
+          }
+        }
+      }else if(v==2){
+        ServerPhase=true;
+        $scope.Misstype = false;
+        $scope.shotplay1=false;
+        $scope.shotplay2=false;
+      }
     }
   function Itempush(n,action){
     gestureNum++;
@@ -2245,6 +2297,211 @@ function ConfirmSide(){
     }else if(n==2){
       gestures2.push({item:action,num:gestureNum});
     }
+  }
+  $scope.winning = function(){
+    if(whichserver==0 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==0 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==1 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==1 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }
+    MissType(2);
+        faultcount=0;
+        rallycount=0;
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
+  }
+  $scope.unforced = function(){
+    if(whichserver==0 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==0 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==1 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==1 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }
+        MissType(2);
+        faultcount=0;
+        rallycount=0;
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
+  }
+  $scope.back = function(){
+    if(whichserver==0 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==0 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==1 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==1 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }
+        MissType(2);
+        faultcount=0;
+        rallycount=0;
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
+  }
+  $scope.side = function(){
+    if(whichserver==0 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==0 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==1 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==1 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }
+        MissType(2);
+        faultcount=0;
+        rallycount=0;
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
+  }
+  $scope.net = function(){
+    if(whichserver==0 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==0 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point2++;
+        ClickPoint(2,point2);
+      }else if(gestureNum%2 == 0){
+        point1++;
+        ClickPoint(1,point1);
+      }
+    }else if(whichserver==1 && faultcount==0){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }else if(whichserver==1 && faultcount==1){
+      if(gestureNum%2 == 1){
+        point1++;
+        ClickPoint(1,point1);
+      }else if(gestureNum%2 == 0){
+        point2++;
+        ClickPoint(2,point2);
+      }
+    }
+        MissType(2);
+        faultcount=0;
+        rallycount=0;
+        gestureNum=0;
+        gestures1.length=0;
+        gestures2.length=0;
   }
 
 
@@ -3033,168 +3290,8 @@ function ConfirmSide(){
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
 .controller('AccountCtrl', function($scope,$document,$cordovaToast){
-    var TouchZone = document.getElementById('touchzone');
-    //-------------------初期設定------------------------------------------
-    //変数--------------
-    var startX,
-        startY,
-        FirstFlag = false,
-        SecondFlag = false,
-        RightFlag = false,
-        nRightFlag = false,
-        LeftFlag = false,
-        nLeftFlag = false,
-        UpFlag = false,
-        nUpFlag = false,
-        DownFlag = false,
-        nDownFlag = false,
-        DownRightFlag = false,
-        DownLeftFlag = false,
-        UpRightFlag = false,
-        UpLeftFlag = false,
-        ApexFlag = false,
-        Lflag = false,
-        begintime;
-    var moveX = new Array();
-    var moveY = new Array();
-
-    var ajustX = 50,
-        ajustY = 50;//ぶれ幅の割る数
-    //-------viewの初期設定-------------------------------------------------
-    $scope.Fserplay1 = true;
-    $scope.agset1 = 1;
-    $scope.aggame1 = 1
-    $scope.agpoint1 = 1;
-    $scope.agset2 = 1;
-    $scope.aggame2 = 1;
-    $scope.agpoint2 = 1;
-    $scope.agplayer1 = "a";
-    $scope.agplayer2 = "a";
-    //---------ジェスチャーのフェーズの変数----------------------------------
-    var ServerPhase = true,
-        ReceiverPhase = false,
-        RallyPhase = false;
-        $scope.DoubleTap = function(){
-          console.log("tapp");
-        }
-//--------------ジェスチャーの実装--------------------------------------
-    var if_touchstart = function(evt){
-      if(evt.touches.length == 1){
-        FirstFlag=true;
-        SecondFlag = false;
-        RightFlag = false;
-        nRightFlag = false;
-        LeftFlag = false;
-        nLeftFlag = false;
-        UpFlag = false;
-        nUpFlag = false;
-        DownFlag = false;
-        nDownFlag = false;
-        DownRightFlag = false;
-        DownLeftFlag = false;
-        UpRightFlag = false;
-        UpLeftFlag = false;
-        ApexFlag=false;
-        startX = evt.touches[0].pageX - window.pageXOffset;
-        startY = evt.touches[0].pageY - window.pageYOffset;
-        begintime = new Date().getTime();
-        moveX[0] = 0;
-        moveY[0] = 0;
-      }
-    };
-
-    var if_touchmove = function(evt){
-      var currenttime = new Date().getTime();
-      moveX[0] = evt.touches[0].pageX - window.pageXOffset - startX;
-      moveY[0] = evt.touches[0].pageY - window.pageYOffset - startY;
-      if(FirstFlag){
-        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nDownFlag){
-          DownFlag = true;
-          console.log("↓↓↓検知");
-        }
-        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nUpFlag){
-          UpFlag = true;
-          console.log("↑↑↑検知");
-        }
-        if(moveX[0] > window.innerWidth/14 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nRightFlag){
-          FirstFlag = false;
-          SecondFlag = true;
-          RightFlag = true;
-          console.log("→→→検知");
-        }
-        if(moveX[0] < -window.innerWidth/14 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nLeftFlag){
-          FirstFlag = false;
-          SecondFlag = true;
-          LeftFlag = true;
-          console.log("←←←検知");
-        }
-        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
-          nDownFlag = true;
-        }
-        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
-          nUpFlag = true;
-        }
-        if(moveX[0] > window.innerWidth/14 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
-          nRightFlag = true;
-        }
-        if(moveX[0] < -window.innerWidth/14 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
-          nLeftFlag = true;
-        }
-      }
-      if(SecondFlag){
-        if(RightFlag && Math.abs(moveY[0]) > window.innerHeight/15 && !ApexFlag || LeftFlag && Math.abs(moveY[0]) > window.innerHeight/15 && !ApexFlag){
-            console.log("頂点検知");
-            startY = evt.touches[0].pageY - window.pageYOffset - moveY[0];
-            startX = evt.touches[0].pageX - window.pageXOffset;
-            ApexFlag = true;
-        }
-        if(moveY[0] > window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX ){
-          DownFlag = true;
-          console.log("↓↓↓検知");
-          if(RightFlag){
-            DownRightFlag = true;
-          }else if(LeftFlag){
-            DownLeftFlag = true;
-          }
-        }
-        if(moveY[0] < -window.innerHeight/14 && Math.abs(moveX[0]) < window.innerWidth/ajustX){
-          UpFlag = true;
-          console.log("↑↑↑検知");
-          if(LeftFlag){
-            UpLeftFlag = true;
-          }else if(RightFlag){
-            UpRightFlag = true;
-          }
-        }
-      }
-    };
-
-    var if_touchend = function(evt){
-      if(DownFlag && !ApexFlag){
-        console.log("Downフリック");
-      }else if(UpFlag && ! ApexFlag){
-        console.log("Upフリック");
-      }else if(RightFlag && !ApexFlag){
-        console.log("Rightフリック");
-      }else if(LeftFlag && !ApexFlag){
-        console.log("Leftフリック");
-      }else if(DownLeftFlag){
-        console.log("DownLeftフリック");
-      }else if(DownRightFlag){
-        console.log("DownRightフリック");
-      }else if(UpRightFlag){
-        console.log("UpRightフリック");
-      }else if(UpLeftFlag){
-        console.log("UpLeftフリック");
-      }
-    }
-
-    TouchZone.addEventListener('touchstart',if_touchstart,false);
-    TouchZone.addEventListener('touchmove',if_touchmove,false);
-    TouchZone.addEventListener('touchend',if_touchend,false);
 })
 .controller('EasyScoreBoardCtrl',function($scope,$controller){
-    $controller('scoreboardCtrl',{$scope:$scope});
 })
 .controller('not',function($scope){
 });

@@ -1,4 +1,14 @@
 /* Empty. Add your own CSS if you like */
+.backimage1{
+  background-size:100%;
+  background-image:url(../img/servermode.jpg);
+  background-repeat:no-repeat;
+}
+.backimage2{
+  background-size:100%;
+  background-image:url(../img/shotmode.jpg);
+  background-repeat:no-repeat;
+}
 .player1count,.player2count,.counttext{
   border:medium solid black;
   -webkit-border-radius:10px;

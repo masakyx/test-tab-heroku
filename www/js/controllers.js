@@ -2063,8 +2063,12 @@ function ConfirmSide(){
         DownLeftFlag = false,
         UpRightFlag = false,
         UpLeftFlag = false,
+        RightUpFlag = false,
+        RightDownFlag = false,
+        LeftUpFlag = false,
+        LeftDownFlag = false,
+        MissFlickFlag = false,
         ApexFlag = false,
-        Lflag = false,
         begintime;
     var moveX = new Array();
     var moveY = new Array();
@@ -2104,6 +2108,10 @@ function ConfirmSide(){
         DownLeftFlag = false;
         UpRightFlag = false;
         UpLeftFlag = false;
+        RightUpFlag = false;
+        RightDownFlag = false;
+        LeftUpFlag = false;
+        LeftDownFlag = false;
         ApexFlag=false;
         startX = evt.touches[0].pageX - window.pageXOffset;
         startY = evt.touches[0].pageY - window.pageYOffset;
@@ -2119,55 +2127,91 @@ function ConfirmSide(){
       moveY[0] = evt.touches[0].pageY - window.pageYOffset - startY;
       if(FirstFlag){
         if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nDownFlag){
+          FirstFlag = false;
+          SecondFlag = true;
           DownFlag = true;
+          MissFlickFlag=false;
         }
         if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX && !nUpFlag){
+          FirstFlag = false;
+          SecondFlag = true;
           UpFlag = true;
+          MissFlickFlag=false;
         }
         if(moveX[0] > window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nRightFlag){
           FirstFlag = false;
           SecondFlag = true;
           RightFlag = true;
+          MissFlickFlag=false;
         }
         if(moveX[0] < -window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY && !nLeftFlag){
           FirstFlag = false;
           SecondFlag = true;
           LeftFlag = true;
+          MissFlickFlag=false;
         }
         if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          MissFlickFlag=true;
           nDownFlag = true;
         }
         if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) > window.innerWidth/ajustX){
+          MissFlickFlag=true;
           nUpFlag = true;
         }
         if(moveX[0] > window.innerWidth/18 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          MissFlickFlag=true;
           nRightFlag = true;
         }
         if(moveX[0] < -window.innerWidth/18 && Math.abs(moveY[0]) > window.innerHeight/ajustY){
+          MissFlickFlag=true;
           nLeftFlag = true;
         }
       }
       if(SecondFlag){
-        if(RightFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag || LeftFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag){
+        MissFlickFlag=true;
+        if(RightFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag || LeftFlag && Math.abs(moveY[0]) > window.innerHeight/20 && !ApexFlag ){
             startY = evt.touches[0].pageY - window.pageYOffset - moveY[0];
             startX = evt.touches[0].pageX - window.pageXOffset;
             ApexFlag = true;
-        }
-        if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX ){
+          }
+          if(UpFlag && Math.abs(moveX[0]) > window.innerWidth/20 && !ApexFlag || DownFlag && Math.abs(moveX[0]) > window.innerWidth/20 && !ApexFlag){
+            startY = evt.touches[0].pageY - window.pageYOffset;
+            startX = evt.touches[0].pageX - window.pageXOffset - moveX[0];
+            ApexFlag = true;
+          }
+        if(moveY[0] > window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX && ApexFlag){
           DownFlag = true;
           if(RightFlag){
-            DownRightFlag = true;
+            RightDownFlag = true;
           }else if(LeftFlag){
-            DownLeftFlag = true;
+            LeftDownFlag = true;
           }
         }
-        if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX){
+        if(moveY[0] < -window.innerHeight/18 && Math.abs(moveX[0]) < window.innerWidth/ajustX&& ApexFlag){
           UpFlag = true;
           if(LeftFlag){
-            UpLeftFlag = true;
+            LeftUpFlag = true;
           }else if(RightFlag){
-            UpRightFlag = true;
+            RightUpFlag = true;
           }
+        }
+        if(moveX[0] > window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY&& ApexFlag){
+          RightFlag = true;
+          if(UpFlag){
+            UpRightFlag=true;
+          }else if(DownFlag){
+            DownRightFlag=true;
+          }
+            console.log("apex");
+        }
+        if(moveX[0] < -window.innerWidth/18 && Math.abs(moveY[0]) < window.innerHeight/ajustY&& ApexFlag){
+          LeftFlag = true;
+          if(UpFlag){
+            UpLeftFlag=true;
+          }else if(DownFlag){
+            DownLeftFlag=true;
+          }
+            console.log("apex");
         }
       }
     };
@@ -2181,19 +2225,28 @@ function ConfirmSide(){
         RightFlick(); 
       }else if(LeftFlag && !ApexFlag){
         LeftFlick();
-      }else if(DownLeftFlag){
+      }else if(LeftDownFlag){
         LeftDownFlick();
-      }else if(DownRightFlag){
+      }else if(RightDownFlag){
         RightDownFlick();
-      }else if(UpRightFlag){
+      }else if(RightUpFlag){
         RightUpFlick();
-      }else if(UpLeftFlag){
+      }else if(LeftUpFlag){
         LeftUpFlick();
+      }else if(UpRightFlag){
+        UpRightFlick();
+      }else if(UpLeftFlag){
+        UpLeftFlick();
+      }else if(DownRightFlag){
+        DownRightFlick();
+      }else if(DownLeftFlag){
+        DownLeftFlick();
       }
     }
     //-------------double tap--------------------------------------
     $scope.DoubleTap = function(){
       console.log(whichserver);
+      MissFlickFlag=false;
       if(ServerPhase){
         //フォルトの実装
         console.log("フォルト");
@@ -2504,7 +2557,100 @@ function ConfirmSide(){
         gestures2.length=0;
   }
 
-
+  function MissFlick(e){
+    $scope.$apply(function(){
+      if(ServerPhase){
+        //サーブ認識失敗の実装
+        console.log("サーブ認識失敗");
+        if(whichserver==0 && faultcount==0){
+          $scope.Fserplay1=false;
+          $scope.recplay2=true;
+          Itempush(1,"サーブ認識失敗");
+        }else if(whichserver==0 && faultcount==1){
+          $scope.Sserplay1=false;
+          $scope.recplay2=true;
+          Itempush(1,"サーブ認識失敗");
+        }else if(whichserver==1 && faultcount==0){
+          $scope.Fserplay2=false;
+          $scope.recplay1=true;
+          Itempush(2,"サーブ認識失敗");
+        }else if(whichserver==1 && faultcount==1){
+          $scope.Sserplay2=false;
+          $scope.recplay1=true;
+          Itempush(2,"サーブ認識失敗");
+        }
+        ServerPhase=false;
+        ReturnPhase=true;
+      }else if(ReturnPhase){
+        //フォアリターン認識失敗の実装
+        console.log("フォアリターン認識失敗");
+        if(whichserver==0 && faultcount==0){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true; 
+          Itempush(2,"フォアリターン認識失敗");
+        }else if(whichserver==0 && faultcount==1){
+          $scope.recplay2=false;
+          $scope.rallyplay1=true;
+          Itempush(2,"フォアリターン認識失敗");
+        }else if(whichserver==1 && faultcount==0){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+          Itempush(1,"フォアリターン認識失敗");
+        }else if(whichserver==1 && faultcount==1){
+          $scope.recplay1=false;
+          $scope.rallyplay2=true;
+          Itempush(1,"フォアリターン認識失敗");
+        }
+        ReturnPhase=false;
+        RallyPhase=true;
+      }else if(RallyPhase){
+        //ストローク認識失敗の実装
+        console.log("ストローク認識失敗");
+        rallycount++;
+        if(whichserver==0 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+            Itempush(1,"ストローク認識失敗");
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+            Itempush(2,"ストローク認識失敗");
+          }
+        }else if(whichserver==0 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay1=false;
+            $scope.rallyplay2=true;
+            Itempush(1,"ストローク認識失敗");
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay1=true;
+            $scope.rallyplay2=false;
+            Itempush(2,"ストローク認識失敗");
+          }
+        }else if(whichserver==1 && faultcount==0){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+            Itempush(2,"ストローク認識失敗");
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+            Itempush(1,"ストローク認識失敗");
+          }
+        }else if(whichserver==1 && faultcount==1){
+          if(rallycount%2 == 1){
+            $scope.rallyplay2=false;
+            $scope.rallyplay1=true;
+            Itempush(2,"ストローク認識失敗");
+          }else if(rallycount%2 == 0){
+            $scope.rallyplay2=true;
+            $scope.rallyplay1=false;
+            Itempush(1,"ストローク認識失敗");
+          }
+        }
+      }
+    });
+  }
   function UpFlick(e){
     $scope.$apply(function(){
       if(ServerPhase){
@@ -2748,7 +2894,206 @@ function ConfirmSide(){
       }
     });
   }
-
+  function UpRightFlick(e){
+    $scope.$apply(function(){
+        if(RallyPhase){
+          //フォアスマッシュの実装
+          console.log("フォアスマッシュ");
+          rallycount++;
+          if(whichserver==0 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"フォアスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"フォアスマッシュ");
+            }
+          }else if(whichserver==0 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"フォアスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"フォアスマッシュ");
+            }
+          }else if(whichserver==1 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"フォアスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"フォアスマッシュ");
+            }
+          }else if(whichserver==1 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"フォアスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"フォアスマッシュ");
+            }
+          }
+        }
+    });
+  }
+  function UpLeftFlick(e){
+    $scope.$apply(function(){
+        if(RallyPhase){
+          //バックスマッシュの実装
+          console.log("バックスマッシュ");
+          rallycount++;
+          if(whichserver==0 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"バックスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"バックスマッシュ");
+            }
+          }else if(whichserver==0 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"バックスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"バックスマッシュ");
+            }
+          }else if(whichserver==1 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"バックスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"バックスマッシュ");
+            }
+          }else if(whichserver==1 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"バックスマッシュ");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"バックスマッシュ");
+            }
+          }
+        }
+    });
+  }
+  function DownRightFlick(e){
+    $scope.$apply(function(){
+        if(RallyPhase){
+          //フォアボレーの実装
+          console.log("フォアボレー");
+          rallycount++;
+          if(whichserver==0 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"フォアボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"フォアボレー");
+            }
+          }else if(whichserver==0 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"フォアボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"フォアボレー");
+            }
+          }else if(whichserver==1 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"フォアボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"フォアボレー");
+            }
+          }else if(whichserver==1 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"フォアボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"フォアボレー");
+            }
+          }
+        }
+    });
+  }
+  function DownLeftFlick(e){
+    $scope.$apply(function(){
+        if(RallyPhase){
+          //バックボレーの実装
+          console.log("バックボレー");
+          rallycount++;
+          if(whichserver==0 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"バックボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"バックボレー");
+            }
+          }else if(whichserver==0 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay1=false;
+              $scope.rallyplay2=true;
+              Itempush(1,"バックボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay1=true;
+              $scope.rallyplay2=false;
+              Itempush(2,"バックボレー");
+            }
+          }else if(whichserver==1 && faultcount==0){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"バックボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"バックボレー");
+            }
+          }else if(whichserver==1 && faultcount==1){
+            if(rallycount%2 == 1){
+              $scope.rallyplay2=false;
+              $scope.rallyplay1=true;
+              Itempush(2,"バックボレー");
+            }else if(rallycount%2 == 0){
+              $scope.rallyplay2=true;
+              $scope.rallyplay1=false;
+              Itempush(1,"バックボレー");
+            }
+          }
+        }
+    });
+  }
   function RightDownFlick(e){
     $scope.$apply(function(){
       if(ReturnPhase){

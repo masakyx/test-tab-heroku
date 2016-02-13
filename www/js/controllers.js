@@ -1680,7 +1680,7 @@ function ForeBack(){
 }
   function ServerChange(){
     Nserverchange++;
-    if(whichserver==1){
+    /*if(whichserver==1){
       $scope.Fserplay1=true;
       $scope.SserPlay1=false;
       $scope.recplay1=false;
@@ -1701,7 +1701,7 @@ function ForeBack(){
       $scope.rallyplay2=false;
     }
     whichserver++;
-    console.log("server=="+whichserver);
+    console.log("server=="+whichserver);*/
     if(gametype == "1"){
       switch (Nserverchange){
         case 1:
@@ -2044,7 +2044,7 @@ function ConfirmSide(){
 
 
     //--------------------------Gesture Mode-----------------------------------------
-    var TouchZone = document.getElementById('touchzone');
+    /*var TouchZone = document.getElementById('touchzone');
     //-------------------初期設定------------------------------------------
     //変数--------------
     var startX,
@@ -2073,8 +2073,8 @@ function ConfirmSide(){
     var moveX = new Array();
     var moveY = new Array();
 
-    var ajustX = 20,
-        ajustY = 20;//ぶれ幅の割る数
+    var ajustX = 15,
+        ajustY = 15;//ぶれ幅の割る数
     //-------viewの初期設定-------------------------------------------------
     $scope.Fserplay1 = true;
     //------------------分岐変数-----------------------------------------------
@@ -3383,9 +3383,9 @@ function ConfirmSide(){
       }
     });
   }
-    TouchZone.addEventListener('touchstart',if_touchstart,false);
+  TouchZone.addEventListener('touchstart',if_touchstart,false);
     TouchZone.addEventListener('touchmove',if_touchmove,false);
-    TouchZone.addEventListener('touchend',if_touchend,false);
+    TouchZone.addEventListener('touchend',if_touchend,false);*/
 
 })
 

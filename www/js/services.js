@@ -51,8 +51,8 @@ angular.module('starter.services', [])
 .factory('TennisID',function(){
     var tennisIDs = {
       creater:"No name",
-      player1:"a",
-      player2:"a",
+      player1:"フェデラー",
+      player2:"ナダル",
       player3:"",
       player4:"",
       gametype:"1",

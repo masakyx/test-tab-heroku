@@ -3634,7 +3634,16 @@ function ConfirmSide(){
     $scope.tennisdata = tennisdata;
     console.log(TennisDataDetail.get($stateParams.tennisdataId));
 })
-.controller('AccountCtrl', function($scope,$document,$cordovaToast){
+.controller('AccountCtrl', function($scope,$document,$cordovaToast,socket){
+    $scope.counter = 0;
+    socket.emit("connected");
+    socket.on("user-entered",function(data){
+      $scope.counter = data.counter;
+    });
+    socket.on("user-exited",function(data){
+      $scope.counter = data.counter;
+    });
+    
 })
 .controller('EasyScoreBoardCtrl',function($scope,$controller){
 })

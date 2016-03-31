@@ -96,8 +96,13 @@ var ppTennis = db.model('pptennis',TennisSchema);
 var Gamedata = db.model('gamedata',TennisSchema);
 var LoginInfo = db.model('logininfo',LoginSchema);
 //-----socket.io----------------------------------------------------------------------------
+var counter = 0;//リアルタイムユーザー数
 var io = require('socket.io').listen(server);
-io.sockets.on('connection',function(socket){
+io.on('connection',function(socket){
+    counter++;
+    console.log("現在のユーザー数＝"+counter);
+    socket.emit("user-entered",{counter:counter});
+    socket.broadcast.json.emit("user-entered",{counter:counter});
     /*
     Chat.find(function(err,items){
         if(err){console.log(err);}
@@ -112,8 +117,15 @@ io.sockets.on('connection',function(socket){
     Gamedata.find(function(err,items){
         if(err){console.log(err);}
         socket.emit('create-gamedata',items);
-    });*/
+        });*/
+  socket.on("disconnect",function(){
+    counter--;
+    console.log("ユーザーが退出しました。現在のユーザー数は="+counter);
+    socket.emit("user-exited",{counter:counter});
+    socket.broadcast.json.emit("user-exited",{counter:counter});
+   })
    socket.on('connected',function(){  
+    socket.emit("user-entered",{counter:counter});
       Chat.find(function(err,items){
           if(err){console.log(err);}
           //接続したユーザーにチャットデータを送る
